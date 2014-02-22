@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, include
+from django.http import HttpResponse
 from django.test import SimpleTestCase
 from django.test.utils import override_settings
 
@@ -172,3 +173,37 @@ class FailuresTest(SimpleTestCase):
             ]:
                 results = get_results_for(test)
                 self.assertEqual(results.failures, [])
+
+    def test_all_views_actually_called(self):
+        views_called = []
+
+        def view_one(*args, **kwargs):
+            views_called.append('view_one')
+            return HttpResponse()
+
+        def view_two(*args, **kwargs):
+            views_called.append('view_two')
+            return HttpResponse()
+
+        def included_view(*args, **kwargs):
+            views_called.append('included_view')
+            return HttpResponse()
+
+        incl = patterns(
+            '',
+            url(r'^included/$', included_view),
+        )
+
+        with override_settings(
+            ROOT_URLCONF=patterns(
+                '',
+                url(r'^one/$', view_one),
+                url(r'^two/$', view_two),
+                url(r'^include/', include(incl)),
+            ),
+            COVERED_URLS=['/one/', '/two/', '/include/included/'],
+        ):
+            results = get_results_for('test_no_errors')
+            self.assertEqual(results.failures, [])
+            self.assertEqual(views_called,
+                             ['view_one', 'view_two', 'included_view'])
