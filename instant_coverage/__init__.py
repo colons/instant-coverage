@@ -43,19 +43,23 @@ def get_urlpatterns():
         return __import__(settings.ROOT_URLCONF, {}, {}, ['']).urlpatterns
 
 
-def extract_all_patterns_from_urlpatterns(patterns, base=''):
+def extract_all_patterns_from_urlpatterns(patterns, base=()):
     all_patterns = []
+
+    if base in getattr(settings, 'UNCOVERED_INCLUDES', []):
+        return []
+
     for p in patterns:
         if isinstance(p, RegexURLPattern):
-            all_patterns.append(p)
+            all_patterns.append((base, p))
         elif isinstance(p, RegexURLResolver):
             all_patterns.extend(extract_all_patterns_from_urlpatterns(
-                p.url_patterns, base + p.regex.pattern))
+                p.url_patterns, base + (p.regex.pattern,)))
         elif hasattr(p, '_get_callback'):
-            all_patterns.append(p)
+            all_patterns.append((base, p))
         elif hasattr(p, 'url_patterns') or hasattr(p, '_get_url_patterns'):
             all_patterns.extend(extract_all_patterns_from_urlpatterns(
-                patterns, base + p.regex.pattern))
+                patterns, base + (p.regex.pattern,)))
         else:
             raise TypeError("%s does not appear to be a urlpattern object" % p)
 
@@ -75,14 +79,16 @@ class TestCase(BaseCase):
             resolve(url)
 
         all_patterns = extract_all_patterns_from_urlpatterns(patterns)
-        not_accounted_for = [p for p in all_patterns if p not in SEEN_PATTERNS]
+        not_accounted_for = [p for p in all_patterns
+                             if p[1] not in SEEN_PATTERNS]
 
         if not_accounted_for:
             raise self.failureException(
                 'The following views are untested:\n{0}'.format(
                     '\n'.join([
-                        '{_regex} ({name})'.format(**p.__dict__)
-                        for p in not_accounted_for
+                        '{base} {_regex} ({name})'.format(
+                            base=base, **pattern.__dict__
+                        ) for base, pattern in not_accounted_for
                     ])
                 )
             )

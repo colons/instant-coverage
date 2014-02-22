@@ -1,4 +1,4 @@
-from django.conf.urls import patterns
+from django.conf.urls import patterns, include
 from django.test import SimpleTestCase
 from django.test.utils import override_settings
 
@@ -55,7 +55,7 @@ class FailuresTest(SimpleTestCase):
             self.assertEqual(
                 results.failures[0][1][1][0],
                 "The following views are untested:\n"
-                "^untested-url/$ (None)"
+                "() ^untested-url/$ (None)"
             )
 
     def test_missing_named_urls_complained_about(self):
@@ -71,7 +71,7 @@ class FailuresTest(SimpleTestCase):
             self.assertEqual(
                 results.failures[0][1][1][0],
                 "The following views are untested:\n"
-                "^untested-url/$ (name)"
+                "() ^untested-url/$ (name)"
             )
 
     def test_excepted_urls_not_complained_about(self):
@@ -89,7 +89,7 @@ class FailuresTest(SimpleTestCase):
             self.assertEqual(
                 results.failures[0][1][1][0],
                 "The following views are untested:\n"
-                "^untested-url/$ (None)"
+                "() ^untested-url/$ (None)"
             )
 
     def test_excepted_urls_ignored(self):
@@ -104,3 +104,64 @@ class FailuresTest(SimpleTestCase):
         ):
             results = get_results_for('test_no_errors')
             self.assertEqual(results.failures, [])
+
+    def test_broken_url_in_include(self):
+        incl = patterns(
+            '',
+            url(r'^broken-url/$', BrokenView.as_view()),
+        )
+
+        with override_settings(
+            ROOT_URLCONF=patterns(
+                '',
+                url(r'^include/', include(incl)),
+            ),
+            COVERED_URLS=['/include/broken-url/'],
+        ):
+            results = get_results_for('test_no_errors')
+            self.assertEqual(
+                results.failures[0][1][1][0],
+                "The following errors were raised:\n"
+                "/include/broken-url/: this view is broken"
+            )
+
+    def test_missing_url_in_include(self):
+        incl = patterns(
+            '',
+            url(r'^broken-url/$', BrokenView.as_view()),
+        )
+
+        with override_settings(
+            ROOT_URLCONF=patterns(
+                '',
+                url(r'^include/', include(incl)),
+            ),
+            COVERED_URLS=[],
+        ):
+            results = get_results_for('test_all_urls_accounted_for')
+            self.assertEqual(
+                results.failures[0][1][1][0],
+                "The following views are untested:\n"
+                "('^include/',) ^broken-url/$ (None)"
+            )
+
+    def test_uncovered_includes(self):
+        incl = patterns(
+            '',
+            url(r'^broken-url/$', BrokenView.as_view()),
+        )
+
+        with override_settings(
+            ROOT_URLCONF=patterns(
+                '',
+                url(r'^include/', include(incl)),
+            ),
+            COVERED_URLS=[],
+            UNCOVERED_INCLUDES=[('^include/',)],
+        ):
+            for test in [
+                'test_all_urls_accounted_for',
+                'test_no_errors',
+            ]:
+                results = get_results_for(test)
+                self.assertEqual(results.failures, [])
