@@ -69,7 +69,9 @@ class TestCase(BaseCase):
 
         patterns = get_urlpatterns()
 
-        for url in settings.COVERED_URLS:
+        for url in (
+            settings.COVERED_URLS + getattr(settings, 'UNCOVERED_URLS', [])
+        ):
             resolve(url)
 
         all_patterns = extract_all_patterns_from_urlpatterns(patterns)
