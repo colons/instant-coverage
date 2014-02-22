@@ -74,7 +74,7 @@ class FailuresTest(SimpleTestCase):
                 "^untested-url/$ (name)"
             )
 
-    def test_excepted_urls_ignored(self):
+    def test_excepted_urls_not_complained_about(self):
         with override_settings(
             ROOT_URLCONF=patterns(
                 '',
@@ -91,3 +91,16 @@ class FailuresTest(SimpleTestCase):
                 "The following views are untested:\n"
                 "^untested-url/$ (None)"
             )
+
+    def test_excepted_urls_ignored(self):
+        with override_settings(
+            ROOT_URLCONF=patterns(
+                '',
+                url(r'^tested-url/$', WorkingView.as_view()),
+                url(r'^deliberately-untested-url/$', BrokenView.as_view()),
+            ),
+            COVERED_URLS=['/tested-url/'],
+            UNCOVERED_URLS=['/deliberately-untested-url/'],
+        ):
+            results = get_results_for('test_no_errors')
+            self.assertEqual(results.failures, [])
