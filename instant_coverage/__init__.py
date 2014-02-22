@@ -8,9 +8,7 @@ from django.test import TestCase as BaseCase
 from mock import patch
 
 
-SEEN_PATTERNS = set()
-# we could do this with a closure, but for the moment i just want to see it
-# work
+SEEN_PATTERNS = set()  # I know, I know. This is what closures are for.
 
 
 class URLSurfacingRegexURLPattern(RegexURLPattern):
@@ -67,6 +65,30 @@ def extract_all_patterns_from_urlpatterns(patterns, base=()):
 
 
 class TestCase(BaseCase):
+    def _get_responses(self):
+        # We cache responses against the class because test runners tend to
+        # use a new instance for each test, and we don't want to draw pages
+        # more than once.
+
+        responses = {}
+        errors = {}
+
+        for url in settings.COVERED_URLS:
+            try:
+                response = self.client.get(url)
+            except Exception as e:
+                errors[url] = e
+            else:
+                responses[url] = response
+
+        self.__class__._instant_cache = (responses, errors)
+
+    def responses(self):
+        if not hasattr(self.__class__, '_instant_cache'):
+            self._get_responses()
+
+        return self.__class__._instant_cache
+
     def test_all_urls_accounted_for(self):
         """
         Ensure all URLs that have not been explicitly excluded are present in
@@ -103,19 +125,13 @@ class TestCase(BaseCase):
         Ensure no URLs raise unhandled exceptions that would cause 500s.
         """
 
-        errors = {}
-
-        for url in settings.COVERED_URLS:
-            try:
-                self.client.get(url)
-            except Exception as e:
-                errors[url] = e
-
+        responses, errors = self.responses()
         if errors:
             raise self.failureException(
                 'The following errors were raised:\n{0}'.format(
                     '\n'.join([
-                        '{0}: {1}'.format(*e) for e in errors.iteritems()
+                        '{0}: {1}'.format(*e)
+                        for e in errors.iteritems()
                     ])
                 )
             )

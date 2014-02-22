@@ -25,9 +25,13 @@ def get_results_for(test_name):
 
     setup_test_environment()
     test = Everything(test_name)
+
     result = PickyTestResult()
+
     test._pre_setup()
+
     test.run(result)
+
     if not result.errors == []:
         # there should only ever be failures; if there's an error we should
         # throw something useful
