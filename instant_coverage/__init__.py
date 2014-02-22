@@ -63,7 +63,7 @@ def extract_all_patterns_from_urlpatterns(patterns, base=()):
     return all_patterns
 
 
-class TestEverythingMixin(object):
+class InstantCoverageMixin(object):
     def _get_responses(self):
         # We cache responses against the class because test runners tend to
         # use a new instance for each test, and we don't want to draw pages
