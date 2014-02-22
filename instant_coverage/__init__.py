@@ -68,6 +68,11 @@ def extract_all_patterns_from_urlpatterns(patterns, base=()):
 
 class TestCase(BaseCase):
     def test_all_urls_accounted_for(self):
+        """
+        Ensure all URLs that have not been explicitly excluded are present in
+        settings.INTERNAL_URLS.
+        """
+
         _resolver_cache.clear()
         SEEN_PATTERNS.clear()
 
@@ -94,6 +99,10 @@ class TestCase(BaseCase):
             )
 
     def test_no_errors(self):
+        """
+        Ensure no URLs raise unhandled exceptions that would cause 500s.
+        """
+
         errors = {}
 
         for url in settings.COVERED_URLS:
