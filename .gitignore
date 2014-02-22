@@ -1,4 +1,6 @@
 build/
 dist/
-django_test_everything.egg-info/
+django_instant_coverage.egg-info/
 *.pyc
+*.egg
+instant_coverage/tests/db

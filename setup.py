@@ -1,9 +1,19 @@
+import os
 from setuptools import setup
 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE",
+                      "instant_coverage.tests.settings")
+
 setup(
-    name='django-test-everything',
-    version=__import__('test_everything').__version__,
+    name='django-instant-coverage',
+    version='0.0.0',
     platforms=['any'],
-    packages=['test_everything'],
-    install_requires=['Django', 'django-extensions'],
+    packages=['instant_coverage'],
+    install_requires=[
+        'Django',
+        'django-extensions',
+        'mock',
+    ],
+    tests_require=['nose'],
+    test_suite='nose.collector',
 )
