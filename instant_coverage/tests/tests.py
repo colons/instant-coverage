@@ -22,7 +22,7 @@ class FailuresTest(SimpleTestCase):
                 '',
                 url(r'^$', WorkingView.as_view()),
             ),
-            INTERNAL_URLS=['/'],
+            COVERED_URLS=['/'],
         ):
             results = get_results_for('test_no_errors')
             self.assertEqual(results.failures, [])
@@ -33,7 +33,7 @@ class FailuresTest(SimpleTestCase):
                 '',
                 url(r'^$', BrokenView.as_view()),
             ),
-            INTERNAL_URLS=['/'],
+            COVERED_URLS=['/'],
         ):
             results = get_results_for('test_no_errors')
             self.assertEqual(
@@ -49,7 +49,7 @@ class FailuresTest(SimpleTestCase):
                 url(r'^tested-url/$', WorkingView.as_view()),
                 url(r'^untested-url/$', WorkingView.as_view()),
             ),
-            INTERNAL_URLS=['/tested-url/'],
+            COVERED_URLS=['/tested-url/'],
         ):
             results = get_results_for('test_all_urls_accounted_for')
             self.assertEqual(
@@ -65,7 +65,7 @@ class FailuresTest(SimpleTestCase):
                 url(r'^tested-url/$', WorkingView.as_view()),
                 url(r'^untested-url/$', WorkingView.as_view(), name='name'),
             ),
-            INTERNAL_URLS=['/tested-url/'],
+            COVERED_URLS=['/tested-url/'],
         ):
             results = get_results_for('test_all_urls_accounted_for')
             self.assertEqual(
