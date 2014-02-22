@@ -1,0 +1,4 @@
+build/
+dist/
+django_test_everything.egg-info/
+*.pyc
