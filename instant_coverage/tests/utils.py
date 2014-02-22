@@ -22,10 +22,14 @@ class PickyTestResult(TestResult):
 
 
 def get_results_for(test_name):
-    from instant_coverage import TestCase as Everything
+    from instant_coverage import TestEverythingMixin
+    from django.test import TestCase
+
+    class EverythingTest(TestEverythingMixin, TestCase):
+        pass
 
     setup_test_environment()
-    test = Everything(test_name)
+    test = EverythingTest(test_name)
 
     result = PickyTestResult()
 

@@ -7,19 +7,12 @@ from .utils import (
     WorkingView, BrokenView, get_results_for, get_urlpatterns_stupid,
 )
 
-from instant_coverage import (
-    url_with_url_sufacing_url_patterns as url, TestCase,
-)
+from instant_coverage import url_with_url_sufacing_url_patterns as url
 
 from mock import patch
 
 
 class FailuresTest(SimpleTestCase):
-    def setUp(self):
-        # we have to destroy the cache because we keep changing stuff
-        if hasattr(TestCase, '_instant_cache'):
-            del(TestCase._instant_cache)
-
     def run(self, *args, **kwargs):
         with patch('instant_coverage.get_urlpatterns', get_urlpatterns_stupid):
             super(FailuresTest, self).run(*args, **kwargs)

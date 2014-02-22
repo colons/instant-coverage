@@ -3,7 +3,6 @@ from django.conf import settings
 from django.core.urlresolvers import (
     RegexURLPattern, RegexURLResolver, resolve, _resolver_cache
 )
-from django.test import TestCase as BaseCase
 
 from mock import patch
 
@@ -64,7 +63,7 @@ def extract_all_patterns_from_urlpatterns(patterns, base=()):
     return all_patterns
 
 
-class TestCase(BaseCase):
+class TestEverythingMixin(object):
     def _get_responses(self):
         # We cache responses against the class because test runners tend to
         # use a new instance for each test, and we don't want to draw pages
