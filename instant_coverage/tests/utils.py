@@ -1,6 +1,7 @@
 from unittest.result import TestResult, failfast
 
 from django.conf import settings
+from django.http import HttpResponse
 from django.test.utils import setup_test_environment
 from django.views.generic import View
 
@@ -40,7 +41,8 @@ def get_results_for(test_name):
 
 
 class WorkingView(View):
-    pass
+    def get(self, request, *args, **kwargs):
+        return HttpResponse()
 
 
 class BrokenView(View):

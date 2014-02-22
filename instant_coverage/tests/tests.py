@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.test import SimpleTestCase
 from django.test.utils import override_settings
 
@@ -207,3 +207,22 @@ class FailuresTest(SimpleTestCase):
             self.assertEqual(results.failures, [])
             self.assertEqual(views_called,
                              ['view_one', 'view_two', 'included_view'])
+
+    def test_bad_status_codes_caught(self):
+        def missing_view(*args, **kwargs):
+            raise Http404
+
+        with override_settings(
+            ROOT_URLCONF=patterns(
+                '',
+                url(r'^working-url/$', WorkingView.as_view()),
+                url(r'^404-url/$', missing_view),
+            ),
+            COVERED_URLS=['/working-url/', '/404-url/'],
+        ):
+            results = get_results_for('test_acceptable_response_codes')
+            self.assertEqual(
+                results.failures[0][1][1][0],
+                "The following bad status codes were seen:\n"
+                "/404-url/: 404"
+            )

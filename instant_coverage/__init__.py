@@ -126,12 +126,35 @@ class TestCase(BaseCase):
         """
 
         responses, errors = self.responses()
+
         if errors:
             raise self.failureException(
                 'The following errors were raised:\n{0}'.format(
                     '\n'.join([
-                        '{0}: {1}'.format(*e)
-                        for e in errors.iteritems()
+                        '{0}: {1}'.format(url, error)
+                        for url, error in errors.iteritems()
+                    ])
+                )
+            )
+
+    def test_acceptable_response_codes(self):
+        """
+        Ensure all URLs return responses with status codes between 200 and 399.
+        """
+
+        responses, errors = self.responses()
+        bad_status_codes = {}
+
+        for url, response in responses.iteritems():
+            if not 200 <= response.status_code < 400:
+                bad_status_codes[url] = response.status_code
+
+        if bad_status_codes:
+            raise self.failureException(
+                'The following bad status codes were seen:\n{0}'.format(
+                    '\n'.join([
+                        '{0}: {1}'.format(url, status)
+                        for url, status in bad_status_codes.iteritems()
                     ])
                 )
             )
