@@ -72,7 +72,7 @@ tuples like the ones shown in the failure you just got to your test's
 `uncovered_includes` attribute:
 
 ```python
-class EverythingTest(instantcoveragemixin, testcase):
+class EverythingTest(InstantCoverageMixin, TestCase):
     uncovered_includes = [
         ('^admin/',),
     ]
@@ -83,7 +83,7 @@ you *don't* to `uncovered_urls`. If you forget what's still missing, run the
 tests again to get an audit of what's left.
 
 ```python
-class EverythingTest(instantcoveragemixin, testcase):
+class EverythingTest(InstantCoverageMixin, TestCase):
     covered_urls = [
         '/',
         '/api/',
