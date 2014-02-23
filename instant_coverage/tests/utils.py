@@ -21,7 +21,7 @@ class PickyTestResult(TestResult):
         self.failures.append((test, err))
 
 
-def get_results_for(test_name):
+def get_results_for(test_name, **test_attributes):
     from instant_coverage import InstantCoverageMixin
     from django.test import TestCase
 
@@ -30,6 +30,9 @@ def get_results_for(test_name):
 
     setup_test_environment()
     test = EverythingTest(test_name)
+
+    for attribute, value in test_attributes.iteritems():
+        setattr(test, attribute, value)
 
     result = PickyTestResult()
 

@@ -10,15 +10,14 @@ from mock import patch
 
 
 INSTANT_TRACEBACKS_TUTORIAL = (
-    'For full tracebacks, set INSTANT_TRACEBACKS = True in your Django '
-    'settings.'
+    'For full tracebacks, set {name}.instant_tracebacks to True.'
 )
 
 IGNORE_TUTORIAL = (
-    "Add a URL that matches each of these to your COVERED_URLS setting "
-    "(or UNCOVERED_URLS if you don't want to test them).\n"
+    "Add a URL that matches each of these to {name}.covered_urls "
+    "(or {name}.uncovered_urls if you don't want to test them).\n"
     "To explicitly ignore entire includes, add the tuple preceeding each "
-    "undesired URL (such as ('^admin/',)) to UNCOVERED_INCLUDES"
+    "undesired URL (such as ('^admin/',)) to {name}.uncovered_includes."
 )
 
 
@@ -26,23 +25,28 @@ def get_urlpatterns():
     return __import__(settings.ROOT_URLCONF, {}, {}, ['']).urlpatterns
 
 
-def extract_all_patterns_from_urlpatterns(patterns, base=()):
+def extract_all_patterns_from_urlpatterns(patterns, uncovered_includes,
+                                          base=()):
     all_patterns = []
 
-    if base in getattr(settings, 'UNCOVERED_INCLUDES', []):
+    if base in uncovered_includes:
         return []
 
     for p in patterns:
         if isinstance(p, RegexURLPattern):
             all_patterns.append((base, p))
+
         elif isinstance(p, RegexURLResolver):
             all_patterns.extend(extract_all_patterns_from_urlpatterns(
-                p.url_patterns, base + (p.regex.pattern,)))
+                p.url_patterns, uncovered_includes, base + (p.regex.pattern,)))
+
         elif hasattr(p, '_get_callback'):
             all_patterns.append((base, p))
+
         elif hasattr(p, 'url_patterns') or hasattr(p, '_get_url_patterns'):
             all_patterns.extend(extract_all_patterns_from_urlpatterns(
-                patterns, base + (p.regex.pattern,)))
+                patterns, uncovered_includes, base + (p.regex.pattern,)))
+
         else:
             raise TypeError("%s does not appear to be a urlpattern object" % p)
 
@@ -50,6 +54,11 @@ def extract_all_patterns_from_urlpatterns(patterns, base=()):
 
 
 class InstantCoverageMixin(object):
+    covered_urls = []
+    uncovered_urls = []
+    uncovered_includes = []
+    instant_tracebacks = False
+
     def _get_responses(self):
         # We cache responses against the class because test runners tend to
         # use a new instance for each test, and we don't want to draw pages
@@ -58,7 +67,7 @@ class InstantCoverageMixin(object):
         responses = {}
         errors = {}
 
-        for url in settings.COVERED_URLS:
+        for url in self.covered_urls:
             try:
                 response = self.client.get(url)
             except Exception:
@@ -77,7 +86,7 @@ class InstantCoverageMixin(object):
     def test_all_urls_accounted_for(self):
         """
         Ensure all URLs that have not been explicitly excluded are present in
-        settings.INTERNAL_URLS.
+        self.covered_urls.
         """
 
         _resolver_cache.clear()
@@ -97,12 +106,12 @@ class InstantCoverageMixin(object):
 
         with patch('django.core.urlresolvers.RegexURLPattern.resolve',
                    resolve_and_make_note):
-            for url in (
-                settings.COVERED_URLS + getattr(settings, 'UNCOVERED_URLS', [])
-            ):
+            for url in self.covered_urls + self.uncovered_urls:
                 resolve(url)
 
-        all_patterns = extract_all_patterns_from_urlpatterns(patterns)
+        all_patterns = extract_all_patterns_from_urlpatterns(
+            patterns, self.uncovered_includes)
+
         not_accounted_for = [p for p in all_patterns
                              if p[1] not in seen_patterns]
 
@@ -114,7 +123,7 @@ class InstantCoverageMixin(object):
                             base=base, **pattern.__dict__
                         ) for base, pattern in not_accounted_for
                     ]),
-                    IGNORE_TUTORIAL,
+                    IGNORE_TUTORIAL.format(name=self.__class__.__name__),
                 )
             )
 
@@ -126,7 +135,7 @@ class InstantCoverageMixin(object):
         responses, errors = self.responses()
 
         if errors:
-            if getattr(settings, 'INSTANT_TRACEBACKS', None):
+            if self.instant_tracebacks:
                 raise self.failureException(
                     'The following errors were raised:\n\n{0}'.format(
                         '\n'.join(['{0}: {1}\n{2}'.format(
@@ -142,7 +151,8 @@ class InstantCoverageMixin(object):
                     .format(
                         '\n'.join(['{0}: {1}'.format(url, error[1])
                                    for url, error in errors.iteritems()]),
-                        INSTANT_TRACEBACKS_TUTORIAL,
+                        INSTANT_TRACEBACKS_TUTORIAL.format(
+                            name=self.__class__.__name__),
                     )
                 )
 
