@@ -1,6 +1,10 @@
 ![A roll of duct tape; the Instant Coverage logo][logo]
 [logo]: http://colons.co/instant-coverage-small.png
 
+[![Build Status][travis-status]][travis]
+[travis-status]: https://travis-ci.org/colons/instant-coverage.png
+[travis]: https://travis-ci.org/colons/instant-coverage
+
 # Instant Coverage
 
 Your new Django site need tests. Nothing super fancy, just enough that you know
