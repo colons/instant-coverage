@@ -11,7 +11,7 @@ setup(
     name='django-instant-coverage',
     description='Better-than-nothing testing for Django',
     url='https://github.com/colons/instant-coverage',
-    version='0.0.1',
+    version='0.0.2',
     license="BSD",
     platforms=['any'],
     packages=['instant_coverage'],
