@@ -129,7 +129,7 @@ class LoggedInEverythingTest(EverythingTest):
         self.assertTrue(self.client.login(username='user', password='pass'))
 ```
 
-### Using the provided optional test mixins
+### Use the provided optional test mixins
 
 Instant Coverage provides a number of optional test mixins that you may find
 useful. Look in `instant_coverage/optional.py` for details. To use them, do
@@ -141,3 +141,10 @@ from instant_coverage import InstantCoverageMixin, optional
 class EverythingTest(optional.ValidJSON, InstantCoverageMixin, TestCase):
     # covered_urls, etc...
 ```
+
+### Write your own tests
+
+`InstantCoverageMixin` provides a `instant_responses` method that returns a
+dictionary of responses and exceptions, keyed by URL. Test methods you write
+should iterate across that. Have a look in `instant_coverage/optional.py` for
+some examples.

@@ -93,6 +93,11 @@ class InstantCoverageMixin(object):
             self.client = Client()
 
     def instant_responses(self):
+        """
+        Return a dictionary of responses, as returned by the Django test
+        client, keyed by URL.
+        """
+
         return self._get_from_instant_cache('responses')
 
     def instant_errors(self):
