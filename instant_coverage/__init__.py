@@ -169,10 +169,9 @@ class InstantCoverageMixin(object):
         Ensure all URLs return responses with status codes between 200 and 399.
         """
 
-        responses = self.instant_responses()
         bad_status_codes = {}
 
-        for url, response in responses.iteritems():
+        for url, response in self.instant_responses().iteritems():
             if not 200 <= response.status_code < 400:
                 bad_status_codes[url] = response.status_code
 
