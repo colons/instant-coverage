@@ -1,3 +1,5 @@
+![A roll of duct tape; the Instant Coverage logo][logo]
+
 # Instant Coverage
 
 Your new Django site need tests. Nothing super fancy, just enough that you know
@@ -126,3 +128,5 @@ class LoggedInEverythingTest(EverythingTest):
         user.save()
         self.assertTrue(self.client.login(username='user', password='pass'))
 ```
+
+[logo]: https://github.com/colons/instant-coverage/raw/master/logo.png
