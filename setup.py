@@ -4,9 +4,7 @@ from setuptools import setup
 os.environ.setdefault("DJANGO_SETTINGS_MODULE",
                       "instant_coverage.tests.settings")
 
-readme_path = os.path.realpath(os.path.join(__file__, '..', 'README.md'))
-
-with open(readme_path) as readme_file:
+with open('README.md') as readme_file:
     README = readme_file.read()
 
 setup(
@@ -15,7 +13,7 @@ setup(
     url='https://github.com/colons/instant-coverage',
     author='Iain Dawson',
     author_email='pypi@colons.co',
-    version='0.0.2',
+    version='0.0.4',
     license="BSD",
     platforms=['any'],
     packages=['instant_coverage'],
