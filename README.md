@@ -129,4 +129,4 @@ class LoggedInEverythingTest(EverythingTest):
         self.assertTrue(self.client.login(username='user', password='pass'))
 ```
 
-[logo]: https://github.com/colons/instant-coverage/raw/master/logo.png
+[logo]: https://github.com/colons/instant-coverage/raw/master/logo-small.png
