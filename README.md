@@ -46,9 +46,7 @@ works well) and should contain at least the following:
 
 ```python
 from django.test import TestCase
-
 from instant_coverage import InstantCoverageMixin
-
 
 class EverythingTest(InstantCoverageMixin, TestCase):
     pass
@@ -118,7 +116,6 @@ instance, you might put the following below your `EverythingTest`:
 ```python
 from django.contrib.auth import get_user_model
 
-
 class LoggedInEverythingTest(EverythingTest):
     def setUp(self):
         super(LoggedInEverythingTest, self).setUp()
@@ -140,7 +137,6 @@ something like this:
 
 ```python
 from instant_coverage import InstantCoverageMixin, optional
-
 
 class EverythingTest(optional.ValidJSON, InstantCoverageMixin, TestCase):
     # covered_urls, etc...
