@@ -7,6 +7,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE",
 setup(
     name='django-instant-coverage',
     description='Better-than-nothing testing for Django',
+    url='https://github.com/colons/instant-coverage',
     version='0.0.1',
     platforms=['any'],
     packages=['instant_coverage'],
