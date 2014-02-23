@@ -5,6 +5,7 @@ from django.conf import settings
 from django.core.urlresolvers import (
     RegexURLPattern, RegexURLResolver, resolve, _resolver_cache
 )
+from django.test.client import Client
 
 from mock import patch
 
@@ -84,6 +85,12 @@ class InstantCoverageMixin(object):
             self._get_responses()
 
         return _instant_cache[self.__class__][key]
+
+    def setUp(self):
+        super(InstantCoverageMixin, self).setUp()
+        if not hasattr(self, 'client'):
+            # django 1.4 does not do this automatically
+            self.client = Client()
 
     def instant_responses(self):
         return self._get_from_instant_cache('responses')
