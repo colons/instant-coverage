@@ -8,6 +8,11 @@ env:
   - DJANGO_VERSION='>=1.5,<1.6'
   - DJANGO_VERSION='>=1.6,<1.7'
 
+matrix:
+  exclude:
+    - python: 2.7
+      env: DJANGO_VERSION='>=1.4,<1.5'
+
 install:
   - pip install -q Django$DJANGO_VERSION
   - python setup.py -q install
