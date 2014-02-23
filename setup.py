@@ -11,7 +11,6 @@ setup(
     packages=['instant_coverage'],
     install_requires=[
         'Django',
-        'django-extensions',
         'mock',
     ],
     tests_require=['nose'],
