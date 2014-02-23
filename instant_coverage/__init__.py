@@ -74,13 +74,20 @@ class InstantCoverageMixin(object):
             else:
                 responses[url] = response
 
-        self.__class__._instant_cache = (responses, errors)
+        self.__class__._instant_cache = {'responses': responses,
+                                         'errors': errors}
 
-    def responses(self):
+    def _get_from_instant_cache(self, key):
         if not hasattr(self.__class__, '_instant_cache'):
             self._get_responses()
 
-        return self.__class__._instant_cache
+        return self.__class__._instant_cache[key]
+
+    def instant_responses(self):
+        return self._get_from_instant_cache('responses')
+
+    def instant_errors(self):
+        return self._get_from_instant_cache('errors')
 
     def test_all_urls_accounted_for(self):
         """
@@ -131,7 +138,7 @@ class InstantCoverageMixin(object):
         Ensure no URLs raise unhandled exceptions that would cause 500s.
         """
 
-        responses, errors = self.responses()
+        errors = self.instant_errors()
 
         if errors:
             if self.instant_tracebacks:
@@ -160,7 +167,7 @@ class InstantCoverageMixin(object):
         Ensure all URLs return responses with status codes between 200 and 399.
         """
 
-        responses, errors = self.responses()
+        responses = self.instant_responses()
         bad_status_codes = {}
 
         for url, response in responses.iteritems():
