@@ -111,7 +111,7 @@ class ValidHTML5(object):
 
         if parser_complaints:
             raise self.failureException(
-                'htm5lib raised the following issues:\n\n{0}'.format(
+                'html5lib raised the following issues:\n\n{0}'.format(
                     '\n\n'.join(['{url}:\n{errs}'.format(
                         url=url, errs='\n'.join(
                             ['Line: {l} Col: {c} {err}'.format(

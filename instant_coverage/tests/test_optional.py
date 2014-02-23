@@ -115,7 +115,7 @@ class ValidHTML5Test(FakeURLPatternsTestCase):
             )
             self.assertEqual(
                 results.failures[0][1][1].args[0],
-                'htm5lib raised the following issues:\n\n'
+                'html5lib raised the following issues:\n\n'
                 '/invalid/:\nLine: 2 Col: 12 Unexpected character in unquoted '
                 'attribute\n'
                 'Line: 2 Col: 13 Expected closing tag. '
