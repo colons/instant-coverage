@@ -7,6 +7,7 @@ from django.test.utils import setup_test_environment
 from django.views.generic import View
 
 from mock import patch
+import six
 
 
 def get_urlpatterns_stupid():
@@ -37,7 +38,7 @@ def get_results_for(test_name, mixin=None, **test_attributes):
     setup_test_environment()
     test = EverythingTest(test_name)
 
-    for attribute, value in test_attributes.iteritems():
+    for attribute, value in six.iteritems(test_attributes):
         setattr(test, attribute, value)
 
     result = PickyTestResult()

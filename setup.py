@@ -20,6 +20,7 @@ setup(
     install_requires=[
         'Django',
         'mock',
+        'six',
         'beautifulsoup4',
         'requests',
         'html5lib',

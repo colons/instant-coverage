@@ -8,6 +8,7 @@ from django.core.urlresolvers import (
 from django.test.client import Client
 
 from mock import patch
+import six
 
 
 INSTANT_TRACEBACKS_TUTORIAL = (
@@ -162,7 +163,7 @@ class InstantCoverageMixin(object):
                             url, error[0], ''.join(
                                 traceback.format_exception(*error)
                             )
-                        ) for url, error in errors.iteritems()])
+                        ) for url, error in six.iteritems(errors)])
                     )
                 )
             else:
@@ -170,7 +171,7 @@ class InstantCoverageMixin(object):
                     'The following errors were raised:\n\n{0}\n\n{1}'
                     .format(
                         '\n'.join(['{0}: {1}'.format(url, error[1])
-                                   for url, error in errors.iteritems()]),
+                                   for url, error in six.iteritems(errors)]),
                         INSTANT_TRACEBACKS_TUTORIAL.format(
                             name=self.__class__.__name__),
                     )
@@ -183,7 +184,7 @@ class InstantCoverageMixin(object):
 
         bad_status_codes = {}
 
-        for url, response in self.instant_responses().iteritems():
+        for url, response in six.iteritems(self.instant_responses()):
             if not 200 <= response.status_code < 400:
                 bad_status_codes[url] = response.status_code
 
@@ -192,7 +193,7 @@ class InstantCoverageMixin(object):
                 'The following bad status codes were seen:\n\n{0}'.format(
                     '\n'.join([
                         '{0}: {1}'.format(url, status)
-                        for url, status in bad_status_codes.iteritems()
+                        for url, status in six.iteritems(bad_status_codes)
                     ])
                 )
             )

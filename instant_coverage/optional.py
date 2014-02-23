@@ -10,6 +10,7 @@ import sys
 from bs4 import BeautifulSoup
 import requests
 import html5lib
+import six
 
 
 class ValidJSON(object):
@@ -21,7 +22,7 @@ class ValidJSON(object):
 
         bad_json = {}
 
-        for url, response in self.instant_responses().iteritems():
+        for url, response in six.iteritems(self.instant_responses()):
             if response['Content-Type'] != 'application/json':
                 continue
 
@@ -35,7 +36,7 @@ class ValidJSON(object):
                 'The following URLs returned invalid JSON:\n\n{0}'.format(
                     '\n'.join([
                         '{0}: {1}'.format(url, err[1])
-                        for url, err in bad_json.iteritems()
+                        for url, err in six.iteritems(bad_json)
                     ])
                 )
             )
@@ -51,7 +52,7 @@ class ExternalLinks(object):
 
         external_urls = defaultdict(list)
 
-        for internal_url, response in self.instant_responses().iteritems():
+        for internal_url, response in six.iteritems(self.instant_responses()):
             if response['Content-Type'].split(';')[0] != 'text/html':
                 continue
 
@@ -80,7 +81,7 @@ class ExternalLinks(object):
                 'The following external links are broken:\n\n{0}'.format(
                     '\n\n'.join(['{0}: {1}\nshown on {2}'.format(
                         url, err, ', '.join(external_urls[url])
-                    ) for url, err in bad_responses.iteritems()])
+                    ) for url, err in six.iteritems(bad_responses)])
                 )
             )
 
@@ -96,7 +97,7 @@ class ValidHTML5(object):
 
         parser_complaints = {}
 
-        for url, response in self.instant_responses().iteritems():
+        for url, response in six.iteritems(self.instant_responses()):
             if response['Content-Type'].split(';')[0] != 'text/html':
                 continue
 
@@ -115,4 +116,4 @@ class ValidHTML5(object):
                                 l=l, c=c, err=html5lib.constants.E[e] % v)
                              for ((l, c), e, v) in errors]
                         )
-                    ) for url, errors in parser_complaints.iteritems()])))
+                    ) for url, errors in six.iteritems(parser_complaints)])))
