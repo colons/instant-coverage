@@ -1,7 +1,6 @@
 import sys
 import traceback
 
-from django.conf.urls import url
 from django.conf import settings
 from django.core.urlresolvers import (
     RegexURLPattern, RegexURLResolver, resolve, _resolver_cache
@@ -25,31 +24,20 @@ IGNORE_TUTORIAL = (
 SEEN_PATTERNS = set()  # I know, I know. This is what closures are for.
 
 
-class URLSurfacingRegexURLPattern(RegexURLPattern):
-    """
-    A subclass of RegexURLPattern that runs a callback with a URL when
-    successfully matching with it
-    """
-
-    def resolve(self, url, *args, **kwargs):
-        match = super(URLSurfacingRegexURLPattern, self
-                      ).resolve(url, *args, **kwargs)
-        if match:
-            SEEN_PATTERNS.add(self)
-
-        return match
+original_resolve = RegexURLPattern.resolve
 
 
-def url_with_url_sufacing_url_patterns(*args, **kwargs):
-    with patch('django.conf.urls.RegexURLPattern',
-               URLSurfacingRegexURLPattern):
-        return url(*args, **kwargs)
+def resolve_and_make_note(self, url, *args, **kwargs):
+    match = original_resolve(self, url, *args, **kwargs)
+
+    if match:
+        SEEN_PATTERNS.add(self)
+
+    return match
 
 
 def get_urlpatterns():
-    with patch('django.conf.urls.url',
-               url_with_url_sufacing_url_patterns):
-        return __import__(settings.ROOT_URLCONF, {}, {}, ['']).urlpatterns
+    return __import__(settings.ROOT_URLCONF, {}, {}, ['']).urlpatterns
 
 
 def extract_all_patterns_from_urlpatterns(patterns, base=()):
@@ -111,10 +99,12 @@ class InstantCoverageMixin(object):
 
         patterns = get_urlpatterns()
 
-        for url in (
-            settings.COVERED_URLS + getattr(settings, 'UNCOVERED_URLS', [])
-        ):
-            resolve(url)
+        with patch('django.core.urlresolvers.RegexURLPattern.resolve',
+                   resolve_and_make_note):
+            for url in (
+                settings.COVERED_URLS + getattr(settings, 'UNCOVERED_URLS', [])
+            ):
+                resolve(url)
 
         all_patterns = extract_all_patterns_from_urlpatterns(patterns)
         not_accounted_for = [p for p in all_patterns

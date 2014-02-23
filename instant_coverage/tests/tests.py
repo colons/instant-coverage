@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, include
+from django.conf.urls import patterns, include, url
 from django.http import HttpResponse, Http404
 from django.test import SimpleTestCase
 from django.test.utils import override_settings
@@ -8,7 +8,6 @@ from .utils import (
 )
 
 from instant_coverage import (
-    url_with_url_sufacing_url_patterns as url,
     IGNORE_TUTORIAL, INSTANT_TRACEBACKS_TUTORIAL
 )
 
