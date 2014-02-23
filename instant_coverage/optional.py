@@ -68,7 +68,7 @@ class ExternalLinks(object):
         for external_url in external_urls:
             try:
                 resp = requests.get(external_url)
-            except requests.RequestException as e:
+            except Exception as e:
                 bad_responses[external_url] = e
             else:
                 if resp.status_code != 200:
@@ -76,7 +76,7 @@ class ExternalLinks(object):
 
         if bad_responses:
             raise self.failureException(
-                'The following URLs returned invalid JSON:\n\n{0}'.format(
+                'The following external links are broken:\n\n{0}'.format(
                     '\n\n'.join(['{0}: {1}\nshown on {2}'.format(
                         url, err, ', '.join(external_urls[url])
                     ) for url, err in bad_responses.iteritems()])
