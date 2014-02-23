@@ -21,20 +21,6 @@ IGNORE_TUTORIAL = (
     "undesired URL (such as ('^admin/',)) to UNCOVERED_INCLUDES"
 )
 
-SEEN_PATTERNS = set()  # I know, I know. This is what closures are for.
-
-
-original_resolve = RegexURLPattern.resolve
-
-
-def resolve_and_make_note(self, url, *args, **kwargs):
-    match = original_resolve(self, url, *args, **kwargs)
-
-    if match:
-        SEEN_PATTERNS.add(self)
-
-    return match
-
 
 def get_urlpatterns():
     return __import__(settings.ROOT_URLCONF, {}, {}, ['']).urlpatterns
@@ -95,9 +81,19 @@ class InstantCoverageMixin(object):
         """
 
         _resolver_cache.clear()
-        SEEN_PATTERNS.clear()
+        seen_patterns = set()
 
         patterns = get_urlpatterns()
+
+        original_resolve = RegexURLPattern.resolve
+
+        def resolve_and_make_note(self, url, *args, **kwargs):
+            match = original_resolve(self, url, *args, **kwargs)
+
+            if match:
+                seen_patterns.add(self)
+
+            return match
 
         with patch('django.core.urlresolvers.RegexURLPattern.resolve',
                    resolve_and_make_note):
@@ -108,7 +104,7 @@ class InstantCoverageMixin(object):
 
         all_patterns = extract_all_patterns_from_urlpatterns(patterns)
         not_accounted_for = [p for p in all_patterns
-                             if p[1] not in SEEN_PATTERNS]
+                             if p[1] not in seen_patterns]
 
         if not_accounted_for:
             raise self.failureException(
