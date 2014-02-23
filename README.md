@@ -1,4 +1,5 @@
 ![A roll of duct tape; the Instant Coverage logo][logo]
+[logo]: http://colons.co/instant-coverage-small.png
 
 # Instant Coverage
 
@@ -127,8 +128,6 @@ class LoggedInEverythingTest(EverythingTest):
         user.save()
         self.assertTrue(self.client.login(username='user', password='pass'))
 ```
-
-[logo]: https://github.com/colons/instant-coverage/raw/master/logo-small.png
 
 ### Using the provided optional test mixins
 
