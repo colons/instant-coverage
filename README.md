@@ -31,6 +31,7 @@ You've got five minutes, though.
 - pip
 - settings
 - import
+- caching and overriding setUp
 - fixtures
 
 ## Extending the base tests
