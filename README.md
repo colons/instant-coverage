@@ -3,7 +3,6 @@
 
 [![Build Status][travis-status]][travis]
 [travis-status]: https://travis-ci.org/colons/instant-coverage.png
-[travis]: https://travis-ci.org/colons/instant-coverage
 
 # Instant Coverage
 
@@ -28,6 +27,8 @@ You've got five minutes, though.
       want tests for things like consistent capitalisation of a particular
       phrase or the universal inclusion of a particular meta tag, you can have
       them in minutes.
+- **Portable**
+    - [Tested][travis] on Python 2.7 and 3.4 and Django 1.4, 1.5 and 1.6.
 
 # Usage
 
@@ -148,3 +149,5 @@ class EverythingTest(optional.ValidJSON, InstantCoverageMixin, TestCase):
 dictionary of responses and exceptions, keyed by URL. Test methods you write
 should iterate across that. Have a look in `instant_coverage/optional.py` for
 some examples.
+
+[travis]: https://travis-ci.org/colons/instant-coverage
