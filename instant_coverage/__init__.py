@@ -31,9 +31,6 @@ class URLSurfacingRegexURLPattern(RegexURLPattern):
     successfully matching with it
     """
 
-    def __init__(self, *args, **kwargs):
-        super(URLSurfacingRegexURLPattern, self).__init__(*args, **kwargs)
-
     def resolve(self, url, *args, **kwargs):
         match = super(URLSurfacingRegexURLPattern, self
                       ).resolve(url, *args, **kwargs)
