@@ -1,14 +1,13 @@
 from django.conf.urls import patterns, url
 from django.http import HttpResponse
-from django.test import TestCase
 from django.test.utils import override_settings
 
 from instant_coverage import optional
 
-from .utils import get_results_for
+from .utils import get_results_for, FakeURLPatternsTestCase
 
 
-class ValidJSONTest(TestCase):
+class ValidJSONTest(FakeURLPatternsTestCase):
     def test_valid_json(self):
         def valid_json(*args, **kwargs):
             return HttpResponse('{}', content_type='application/json')
@@ -38,7 +37,7 @@ class ValidJSONTest(TestCase):
             )
 
 
-class ExternalLinksTest(TestCase):
+class ExternalLinksTest(FakeURLPatternsTestCase):
     def test_external_links(self):
         def page_with_links(*args, **kwargs):
             return HttpResponse(

@@ -2,7 +2,7 @@ from unittest.result import TestResult, failfast
 
 from django.conf import settings
 from django.http import HttpResponse
-from django.test import SimpleTestCase
+from django.test import SimpleTestCase, TestCase
 from django.test.utils import setup_test_environment
 from django.views.generic import View
 
@@ -26,7 +26,6 @@ class PickyTestResult(TestResult):
 
 def get_results_for(test_name, mixin=None, **test_attributes):
     from instant_coverage import InstantCoverageMixin
-    from django.test import TestCase
 
     if mixin is None:
         class EverythingTest(InstantCoverageMixin, TestCase):
