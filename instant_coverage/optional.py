@@ -26,8 +26,10 @@ class ValidJSON(object):
             if response['Content-Type'] != 'application/json':
                 continue
 
+            content = response.content.decode('utf-8')
+
             try:
-                json.loads(response.content)
+                json.loads(content)
             except ValueError:
                 bad_json[url] = sys.exc_info()
 
