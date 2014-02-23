@@ -108,7 +108,7 @@ class InstantCoverageMixin(object):
         with patch('django.core.urlresolvers.RegexURLPattern.resolve',
                    resolve_and_make_note):
             for url in self.covered_urls + self.uncovered_urls:
-                resolve(url)
+                resolve(url.split('?')[0])
 
         all_patterns = extract_all_patterns_from_urlpatterns(
             patterns, self.uncovered_includes)
