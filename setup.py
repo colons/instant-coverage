@@ -11,6 +11,8 @@ setup(
     name='django-instant-coverage',
     description='Better-than-nothing testing for Django',
     url='https://github.com/colons/instant-coverage',
+    author='Iain Dawson',
+    author_email='pypi@colons.co',
     version='0.0.2',
     license="BSD",
     platforms=['any'],
