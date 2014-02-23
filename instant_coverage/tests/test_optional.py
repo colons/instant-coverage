@@ -88,3 +88,36 @@ class ExternalLinksTest(FakeURLPatternsTestCase):
             )
 
             self.assertNotIn("google", result_string)
+
+
+class ValidHTML5Test(FakeURLPatternsTestCase):
+    def test_valid_json(self):
+        def valid_html(*args, **kwargs):
+            return HttpResponse('<!doctype html>\n<html></html>')
+
+        def invalid_html(*args, **kwargs):
+            return HttpResponse('<!doctype html>\n<div sty=wu">')
+
+        def not_html(*args, **kwargs):
+            return HttpResponse('<div sty=wu">', content_type='text/plain')
+
+        with override_settings(
+            ROOT_URLCONF=patterns(
+                '',
+                url(r'^valid/$', valid_html),
+                url(r'^invalid/$', invalid_html),
+                url(r'^not/$', not_html),
+            ),
+        ):
+            results = get_results_for(
+                'test_valid_html5', mixin=optional.ValidHTML5,
+                covered_urls=['/valid/', '/invalid/', '/not/']
+            )
+            self.assertEqual(
+                results.failures[0][1][1][0],
+                'htm5lib raised the following issues:\n\n'
+                '/invalid/:\nLine: 2 Col: 12 Unexpected character in unquoted '
+                'attribute\n'
+                'Line: 2 Col: 13 Expected closing tag. '
+                'Unexpected end of file.'
+            )

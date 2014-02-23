@@ -89,8 +89,9 @@ class ValidHTML5(object):
     def test_valid_html5(self):
         """
         Ensure html5lib thinks our HTML is okay. Will catch really bad stuff
-        like dangling tags but ignores stuff like custom attributes and other
-        petty stuff HTMLTidy and the W3 validator would complain about.
+        like dangling tags and asymmetrical attribute quotes but ignores stuff
+        like custom attributes and other petty stuff HTMLTidy and the W3
+        validator would complain about.
         """
 
         parser_complaints = {}
@@ -109,14 +110,9 @@ class ValidHTML5(object):
             raise self.failureException(
                 'htm5lib raised the following issues:\n\n{0}'.format(
                     '\n\n'.join(['{url}:\n{errs}'.format(
-
                         url=url, errs='\n'.join(
-
                             ['Line: {l} Col: {c} {err}'.format(
                                 l=l, c=c, err=html5lib.constants.E[e] % v)
                              for ((l, c), e, v) in errors]
-
                         )
-
-
-                        ) for url, errors in parser_complaints.iteritems()])))
+                    ) for url, errors in parser_complaints.iteritems()])))
