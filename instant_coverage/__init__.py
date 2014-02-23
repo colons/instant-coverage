@@ -63,8 +63,6 @@ class InstantCoverageMixin(object):
         # We cache responses against the class because test runners tend to
         # use a new instance for each test, and we don't want to draw pages
         # more than once.
-        print 'getting responses for %s' % self.__class__
-
         responses = {}
         errors = {}
 
