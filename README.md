@@ -17,9 +17,9 @@ You've got five minutes, though.
     - Will loudly complain when there are views missing from the list of URLs
       to test.
 - **Has what you need**
-    - Comes with optional tests for validating HTML to various degrees of
-      strictness, hunting for dead links (both internal and external) and
-      finding orphaned pages.
+    - Comes with optional test mixins for validating HTML and JSON, hunting for
+      dead links (both internal and external) and finding orphaned pages, and
+      writing your own is *super easy*.
 - **Extensible**
     - Easily add tests that will run against every view on your website. If you
       want tests for things like consistent capitalisation of a particular
@@ -130,3 +130,17 @@ class LoggedInEverythingTest(EverythingTest):
 ```
 
 [logo]: https://github.com/colons/instant-coverage/raw/master/logo-small.png
+
+### Using the provided optional test mixins
+
+Instant Coverage provides a number of optional test mixins that you may find
+useful. Look in `instant_coverage/optional.py` for details. To use them, do
+something like this:
+
+```python
+from instant_coverage import InstantCoverageMixin, optional
+
+
+class EverythingTest(optional.ValidJSON, InstantCoverageMixin, TestCase):
+    # covered_urls, etc...
+```

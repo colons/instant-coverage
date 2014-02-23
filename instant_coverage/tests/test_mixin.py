@@ -1,25 +1,19 @@
 from django.conf.urls import patterns, include, url
 from django.http import HttpResponse, Http404
-from django.test import TestCase, SimpleTestCase
+from django.test import TestCase
 from django.test.utils import override_settings
 
 from .utils import (
-    WorkingView, BrokenView, get_results_for, get_urlpatterns_stupid,
-    PickyTestResult,
+    WorkingView, BrokenView, get_results_for, PickyTestResult,
+    FakeURLPatternsTestCase,
 )
 
 from instant_coverage import (
     IGNORE_TUTORIAL, INSTANT_TRACEBACKS_TUTORIAL, InstantCoverageMixin
 )
 
-from mock import patch
 
-
-class FailuresTest(SimpleTestCase):
-    def run(self, *args, **kwargs):
-        with patch('instant_coverage.get_urlpatterns', get_urlpatterns_stupid):
-            super(FailuresTest, self).run(*args, **kwargs)
-
+class FailuresTest(FakeURLPatternsTestCase):
     def test_no_errors_okay(self):
         with override_settings(
             ROOT_URLCONF=patterns(

@@ -2,8 +2,11 @@ from unittest.result import TestResult, failfast
 
 from django.conf import settings
 from django.http import HttpResponse
+from django.test import SimpleTestCase
 from django.test.utils import setup_test_environment
 from django.views.generic import View
+
+from mock import patch
 
 
 def get_urlpatterns_stupid():
@@ -21,12 +24,16 @@ class PickyTestResult(TestResult):
         self.failures.append((test, err))
 
 
-def get_results_for(test_name, **test_attributes):
+def get_results_for(test_name, mixin=None, **test_attributes):
     from instant_coverage import InstantCoverageMixin
     from django.test import TestCase
 
-    class EverythingTest(InstantCoverageMixin, TestCase):
-        pass
+    if mixin is None:
+        class EverythingTest(InstantCoverageMixin, TestCase):
+            pass
+    else:
+        class EverythingTest(mixin, InstantCoverageMixin, TestCase):
+            pass
 
     setup_test_environment()
     test = EverythingTest(test_name)
@@ -55,3 +62,9 @@ class WorkingView(View):
 class BrokenView(View):
     def get(self, request, *args, **kwargs):
         raise Exception('this view is broken')
+
+
+class FakeURLPatternsTestCase(SimpleTestCase):
+    def run(self, *args, **kwargs):
+        with patch('instant_coverage.get_urlpatterns', get_urlpatterns_stupid):
+            super(FakeURLPatternsTestCase, self).run(*args, **kwargs)
