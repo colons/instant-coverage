@@ -22,6 +22,7 @@ setup(
         'mock',
         'beautifulsoup4',
         'requests',
+        'html5lib',
     ],
     tests_require=['nose'],
     test_suite='nose.collector',

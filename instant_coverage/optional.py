@@ -9,6 +9,7 @@ import sys
 
 from bs4 import BeautifulSoup
 import requests
+import html5lib
 
 
 class ValidJSON(object):
@@ -82,3 +83,40 @@ class ExternalLinks(object):
                     ) for url, err in bad_responses.iteritems()])
                 )
             )
+
+
+class ValidHTML5(object):
+    def test_valid_html5(self):
+        """
+        Ensure html5lib thinks our HTML is okay. Will catch really bad stuff
+        like dangling tags but ignores stuff like custom attributes and other
+        petty stuff HTMLTidy and the W3 validator would complain about.
+        """
+
+        parser_complaints = {}
+
+        for url, response in self.instant_responses().iteritems():
+            if response['Content-Type'].split(';')[0] != 'text/html':
+                continue
+
+            parser = html5lib.HTMLParser()
+            parser.parse(response.content)
+
+            if parser.errors:
+                parser_complaints[url] = parser.errors
+
+        if parser_complaints:
+            raise self.failureException(
+                'htm5lib raised the following issues:\n\n{0}'.format(
+                    '\n\n'.join(['{url}:\n{errs}'.format(
+
+                        url=url, errs='\n'.join(
+
+                            ['Line: {l} Col: {c} {err}'.format(
+                                l=l, c=c, err=html5lib.constants.E[e] % v)
+                             for ((l, c), e, v) in errors]
+
+                        )
+
+
+                        ) for url, errors in parser_complaints.iteritems()])))
