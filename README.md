@@ -7,9 +7,9 @@
 # Instant Coverage
 
 Your new Django site need tests. Nothing super fancy, just enough that you know
-it's not going to start 500ing next time you deploy. You *could* write unit
-tests, but those are boring and your client sure as hell isn't going to pay for
-the time.
+you've not forgotten to close some &lt;div&gt; somewhere and it's not going to
+start 500ing next time you deploy. You *could* write unit tests, but those are
+boring and your client sure as hell isn't going to pay for the time.
 
 You've got five minutes, though.
 
