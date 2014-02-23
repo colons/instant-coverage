@@ -8,7 +8,8 @@ from .utils import (
 )
 
 from instant_coverage import (
-    url_with_url_sufacing_url_patterns as url, INSTANT_TRACEBACKS_TUTORIAL
+    url_with_url_sufacing_url_patterns as url,
+    IGNORE_TUTORIAL, INSTANT_TRACEBACKS_TUTORIAL
 )
 
 from mock import patch
@@ -59,7 +60,8 @@ class FailuresTest(SimpleTestCase):
             self.assertEqual(
                 results.failures[0][1][1][0],
                 "The following views are untested:\n\n"
-                "() ^untested-url/$ (None)"
+                "() ^untested-url/$ (None)\n\n"
+                + IGNORE_TUTORIAL
             )
 
     def test_missing_named_urls_complained_about(self):
@@ -75,7 +77,8 @@ class FailuresTest(SimpleTestCase):
             self.assertEqual(
                 results.failures[0][1][1][0],
                 "The following views are untested:\n\n"
-                "() ^untested-url/$ (name)"
+                "() ^untested-url/$ (name)\n\n"
+                + IGNORE_TUTORIAL
             )
 
     def test_excepted_urls_not_complained_about(self):
@@ -93,7 +96,8 @@ class FailuresTest(SimpleTestCase):
             self.assertEqual(
                 results.failures[0][1][1][0],
                 "The following views are untested:\n\n"
-                "() ^untested-url/$ (None)"
+                "() ^untested-url/$ (None)\n\n"
+                + IGNORE_TUTORIAL
             )
 
     def test_excepted_urls_ignored(self):
@@ -147,7 +151,8 @@ class FailuresTest(SimpleTestCase):
             self.assertEqual(
                 results.failures[0][1][1][0],
                 "The following views are untested:\n\n"
-                "('^include/',) ^broken-url/$ (None)"
+                "('^include/',) ^broken-url/$ (None)\n\n"
+                + IGNORE_TUTORIAL
             )
 
     def test_uncovered_includes(self):

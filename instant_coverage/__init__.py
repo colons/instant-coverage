@@ -15,6 +15,13 @@ INSTANT_TRACEBACKS_TUTORIAL = (
     'settings.'
 )
 
+IGNORE_TUTORIAL = (
+    "Add a URL that matches each of these to your COVERED_URLS setting "
+    "(or UNCOVERED_URLS if you don't want to test them).\n"
+    "To explicitly ignore entire includes, add the tuple preceeding each "
+    "undesired URL (such as ('^admin/',)) to UNCOVERED_INCLUDES"
+)
+
 SEEN_PATTERNS = set()  # I know, I know. This is what closures are for.
 
 
@@ -118,12 +125,13 @@ class InstantCoverageMixin(object):
 
         if not_accounted_for:
             raise self.failureException(
-                'The following views are untested:\n\n{0}'.format(
+                'The following views are untested:\n\n{0}\n\n{1}'.format(
                     '\n'.join([
                         '{base} {_regex} ({name})'.format(
                             base=base, **pattern.__dict__
                         ) for base, pattern in not_accounted_for
-                    ])
+                    ]),
+                    IGNORE_TUTORIAL,
                 )
             )
 
