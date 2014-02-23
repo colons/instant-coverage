@@ -31,7 +31,7 @@ class ValidJSONTest(FakeURLPatternsTestCase):
                 covered_urls=['/valid/', '/invalid/', '/not/']
             )
             self.assertEqual(
-                results.failures[0][1][1][0],
+                results.failures[0][1][1].args[0],
                 "The following URLs returned invalid JSON:\n\n"
                 "/invalid/: No JSON object could be decoded"
             )
@@ -60,7 +60,7 @@ class ExternalLinksTest(FakeURLPatternsTestCase):
                 covered_urls=['/page/'],
             )
 
-            result_string = results.failures[0][1][1][0]
+            result_string = results.failures[0][1][1].args[0]
 
             self.assertIn(
                 "The following external links are broken:\n\n",
@@ -114,7 +114,7 @@ class ValidHTML5Test(FakeURLPatternsTestCase):
                 covered_urls=['/valid/', '/invalid/', '/not/']
             )
             self.assertEqual(
-                results.failures[0][1][1][0],
+                results.failures[0][1][1].args[0],
                 'htm5lib raised the following issues:\n\n'
                 '/invalid/:\nLine: 2 Col: 12 Unexpected character in unquoted '
                 'attribute\n'
