@@ -14,6 +14,8 @@ setup(
     install_requires=[
         'Django',
         'mock',
+        'beautifulsoup4',
+        'requests',
     ],
     tests_require=['nose'],
     test_suite='nose.collector',

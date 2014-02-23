@@ -22,8 +22,7 @@ You've got five minutes, though.
     - Will loudly complain when there are views missing from the list of URLs
       to test.
 - **Has what you need**
-    - Comes with an optional test mixin for validating JSON. HTML validators
-      and dead link detectors coming soon.
+    - Comes with optional test mixins for checking links and validating JSON.
 - **Extensible**
     - Easily add tests that will run against every view on your website. If you
       want tests for things like consistent capitalisation of a particular
