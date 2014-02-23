@@ -4,6 +4,9 @@ from setuptools import setup
 os.environ.setdefault("DJANGO_SETTINGS_MODULE",
                       "instant_coverage.tests.settings")
 
+with open('README.md') as readme_file:
+    README = readme_file.read()
+
 setup(
     name='django-instant-coverage',
     description='Better-than-nothing testing for Django',
@@ -20,4 +23,13 @@ setup(
     ],
     tests_require=['nose'],
     test_suite='nose.collector',
+    long_description=README,
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Framework :: Django',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: BSD License',
+        'Operating System :: OS Independent',
+        'Topic :: Software Development :: Testing',
+    ],
 )
