@@ -20,6 +20,8 @@ IGNORE_TUTORIAL = (
     "undesired URL (such as ('^admin/',)) to {name}.uncovered_includes."
 )
 
+_instant_cache = {}
+
 
 def get_urlpatterns():
     return __import__(settings.ROOT_URLCONF, {}, {}, ['']).urlpatterns
@@ -74,14 +76,14 @@ class InstantCoverageMixin(object):
             else:
                 responses[url] = response
 
-        self.__class__._instant_cache = {'responses': responses,
-                                         'errors': errors}
+        _instant_cache[self.__class__] = {
+            'responses': responses, 'errors': errors}
 
     def _get_from_instant_cache(self, key):
-        if not hasattr(self.__class__, '_instant_cache'):
+        if not self.__class__ in _instant_cache:
             self._get_responses()
 
-        return self.__class__._instant_cache[key]
+        return _instant_cache[self.__class__][key]
 
     def instant_responses(self):
         return self._get_from_instant_cache('responses')

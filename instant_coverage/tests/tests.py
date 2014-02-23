@@ -1,14 +1,15 @@
 from django.conf.urls import patterns, include, url
 from django.http import HttpResponse, Http404
-from django.test import SimpleTestCase
+from django.test import TestCase, SimpleTestCase
 from django.test.utils import override_settings
 
 from .utils import (
     WorkingView, BrokenView, get_results_for, get_urlpatterns_stupid,
+    PickyTestResult,
 )
 
 from instant_coverage import (
-    IGNORE_TUTORIAL, INSTANT_TRACEBACKS_TUTORIAL
+    IGNORE_TUTORIAL, INSTANT_TRACEBACKS_TUTORIAL, InstantCoverageMixin
 )
 
 from mock import patch
@@ -246,3 +247,37 @@ class FailuresTest(SimpleTestCase):
                 'most recent call last',
                 results.failures[0][1][1][0],
             )
+
+    def test_views_only_called_once_per_class(self):
+        calls = []
+
+        def a(*args, **kwargs):
+            calls.append('a')
+            return HttpResponse()
+
+        def b(*args, **kwargs):
+            calls.append('b')
+            return HttpResponse()
+
+        with override_settings(
+            ROOT_URLCONF=patterns(
+                '',
+                url(r'^a/$', a),
+                url(r'^b/$', b),
+            ),
+        ):
+            class TestA(InstantCoverageMixin, TestCase):
+                covered_urls = ['/a/']
+
+            class TestB(InstantCoverageMixin, TestCase):
+                covered_urls = ['/b/']
+
+            for method in ['test_no_errors', 'test_acceptable_status_codes']:
+                for test in [TestA(method), TestB(method)]:
+                    test._pre_setup()
+                    result = PickyTestResult()
+                    test.run(result)
+                    self.assertEqual(result.failures, [])
+                    self.assertEqual(result.errors, [])
+
+            self.assertEqual(calls, ['a', 'b'])
