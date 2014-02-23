@@ -63,6 +63,7 @@ class InstantCoverageMixin(object):
         # We cache responses against the class because test runners tend to
         # use a new instance for each test, and we don't want to draw pages
         # more than once.
+        print 'getting responses for %s' % self.__class__
 
         responses = {}
         errors = {}
@@ -156,7 +157,7 @@ class InstantCoverageMixin(object):
                     )
                 )
 
-    def test_acceptable_response_codes(self):
+    def test_acceptable_status_codes(self):
         """
         Ensure all URLs return responses with status codes between 200 and 399.
         """

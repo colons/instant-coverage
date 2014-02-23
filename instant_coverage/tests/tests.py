@@ -220,7 +220,7 @@ class FailuresTest(SimpleTestCase):
                 url(r'^404-url/$', missing_view),
             ),
         ):
-            results = get_results_for('test_acceptable_response_codes',
+            results = get_results_for('test_acceptable_status_codes',
                                       covered_urls=['/working-url/',
                                                     '/404-url/'])
             self.assertEqual(
