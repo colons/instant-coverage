@@ -7,7 +7,9 @@ from .utils import (
     WorkingView, BrokenView, get_results_for, get_urlpatterns_stupid,
 )
 
-from instant_coverage import url_with_url_sufacing_url_patterns as url
+from instant_coverage import (
+    url_with_url_sufacing_url_patterns as url, INSTANT_TRACEBACKS_TUTORIAL
+)
 
 from mock import patch
 
@@ -39,8 +41,9 @@ class FailuresTest(SimpleTestCase):
             results = get_results_for('test_no_errors')
             self.assertEqual(
                 results.failures[0][1][1][0],
-                "The following errors were raised:\n"
-                "/: this view is broken"
+                "The following errors were raised:\n\n"
+                "/: this view is broken\n\n"
+                + INSTANT_TRACEBACKS_TUTORIAL
             )
 
     def test_missing_nameless_urls_complained_about(self):
@@ -55,7 +58,7 @@ class FailuresTest(SimpleTestCase):
             results = get_results_for('test_all_urls_accounted_for')
             self.assertEqual(
                 results.failures[0][1][1][0],
-                "The following views are untested:\n"
+                "The following views are untested:\n\n"
                 "() ^untested-url/$ (None)"
             )
 
@@ -71,7 +74,7 @@ class FailuresTest(SimpleTestCase):
             results = get_results_for('test_all_urls_accounted_for')
             self.assertEqual(
                 results.failures[0][1][1][0],
-                "The following views are untested:\n"
+                "The following views are untested:\n\n"
                 "() ^untested-url/$ (name)"
             )
 
@@ -89,7 +92,7 @@ class FailuresTest(SimpleTestCase):
             results = get_results_for('test_all_urls_accounted_for')
             self.assertEqual(
                 results.failures[0][1][1][0],
-                "The following views are untested:\n"
+                "The following views are untested:\n\n"
                 "() ^untested-url/$ (None)"
             )
 
@@ -122,8 +125,9 @@ class FailuresTest(SimpleTestCase):
             results = get_results_for('test_no_errors')
             self.assertEqual(
                 results.failures[0][1][1][0],
-                "The following errors were raised:\n"
-                "/include/broken-url/: this view is broken"
+                "The following errors were raised:\n\n"
+                "/include/broken-url/: this view is broken\n\n"
+                + INSTANT_TRACEBACKS_TUTORIAL
             )
 
     def test_missing_url_in_include(self):
@@ -142,7 +146,7 @@ class FailuresTest(SimpleTestCase):
             results = get_results_for('test_all_urls_accounted_for')
             self.assertEqual(
                 results.failures[0][1][1][0],
-                "The following views are untested:\n"
+                "The following views are untested:\n\n"
                 "('^include/',) ^broken-url/$ (None)"
             )
 
@@ -216,6 +220,24 @@ class FailuresTest(SimpleTestCase):
             results = get_results_for('test_acceptable_response_codes')
             self.assertEqual(
                 results.failures[0][1][1][0],
-                "The following bad status codes were seen:\n"
+                "The following bad status codes were seen:\n\n"
                 "/404-url/: 404"
+            )
+
+    def test_instant_tracebacks(self):
+        with override_settings(
+            ROOT_URLCONF=patterns(
+                '',
+                url(r'^$', BrokenView.as_view()),
+            ),
+            COVERED_URLS=['/'],
+            INSTANT_TRACEBACKS=True,
+        ):
+            results = get_results_for('test_no_errors')
+
+            # This is difficult to properly test, as tracebacks will vary from
+            # system to system, so we fudge a little.
+            self.assertIn(
+                'most recent call last',
+                results.failures[0][1][1][0],
             )

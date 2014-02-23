@@ -1,3 +1,6 @@
+import sys
+import traceback
+
 from django.conf.urls import url
 from django.conf import settings
 from django.core.urlresolvers import (
@@ -6,6 +9,11 @@ from django.core.urlresolvers import (
 
 from mock import patch
 
+
+INSTANT_TRACEBACKS_TUTORIAL = (
+    'For full tracebacks, set INSTANT_TRACEBACKS = True in your Django '
+    'settings.'
+)
 
 SEEN_PATTERNS = set()  # I know, I know. This is what closures are for.
 
@@ -75,8 +83,8 @@ class InstantCoverageMixin(object):
         for url in settings.COVERED_URLS:
             try:
                 response = self.client.get(url)
-            except Exception as e:
-                errors[url] = e
+            except Exception:
+                errors[url] = sys.exc_info()
             else:
                 responses[url] = response
 
@@ -110,7 +118,7 @@ class InstantCoverageMixin(object):
 
         if not_accounted_for:
             raise self.failureException(
-                'The following views are untested:\n{0}'.format(
+                'The following views are untested:\n\n{0}'.format(
                     '\n'.join([
                         '{base} {_regex} ({name})'.format(
                             base=base, **pattern.__dict__
@@ -127,14 +135,25 @@ class InstantCoverageMixin(object):
         responses, errors = self.responses()
 
         if errors:
-            raise self.failureException(
-                'The following errors were raised:\n{0}'.format(
-                    '\n'.join([
-                        '{0}: {1}'.format(url, error)
-                        for url, error in errors.iteritems()
-                    ])
+            if getattr(settings, 'INSTANT_TRACEBACKS', None):
+                raise self.failureException(
+                    'The following errors were raised:\n\n{0}'.format(
+                        '\n'.join(['{0}: {1}\n{2}'.format(
+                            url, error[0], ''.join(
+                                traceback.format_exception(*error)
+                            )
+                        ) for url, error in errors.iteritems()])
+                    )
                 )
-            )
+            else:
+                raise self.failureException(
+                    'The following errors were raised:\n\n{0}\n\n{1}'
+                    .format(
+                        '\n'.join(['{0}: {1}'.format(url, error[1])
+                                   for url, error in errors.iteritems()]),
+                        INSTANT_TRACEBACKS_TUTORIAL,
+                    )
+                )
 
     def test_acceptable_response_codes(self):
         """
@@ -150,7 +169,7 @@ class InstantCoverageMixin(object):
 
         if bad_status_codes:
             raise self.failureException(
-                'The following bad status codes were seen:\n{0}'.format(
+                'The following bad status codes were seen:\n\n{0}'.format(
                     '\n'.join([
                         '{0}: {1}'.format(url, status)
                         for url, status in bad_status_codes.iteritems()
