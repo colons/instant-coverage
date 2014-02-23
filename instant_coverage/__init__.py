@@ -71,7 +71,7 @@ class InstantCoverageMixin(object):
 
         for url in self.covered_urls:
             try:
-                response = self.client.get(url)
+                response = self.client.get(url, follow=True)
             except Exception:
                 errors[url] = sys.exc_info()
             else:
