@@ -125,9 +125,8 @@ class EverythingTest(optional.ValidJSON, InstantCoverageMixin, TestCase):
 ### Write your own tests
 
 `InstantCoverageMixin` provides an `instant_responses` method that returns a
-dictionary of responses and exceptions, keyed by URL. Test methods you write
-should iterate across that. Have a look at [the optional mixins][optional] for
-some examples.
+dictionary of responses keyed by URL. Test methods you write should iterate
+across that. Have a look at [the optional mixins][optional] for some examples.
 
 ### Test under different circumstances
 
