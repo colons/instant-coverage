@@ -107,6 +107,28 @@ If you have views that you can't test without data present in the database,
 [dumpdata]: https://docs.djangoproject.com/en/dev/ref/django-admin/#dumpdata-app-label-app-label-app-label-model
 [fixtures]: https://docs.djangoproject.com/en/dev/topics/testing/tools/#django.test.TransactionTestCase.fixtures
 
+### Use the provided optional test mixins
+
+By default, Instant Coverage will make sure none of your views raise unhandled
+exceptions and all of them return status codes between 200 and 399. There's a
+good chance at least some of the provided [optional mixins][optional] will be
+appropriate for your website, so be sure to have a look through them and see
+what strikes your fancy. Use them like this:
+
+```python
+from instant_coverage import InstantCoverageMixin, optional
+
+class EverythingTest(optional.ValidJSON, InstantCoverageMixin, TestCase):
+    # covered_urls, etc...
+```
+
+### Write your own tests
+
+`InstantCoverageMixin` provides an `instant_responses` method that returns a
+dictionary of responses and exceptions, keyed by URL. Test methods you write
+should iterate across that. Have a look at [the optional mixins][optional] for
+some examples.
+
 ### Test under different circumstances
 
 If you want to test all the URLs you've listed under different circumstances
@@ -130,28 +152,5 @@ class LoggedInEverythingTest(EverythingTest):
         self.assertTrue(self.client.login(username='user', password='pass'))
 ```
 
-### Use the provided optional test mixins
-
-By default, Instant Coverage will make sure none of your views raise unhandled
-exceptions and all of them return status codes between 200 and 399. There's a
-good chance at least some of the provided [optional mixins][optional] will be
-appropriate for your website, so be sure to have a look through them and see
-what strikes your fancy. Use them like this:
-
-```python
-from instant_coverage import InstantCoverageMixin, optional
-
-class EverythingTest(optional.ValidJSON, InstantCoverageMixin, TestCase):
-    # covered_urls, etc...
-```
-
-[optional]: https://github.com/colons/instant-coverage/blob/master/instant_coverage/optional.py
-
-### Write your own tests
-
-`InstantCoverageMixin` provides a `instant_responses` method that returns a
-dictionary of responses and exceptions, keyed by URL. Test methods you write
-should iterate across that. Have a look in `instant_coverage/optional.py` for
-some examples.
-
 [travis]: https://travis-ci.org/colons/instant-coverage
+[optional]: https://github.com/colons/instant-coverage/blob/master/instant_coverage/optional.py
