@@ -132,9 +132,11 @@ class LoggedInEverythingTest(EverythingTest):
 
 ### Use the provided optional test mixins
 
-Instant Coverage provides a number of optional test mixins that you may find
-useful. Look in `instant_coverage/optional.py` for details. To use them, do
-something like this:
+By default, Instant Coverage will make sure none of your views raise unhandled
+exceptions and all of them return status codes between 200 and 399. There's a
+good chance at least some of the provided [optional mixins][optional] will be
+appropriate for your website, so be sure to have a look through them and see
+what strikes your fancy. Use them like this:
 
 ```python
 from instant_coverage import InstantCoverageMixin, optional
@@ -142,6 +144,8 @@ from instant_coverage import InstantCoverageMixin, optional
 class EverythingTest(optional.ValidJSON, InstantCoverageMixin, TestCase):
     # covered_urls, etc...
 ```
+
+[optional]: https://github.com/colons/instant-coverage/blob/master/instant_coverage/optional.py
 
 ### Write your own tests
 
