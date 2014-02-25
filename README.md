@@ -129,6 +129,9 @@ class EverythingTest(optional.ValidJSON, InstantCoverageMixin, TestCase):
 dictionary of responses keyed by URL. Test methods you write should iterate
 across that. Have a look at [the optional mixins][optional] for some examples.
 
+If you make any that you think might be useful to any other websites, even if a
+minority, a pull request would be very much appreciated.
+
 ### Test under different circumstances
 
 If you want to test all the URLs you've listed under different circumstances
