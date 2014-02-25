@@ -33,13 +33,11 @@ You've got five minutes, though.
 
 # Usage
 
-## Setup
-
-### Install
+## Install
 
 `pip install django-instant-coverage`
 
-### ‘Write’ your tests
+## ‘Write’ your tests
 
 You'll want a tests module somewhere. I keep mine in my `PROJECT_DIR`, because
 it's testing the whole site and not just one app. Wherever you put it, it
@@ -108,7 +106,7 @@ If you have views that you can't test without data present in the database,
 [dumpdata]: https://docs.djangoproject.com/en/dev/ref/django-admin/#dumpdata-app-label-app-label-app-label-model
 [fixtures]: https://docs.djangoproject.com/en/dev/topics/testing/tools/#django.test.TransactionTestCase.fixtures
 
-### Use the provided optional test mixins
+## Use the provided optional test mixins
 
 By default, Instant Coverage will make sure none of your views raise unhandled
 exceptions and all of them return status codes between 200 and 399. There's a
@@ -123,7 +121,7 @@ class EverythingTest(optional.ValidJSON, InstantCoverageMixin, TestCase):
     # covered_urls, etc...
 ```
 
-### Write your own tests
+## Write your own tests
 
 `InstantCoverageMixin` provides an `instant_responses` method that returns a
 dictionary of responses keyed by URL. Test methods you write should iterate
@@ -132,7 +130,7 @@ across that. Have a look at [the optional mixins][optional] for some examples.
 If you make any that you think might be useful to any other websites, even if a
 minority, a pull request would be very much appreciated.
 
-### Test under different circumstances
+## Test under different circumstances
 
 If you want to test all the URLs you've listed under different circumstances
 (for instance, when a user is logged in or when a different language has been
