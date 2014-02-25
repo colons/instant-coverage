@@ -121,3 +121,68 @@ class ValidHTML5Test(FakeURLPatternsTestCase):
                 'Line: 2 Col: 13 Expected closing tag. '
                 'Unexpected end of file.'
             )
+
+
+class SpellingTest(FakeURLPatternsTestCase):
+    def test_spelling(self):
+        def well_spelt(*args, **kwargs):
+            return HttpResponse(
+                'I am fuelled by the colour of your aluminium armour. '
+                'Every fibre of me is paralysed by your laboured defence.'
+            )
+
+        def poorly_spelt(*args, **kwargs):
+            return HttpResponse(
+                'mi am nott no how wordzz saiodjsoiafh'
+            )
+
+        def not_html(*args, **kwargs):
+            return HttpResponse('nsaiodjsioajds', content_type='text/plain')
+
+        with override_settings(
+            ROOT_URLCONF=patterns(
+                '',
+                url(r'^well/$', well_spelt),
+                url(r'^poorly/$', poorly_spelt),
+                url(r'^not/$', not_html),
+            ),
+        ):
+            results = get_results_for(
+                'test_spelling', mixin=optional.Spelling,
+                covered_urls=['/well/', '/poorly/', '/not/'],
+                spelling_language='en_GB',
+                spelling_extra_words=['wordzz'],
+            )
+
+            result_string = results.failures[0][1][1].args[0]
+
+            self.assertNotIn('wordzz', result_string)
+            self.assertNotIn('/not/', result_string)
+            self.assertNotIn('/well/', result_string)
+
+            expected_start = (
+                'Enchant doesn\'t think any of these are actual words:\n\n')
+            self.assertTrue(result_string.startswith(expected_start),
+                            '"{0}" does not start with "{1}"'.format(
+                                result_string, expected_start))
+
+            self.assertIn('/poorly/', result_string)
+            self.assertIn('\n\n"nott"\n', result_string)
+            self.assertIn('\nsuggestions: not, ', result_string)
+            self.assertIn('\nseen on: /poorly/', result_string)
+            self.assertIn('\n\n"saiodjsoiafh"\n', result_string)
+
+            expected_end = (
+                "\n\nIf you disagree with any of these, add them to "
+                "EverythingTest.spelling_extra_words.")
+            self.assertTrue(result_string.endswith(expected_end),
+                            '"{0}" does not end with "{1}"'.format(
+                                result_string, expected_end))
+
+    def test_no_language_provided(self):
+        self.assertRaisesMessage(lambda: get_results_for(
+            'test_spelling', mixin=optional.Spelling,
+            covered_urls=['/well/', '/poorly/', '/not/']),
+            'Set EverythingTest.spelling_language to the language you want to '
+            'check against. (something like "en_GB" or "fr").'
+        )
