@@ -180,9 +180,15 @@ class SpellingTest(FakeURLPatternsTestCase):
                                 result_string, expected_end))
 
     def test_no_language_provided(self):
-        self.assertRaisesMessage(lambda: get_results_for(
-            'test_spelling', mixin=optional.Spelling,
-            covered_urls=['/well/', '/poorly/', '/not/']),
+        self.assertRaisesMessage(
+            Exception,
+            # I'd ask for AttributeError specifically, but for whatever reason
+            # that just causes the AttributeError to be reraised.
+
             'Set EverythingTest.spelling_language to the language you want to '
-            'check against. (something like "en_GB" or "fr").'
+            'check against (something like "en_GB" or "fr").',
+
+            lambda: get_results_for(
+                'test_spelling', mixin=optional.Spelling,
+                covered_urls=['/'])
         )

@@ -155,7 +155,7 @@ class Spelling(object):
         if not hasattr(self, 'spelling_language'):
             raise AttributeError(
                 'Set {self}.spelling_language to the language you want to '
-                'check against. (something like "en_GB" or "fr").'.format(
+                'check against (something like "en_GB" or "fr").'.format(
                     self=self.__class__.__name__,
                 )
             )
