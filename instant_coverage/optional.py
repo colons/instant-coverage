@@ -67,22 +67,25 @@ class ExternalLinks(object):
                     ):
                         external_urls[element[attribute]].append(internal_url)
 
+        self.ensure_all_urls_resolve(external_urls)
+
+    def ensure_all_urls_resolve(self, urls):
         bad_responses = {}
 
-        for external_url in external_urls:
+        for url in urls:
             try:
-                resp = requests.get(external_url)
+                resp = requests.get(url)
             except Exception as e:
-                bad_responses[external_url] = e
+                bad_responses[url] = e
             else:
                 if resp.status_code != 200:
-                    bad_responses[external_url] = resp.status_code
+                    bad_responses[url] = resp.status_code
 
         if bad_responses:
             raise self.failureException(
-                'The following external links are broken:\n\n{0}'.format(
+                'The following links are broken:\n\n{0}'.format(
                     '\n\n'.join(['{0}: {1}\nshown on {2}'.format(
-                        url, err, ', '.join(external_urls[url])
+                        url, err, ', '.join(urls[url])
                     ) for url, err in six.iteritems(bad_responses)])
                 )
             )

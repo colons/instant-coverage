@@ -63,7 +63,7 @@ class ExternalLinksTest(FakeURLPatternsTestCase):
             result_string = results.failures[0][1][1].args[0]
 
             self.assertIn(
-                "The following external links are broken:\n\n",
+                "The following links are broken:\n\n",
                 result_string
             )
 
