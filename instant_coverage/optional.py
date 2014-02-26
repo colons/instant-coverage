@@ -138,7 +138,9 @@ class Spelling(object):
         Only tests HTML content; we can't be confident about the intent of
         anything else.
 
-        Requires pyenchant.
+        Requires pyenchant. If you're on Python 3, installing pyenchant from
+        pypi may prove to be difficult, so you may have to try `pip install
+        git+https://github.com/rfk/pyenchant.git` instead.
         """
 
         try:
