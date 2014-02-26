@@ -127,8 +127,9 @@ class EverythingTest(
 ## Write your own tests
 
 `InstantCoverageMixin` provides an `instant_responses` method that returns a
-dictionary of responses keyed by URL. Test methods you write should iterate
-across that. Have a look at [the optional mixins][optional] for some examples.
+dictionary of [Django test client `Response` objects][response] keyed by URL.
+Test methods you write should iterate across that. Have a look at [the optional
+mixins][optional] for some examples.
 
 If you make any that you think might be useful to any other websites, even if a
 minority, a pull request would be very much appreciated.
@@ -157,4 +158,5 @@ class LoggedInEverythingTest(EverythingTest):
 ```
 
 [travis]: https://travis-ci.org/colons/instant-coverage
+[response]: https://docs.djangoproject.com/en/dev/topics/testing/tools/#django.test.Response
 [optional]: https://github.com/colons/instant-coverage/blob/master/instant_coverage/optional.py
