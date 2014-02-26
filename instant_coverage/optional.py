@@ -134,9 +134,9 @@ class Spelling(object):
 
         This test is pretty stupid and I do not recommend adding it to your
         full-time test suite. It will freak out about almost anything in any
-        <script>s you have and it doesn't care what a proper noun is. It can't
-        hurt to run it occasionally and make sure you've not done something
-        silly, though.
+        inline <script>s you have and it doesn't care what a proper noun is. It
+        can't hurt to run it occasionally and make sure you've not done
+        something silly, though.
 
         Only tests HTML content; we can't be confident about the intent of
         anything else.
