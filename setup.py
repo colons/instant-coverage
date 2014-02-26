@@ -25,7 +25,10 @@ setup(
         'requests',
         'html5lib',
     ],
-    tests_require=['nose'],
+    tests_require=[
+        'nose',
+        'pyenchant',
+    ],
     test_suite='nose.collector',
     long_description=README,
     classifiers=[

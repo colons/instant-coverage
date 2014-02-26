@@ -22,7 +22,7 @@ You've got five minutes, though.
       to test.
 - **Has what you need**
     - Comes with [optional test mixins][optional] for checking links and
-      validating HTML and JSON.
+      validating HTML, JSON or your spelling.
 - **Extensible**
     - Easily add tests that will run against every view on your website. If you
       want tests for things like consistent capitalisation of a particular
@@ -117,7 +117,10 @@ what strikes your fancy. Use them like this:
 ```python
 from instant_coverage import InstantCoverageMixin, optional
 
-class EverythingTest(optional.ValidJSON, InstantCoverageMixin, TestCase):
+class EverythingTest(
+    optional.Spelling, optional.ExternalLinks, optional.ValidHTML5,
+    InstantCoverageMixin, TestCase
+):
     # covered_urls, etc...
 ```
 
