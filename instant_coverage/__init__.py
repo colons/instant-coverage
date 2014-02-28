@@ -57,16 +57,17 @@ def extract_all_patterns_from_urlpatterns(patterns, uncovered_includes,
     return all_patterns
 
 
-class InstantCoverageMixin(object):
+class InstantCoverageAPI(object):
+    """
+    The API provided by InstantCoverageMixin with none of the tests.
+    """
+
     covered_urls = []
     uncovered_urls = []
     uncovered_includes = []
     instant_tracebacks = False
 
     def _get_responses(self):
-        # We cache responses against the class because test runners tend to
-        # use a new instance for each test, and we don't want to draw pages
-        # more than once.
         responses = {}
         errors = {}
 
@@ -78,6 +79,9 @@ class InstantCoverageMixin(object):
             else:
                 responses[url] = response
 
+        # We cache responses against the class because test runners tend to
+        # use a new instance for each test, and we don't want to draw pages
+        # more than once.
         _instant_cache[self.__class__] = {
             'responses': responses, 'errors': errors}
 
@@ -88,7 +92,7 @@ class InstantCoverageMixin(object):
         return _instant_cache[self.__class__][key]
 
     def setUp(self):
-        super(InstantCoverageMixin, self).setUp()
+        super(InstantCoverageAPI, self).setUp()
         if not hasattr(self, 'client'):
             # django 1.4 does not do this automatically
             self.client = Client()
@@ -104,6 +108,8 @@ class InstantCoverageMixin(object):
     def instant_errors(self):
         return self._get_from_instant_cache('errors')
 
+
+class InstantCoverageMixin(InstantCoverageAPI):
     def test_all_urls_accounted_for(self):
         """
         Ensure all URLs that have not been explicitly excluded are present in

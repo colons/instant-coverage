@@ -157,6 +157,11 @@ class LoggedInEverythingTest(EverythingTest):
         self.assertTrue(self.client.login(username='user', password='pass'))
 ```
 
+If you have a bunch of test classes that test the same collection of URLs, you
+may want to consider inheriting from `InstantCoverageAPI` instead of
+`InstantCoverageMixin`; the former will not run any tests that you don't
+explicitly add yourself.
+
 [travis]: https://travis-ci.org/colons/instant-coverage
 [response]: https://docs.djangoproject.com/en/dev/topics/testing/tools/#django.test.Response
 [optional]: https://github.com/colons/instant-coverage/blob/master/instant_coverage/optional.py
