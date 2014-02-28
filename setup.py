@@ -13,7 +13,7 @@ setup(
     url='https://github.com/colons/instant-coverage',
     author='Iain Dawson',
     author_email='pypi@colons.co',
-    version='0.0.8',
+    version='0.0.9',
     license="BSD",
     platforms=['any'],
     packages=['instant_coverage'],
