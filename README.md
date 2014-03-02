@@ -1,10 +1,6 @@
 ![A roll of duct tape; the Instant Coverage logo][logo]
-[logo]: http://colons.co/instant-coverage-small.png
 
-[![Build Status][travis-status]][travis]
-[travis-status]: https://travis-ci.org/colons/instant-coverage.png
-
-# Instant Coverage
+# Instant Coverage [![Build Status][travis-status]][travis]
 
 Your new Django site need tests. Nothing super fancy, just enough that you know
 you've not forgotten to close some &lt;div&gt; somewhere and it's not going to
@@ -162,6 +158,8 @@ may want to consider inheriting from `InstantCoverageAPI` instead of
 `InstantCoverageMixin`; the former will not run any tests that you don't
 explicitly add yourself.
 
+[logo]: http://colons.co/instant-coverage-small.png
 [travis]: https://travis-ci.org/colons/instant-coverage
+[travis-status]: https://travis-ci.org/colons/instant-coverage.png
 [response]: https://docs.djangoproject.com/en/dev/topics/testing/tools/#django.test.Response
 [optional]: https://github.com/colons/instant-coverage/blob/master/instant_coverage/optional.py
