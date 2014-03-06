@@ -153,6 +153,9 @@ class LoggedInEverythingTest(EverythingTest):
         self.assertTrue(self.client.login(username='user', password='pass'))
 ```
 
+Be aware that, by default, the test client will follow redirects. If you do not
+want this, set the `follow_redirects` attribute of your tests to `False`.
+
 If you have a bunch of test classes that test the same collection of URLs, you
 may want to consider inheriting from `InstantCoverageAPI` instead of
 `InstantCoverageMixin`; the former will not run any tests that you don't

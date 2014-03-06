@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.http import HttpResponse, Http404
+from django.shortcuts import redirect
 from django.test import TestCase
 from django.test.utils import override_settings
 
@@ -275,3 +276,30 @@ class FailuresTest(FakeURLPatternsTestCase):
                     self.assertEqual(result.errors, [])
 
             self.assertEqual(calls, ['a', 'b'])
+
+    def test_redirects_not_followed_if_follow_tracebacks_false(self):
+        calls = []
+
+        def redir(*args, **kwargs):
+            calls.append('redir')
+            return redirect('/target/')
+
+        def target(*args, **kwargs):
+            calls.append('target')
+            return HttpResponse('hihi')
+
+        with override_settings(
+            ROOT_URLCONF=tuple(patterns(
+                '',
+                url(r'^redir/$', redir),
+                url(r'^target/$', target),
+            )),
+        ):
+            get_results_for('test_no_errors', covered_urls=['/redir/'])
+            self.assertEqual(calls, ['redir', 'target'])
+
+            calls = []
+
+            get_results_for('test_no_errors', covered_urls=['/redir/'],
+                            follow_redirects=False)
+            self.assertEqual(calls, ['redir'])

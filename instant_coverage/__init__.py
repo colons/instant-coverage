@@ -62,10 +62,16 @@ class InstantCoverageAPI(object):
     The API provided by InstantCoverageMixin with none of the tests.
     """
 
-    covered_urls = []
-    uncovered_urls = []
-    uncovered_includes = []
-    instant_tracebacks = False
+    covered_urls = []  # URLs to test
+
+    uncovered_urls = []  # URLs we're okay with not testing
+
+    uncovered_includes = []  # tuples of includes we're okay with not testing
+                             # (see README for more details)
+
+    instant_tracebacks = False  # show full tracebacks in test_no_errors
+
+    follow_redirects = True  # whether the test client should follow redirects
 
     def _get_responses(self):
         responses = {}
@@ -73,7 +79,7 @@ class InstantCoverageAPI(object):
 
         for url in self.covered_urls:
             try:
-                response = self.client.get(url, follow=True)
+                response = self.client.get(url, follow=self.follow_redirects)
             except Exception:
                 errors[url] = sys.exc_info()
             else:
