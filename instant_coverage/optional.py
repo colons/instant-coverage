@@ -51,6 +51,10 @@ class ExternalLinks(object):
         Ensure all external links are pointed at URLs that resolve and respond
         with or eventually redirect to somewhere that responds with a 200
         status code.
+
+        If you want to change your user agent or exclude certain URLs or
+        anything fancy like that, override attempt_to_get_external_url in your
+        subclass.
         """
 
         external_urls = defaultdict(list)
@@ -75,7 +79,7 @@ class ExternalLinks(object):
 
         for url in urls:
             try:
-                resp = requests.get(url)
+                resp = self.attempt_to_get_external_url(url)
             except Exception as e:
                 bad_responses[url] = e
             else:
@@ -90,6 +94,9 @@ class ExternalLinks(object):
                     ) for url, err in six.iteritems(bad_responses)])
                 )
             )
+
+    def attempt_to_get_external_url(self, url):
+        return requests.get(url)
 
 
 class ValidHTML5(object):
