@@ -52,8 +52,8 @@ class ExternalLinks(object):
         with or eventually redirect to somewhere that responds with a 200
         status code.
 
-        If you want to change your user agent or exclude certain URLs or
-        anything fancy like that, override attempt_to_get_external_url in your
+        If you want to change your user agent or exclude certain URLs or use a
+        proxy or something, override attempt_to_get_external_url in your
         subclass.
         """
 
