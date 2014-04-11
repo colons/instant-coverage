@@ -74,9 +74,10 @@ class EverythingTest(InstantCoverageMixin, TestCase):
     ]
 ```
 
-Add URLs that you *do* actually want to test to `covered_urls`, and add those
-you *don't* to `uncovered_urls`. If you forget what's still missing, run the
-tests again to get an audit of what's left.
+Add paths matching the URLs that you *do* actually want to test to
+`covered_urls`, and add paths that match those you *don't* to `uncovered_urls`.
+If you forget what's still missing, run the tests again to get an audit of
+what's left.
 
 ```python
 class EverythingTest(InstantCoverageMixin, TestCase):
@@ -95,6 +96,12 @@ class EverythingTest(InstantCoverageMixin, TestCase):
         '/shortlist-order/',
     ]
 ```
+
+If you want to use `reverse()` rather than hard-code URLs or if you want to
+test more than one path for a given URL, that is fully supported. [Encouraged],
+even. It doesn't matter how you build it, as long as `covered_urls` is a list.
+
+[Encouraged]: https://github.com/colons/musicfortheblind.co.uk/blob/master/mftb5/tests.py
 
 If you have views that you can't test without data present in the database,
 [make a fixtures file][dumpdata] and [add it to your test class][fixtures].
