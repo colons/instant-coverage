@@ -163,6 +163,6 @@ explicitly add yourself.
 
 [logo]: http://colons.co/instant-coverage-small.png
 [travis]: https://travis-ci.org/colons/instant-coverage
-[travis-status]: https://travis-ci.org/colons/instant-coverage.png
+[travis-status]: https://travis-ci.org/colons/instant-coverage.svg
 [response]: https://docs.djangoproject.com/en/dev/topics/testing/tools/#django.test.Response
 [optional]: https://github.com/colons/instant-coverage/blob/master/instant_coverage/optional.py
