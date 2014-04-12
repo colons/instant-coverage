@@ -27,6 +27,12 @@ You've got five minutes, though.
 - **Portable**
     - [Tested][travis] on Python 2.7 and 3.3 and Django 1.4, 1.5 and 1.6.
 
+# Changes
+
+Changes made in each release are listed in [tags] in this repository.
+
+[tags]: https://github.com/colons/instant-coverage/releases
+
 # Usage
 
 ## Install
