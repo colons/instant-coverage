@@ -25,7 +25,7 @@ You've got five minutes, though.
       phrase or the universal inclusion of a particular meta tag, you can have
       them in minutes.
 - **Portable**
-    - [Tested][travis] on Python 2.7 and 3.3 and Django 1.4, 1.5 and 1.6.
+    - [Tested][travis] on Python 2.7, 3.3 and 3.4 with Django 1.4, 1.5 and 1.6.
 
 # Changes
 
