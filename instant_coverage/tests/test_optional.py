@@ -1,3 +1,5 @@
+import re
+
 from django.conf.urls import patterns, url
 from django.http import HttpResponse
 from django.test.utils import override_settings
@@ -30,10 +32,16 @@ class ValidJSONTest(FakeURLPatternsTestCase):
                 'test_valid_json', mixin=optional.ValidJSON,
                 covered_urls=['/valid/', '/invalid/', '/not/']
             )
-            self.assertEqual(
-                results.failures[0][1][1].args[0],
-                "The following URLs returned invalid JSON:\n\n"
-                "/invalid/: No JSON object could be decoded"
+
+            self.assertTrue(
+                results.failures[0][1][1].args[0].startswith(
+                    "The following URLs returned invalid JSON:\n\n"
+                    "/invalid/: ",
+                ),
+                '"{error}"\n'
+                'does not look like the kind of error we expect'.format(
+                    error=results.failures[0][1][1].args[0]
+                )
             )
 
 
