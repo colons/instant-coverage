@@ -74,8 +74,7 @@ class ExternalLinksTest(FakeURLPatternsTestCase):
             )
 
             self.assertIn(
-                "http:garbage: Failed to parse: Failed to parse: http:garbage"
-                "\nshown on /page/",
+                "http:garbage: Failed to parse: ",
                 result_string
             )
 
