@@ -1,5 +1,3 @@
-import re
-
 from django.conf.urls import patterns, url
 from django.http import HttpResponse
 from django.test.utils import override_settings
