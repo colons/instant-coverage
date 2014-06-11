@@ -50,7 +50,7 @@ class ExternalLinksTest(FakeURLPatternsTestCase):
                 '<a href="http:garbage"></a>'
                 '<a href="https://github.com/colons/not-a-real-repo"></a>'
                 '<img src="http://localhost:9000000"></img>'
-                '<a href="http://what"></a>'
+                '<form action="http://what"></a>'
                 '<a href="http://google.com/"></a>',
                 content_type='text/html; utf-8'
             )

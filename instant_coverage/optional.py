@@ -65,7 +65,7 @@ class ExternalLinks(object):
 
             soup = BeautifulSoup(response.content)
 
-            for attribute in ['href', 'src']:
+            for attribute in ['href', 'src', 'action']:
                 for prefix in ['http:', 'https:']:
                     for element in soup.select(
                         '[{0}^="{1}"]'.format(attribute, prefix)
