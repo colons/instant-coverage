@@ -129,7 +129,9 @@ class ValidHTML5(object):
                                 l=l, c=c, err=html5lib.constants.E[e] % v)
                              for ((l, c), e, v) in errors]
                         )
-                    ) for url, errors in six.iteritems(parser_complaints)])))
+                    ) for url, errors in six.iteritems(parser_complaints)])
+                )
+            )
 
 
 class Spelling(object):
