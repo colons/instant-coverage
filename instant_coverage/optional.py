@@ -47,12 +47,12 @@ class ValidJSON(object):
                 )
             )
 
-        self.assertTrue(
-            json_seen,
-            "No views were found to serve up JSON. Ensure any views you "
-            "expect to return JSON set the Content-Type: header to "
-            "'application/json'."
-        )
+        if not json_seen:
+            raise self.failureException(
+                "No views were found to serve up JSON. Ensure any views you "
+                "expect to return JSON set the Content-Type: header to "
+                "'application/json'."
+            )
 
 
 class ExternalLinks(object):
