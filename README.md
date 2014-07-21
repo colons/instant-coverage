@@ -77,7 +77,6 @@ tuples like the ones shown in the failure you just got to your test's
 class EverythingTest(InstantCoverageMixin, TestCase):
     uncovered_includes = [
         ('^admin/',),
-        ('^media/',),
     ]
 ```
 
@@ -101,6 +100,9 @@ class EverythingTest(InstantCoverageMixin, TestCase):
 
         # only accepts POST
         '/shortlist-order/',
+
+        # probably tested pretty thoroughly by the django project
+        '/media/woof.jpg',
     ]
 ```
 
