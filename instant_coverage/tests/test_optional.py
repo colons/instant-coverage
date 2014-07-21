@@ -42,6 +42,32 @@ class ValidJSONTest(FakeURLPatternsTestCase):
                 )
             )
 
+    def test_no_json(self):
+        """
+        Ensure that, given a website with no json in it, a failure is raised.
+        """
+
+        def valid_not_json(*args, **kwargs):
+            return HttpResponse('{}', content_type='text/plain')
+
+        with override_settings(
+            ROOT_URLCONF=patterns(
+                '',
+                url(r'^valid-not-json/$', valid_not_json),
+            ),
+        ):
+            results = get_results_for(
+                'test_valid_json', mixin=optional.ValidJSON,
+                covered_urls=['/valid/', '/invalid/', '/not/']
+            )
+
+            self.assertEqual(
+                results.failures[0][1][1].args[0],
+                "No views were found to serve up JSON. Ensure any views you "
+                "expect to return JSON set the Content-type: header to "
+                "'application/json'."
+            )
+
 
 class ExternalLinksTest(FakeURLPatternsTestCase):
     def test_external_links(self):

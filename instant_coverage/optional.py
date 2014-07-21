@@ -22,10 +22,13 @@ class ValidJSON(object):
         """
 
         bad_json = {}
+        json_seen = False
 
         for url, response in six.iteritems(self.instant_responses()):
             if response['Content-Type'] != 'application/json':
                 continue
+
+            json_seen = True
 
             content = response.content.decode('utf-8')
 
@@ -43,6 +46,13 @@ class ValidJSON(object):
                     ])
                 )
             )
+
+        self.assertTrue(
+            json_seen,
+            "No views were found to serve up JSON. Ensure any views you "
+            "expect to return JSON set the Content-type: header to "
+            "'application/json'."
+        )
 
 
 class ExternalLinks(object):
