@@ -64,7 +64,7 @@ class ValidJSONTest(FakeURLPatternsTestCase):
             self.assertEqual(
                 results.failures[0][1][1].args[0],
                 "No views were found to serve up JSON. Ensure any views you "
-                "expect to return JSON set the Content-type: header to "
+                "expect to return JSON set the Content-Type: header to "
                 "'application/json'."
             )
 
