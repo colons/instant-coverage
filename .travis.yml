@@ -5,9 +5,9 @@ python:
   - "3.4"
 
 env:
-  - DJANGO_VERSION='>=1.4,<1.5'
-  - DJANGO_VERSION='>=1.5,<1.6'
-  - DJANGO_VERSION='>=1.6,<1.7'
+  - DJANGO_VERSION='Django>=1.4,<1.5'
+  - DJANGO_VERSION='Django>=1.5,<1.6'
+  - DJANGO_VERSION='Django>=1.6,<1.7'
   - DJANGO_VERSION='https://www.djangoproject.com/download/1.7c1/tarball/'
 
 matrix:
@@ -21,7 +21,7 @@ before_install:
   - sudo apt-get install libenchant-dev
 
 install:
-  - pip install -q Django$DJANGO_VERSION
+  - pip install -q $DJANGO_VERSION
   - pip install 'git+https://github.com/rfk/pyenchant.git'
   - python setup.py -q install
 
