@@ -1,14 +1,24 @@
 import sys
 import traceback
 
+import django
 from django.conf import settings
 from django.core.urlresolvers import (
-    RegexURLPattern, RegexURLResolver, resolve, _resolver_cache
+    RegexURLPattern, RegexURLResolver, resolve
 )
 from django.test.client import Client
 
 from mock import patch
 import six
+
+
+if django.VERSION >= (1, 7):
+    from django.core.urlresolvers import clear_url_caches
+else:
+    from django.core.urlresolvers import _resolver_cache
+
+    def clear_url_caches():
+        _resolver_cache.clear()
 
 
 INSTANT_TRACEBACKS_TUTORIAL = (
@@ -122,7 +132,7 @@ class InstantCoverageMixin(InstantCoverageAPI):
         self.covered_urls.
         """
 
-        _resolver_cache.clear()
+        clear_url_caches()
         seen_patterns = set()
 
         patterns = get_urlpatterns()
