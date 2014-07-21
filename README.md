@@ -77,6 +77,7 @@ tuples like the ones shown in the failure you just got to your test's
 class EverythingTest(InstantCoverageMixin, TestCase):
     uncovered_includes = [
         ('^admin/',),
+        ('^media/',),
     ]
 ```
 
