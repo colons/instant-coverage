@@ -112,15 +112,18 @@ class ExternalLinksTest(FakeURLPatternsTestCase):
                 result_string
             )
 
+            connection_error_regex = r'(?m).*^{}[^\r\n]+Connection'
+
             self.assertRegexpMatches(
-                # different urllibs raise different-looking errors here
-                result_string, r"(?m).*^{}[^\r\n]+Connection".format(
+                result_string, connection_error_regex.format(
                     re.escape('http://localhost:9000000: ')
                 )
             )
 
-            self.assertIn(
-                "http://what: HTTPConnectionPool(", result_string
+            self.assertRegexpMatches(
+                result_string, connection_error_regex.format(
+                    re.escape('"http://what: ')
+                )
             )
 
             self.assertNotIn("google", result_string)
