@@ -12,3 +12,5 @@ DATABASES = {
         'NAME': os.path.join(PROJECT_DIR, 'db'),
     }
 }
+
+MEDIA_URL = '/media/'

@@ -74,6 +74,24 @@ class FailuresTest(FakeURLPatternsTestCase):
                 + IGNORE_TUTORIAL.format(name='EverythingTest')
             )
 
+    def ensure_media_urls_ignored(self):
+        get_results_for('test_all_urls_accounted_for',
+                        covered_urls=['/media/wof/'])
+
+    def test_media_urls_ignored_when_debug_true(self):
+        with override_settings(
+            ROOT_URLCONF=patterns(''),
+            DEBUG=False,
+        ):
+            self.ensure_media_urls_ignored()
+
+    def test_media_urls_ignored_when_debug_false(self):
+        with override_settings(
+            ROOT_URLCONF=patterns(''),
+            DEBUG=False,
+        ):
+            self.ensure_media_urls_ignored()
+
     def test_excepted_urls_not_complained_about(self):
         with override_settings(
             ROOT_URLCONF=patterns(
