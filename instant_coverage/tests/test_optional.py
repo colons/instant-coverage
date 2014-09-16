@@ -122,7 +122,7 @@ class ExternalLinksTest(FakeURLPatternsTestCase):
 
             self.assertRegexpMatches(
                 result_string, connection_error_regex.format(
-                    re.escape('"http://what: ')
+                    re.escape('http://what: ')
                 )
             )
 
