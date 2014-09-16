@@ -1,3 +1,5 @@
+import re
+
 from django.conf.urls import patterns, url
 from django.http import HttpResponse
 from django.test.utils import override_settings
@@ -110,8 +112,11 @@ class ExternalLinksTest(FakeURLPatternsTestCase):
                 result_string
             )
 
-            self.assertIn(
-                "http://localhost:9000000: HTTPConnectionPool(", result_string
+            self.assertRegexpMatches(
+                # different urllibs raise different-looking errors here
+                result_string, r"(?m).*^{}[^\r\n]+Connection".format(
+                    re.escape('http://localhost:9000000: ')
+                )
             )
 
             self.assertIn(
