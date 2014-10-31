@@ -106,7 +106,7 @@ class ExternalLinks(object):
             )
 
     def attempt_to_get_external_url(self, url):
-        return requests.get(url)
+        return requests.head(url, allow_redirects=True)
 
 
 class ValidHTML5(object):
