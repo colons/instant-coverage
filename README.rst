@@ -17,28 +17,34 @@ You've got five minutes, though.
 Features
 --------
 
-- **Simple**
-    - Iterates through a list of URLs and complains if any of them 500.
-- **Magic**
-    - Will loudly complain when there are views missing from the list of URLs
-      to test.
-- **Has what you need**
-    - Comes with `optional mixins`_ for checking links and validating HTML,
-      JSON or your spelling.
-- **Extensible**
-    - Easily add tests that will run against every view on your website. If you
-      want tests for things like consistent capitalisation of a particular
-      phrase or the universal inclusion of a particular meta tag, you can have
-      them in minutes.
-- **Portable**
-    - [Tested][travis] on Python 2.7, 3.3 and 3.4 with Django 1.4, 1.5, 1.6 and 1.7.
+**Simple**
+    Iterates through a list of URLs and complains if any of them 500.
+
+**Magic**
+    Will loudly complain when there are views missing from the list of URLs to
+    test.
+
+**Has what you need**
+    Comes with `optional mixins`_ for checking links and validating HTML, JSON
+    or your spelling.
+
+**Extensible**
+    Easily add tests that will run against every view on your website. If you
+    want tests for things like consistent capitalisation of a particular phrase
+    or the universal inclusion of a particular meta tag, you can have them in
+    minutes.
+
+**Portable**
+    Tested_ on Python 2.7, 3.3 and 3.4 with Django 1.4, 1.5, 1.6 and 1.7.
+
+.. _tested: https://travis-ci.org/colons/instant-coverage
 
 Changes
 =======
 
-Changes made in each release are listed in [tags] in this repository.
+Changes made in each release are listed in tags_ in this repository.
 
-[tags]: https://github.com/colons/instant-coverage/releases
+.. _tags: https://github.com/colons/instant-coverage/releases
 
 Usage
 =====
@@ -117,17 +123,17 @@ get an audit of what's left.
        ]
 
 If you want to use ``reverse()`` rather than hard-code URLs or if you want to
-test more than one path for a given URL, that is fully supported. [Encouraged],
+test more than one path for a given URL, that is fully supported. Encouraged_,
 even. It doesn't matter how you build it, as long as ``covered_urls`` is a
 list.
 
-[Encouraged]: https://github.com/colons/musicfortheblind.co.uk/blob/master/mftb5/tests.py
+.. _Encouraged: https://github.com/colons/musicfortheblind.co.uk/blob/master/mftb5/tests.py
 
 If you have views that you can't test without data present in the database,
-[make a fixtures file][dumpdata] and [add it to your test class][fixtures].
+`make a fixtures file`_ and `add it to your test class`_.
 
-[dumpdata]: https://docs.djangoproject.com/en/dev/ref/django-admin/#dumpdata-app-label-app-label-app-label-model
-[fixtures]: https://docs.djangoproject.com/en/dev/topics/testing/tools/#django.test.TransactionTestCase.fixtures
+.. _make a fixtures file: https://docs.djangoproject.com/en/dev/ref/django-admin/#dumpdata-app-label-app-label-app-label-model
+.. _add it to your test class: https://docs.djangoproject.com/en/dev/topics/testing/tools/#django.test.TransactionTestCase.fixtures
 
 Use the provided optional test mixins
 -------------------------------------
