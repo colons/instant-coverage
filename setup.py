@@ -4,7 +4,7 @@ from setuptools import setup
 os.environ.setdefault("DJANGO_SETTINGS_MODULE",
                       "instant_coverage.tests.settings")
 
-with open('README.md') as readme_file:
+with open('README.rst') as readme_file:
     README = readme_file.read()
 
 setup(
