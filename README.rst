@@ -62,7 +62,7 @@ because it's testing the whole site and not just one app. Wherever you put it,
 it should be named such that your test runner will find it (``tests.py``
 usually works well) and should contain at least the following:
 
-::
+.. code-block:: python
 
    from django.test import TestCase
    from instant_coverage import InstantCoverageMixin
@@ -89,7 +89,7 @@ those from the Django admin app. To quickly exclude entire URL includes, add
 tuples like the ones shown in the failure you just got to your test's
 ``uncovered_includes`` attribute:
 
-::
+.. code-block:: python
 
    class EverythingTest(InstantCoverageMixin, TestCase):
        uncovered_includes = [
@@ -101,7 +101,7 @@ Add paths matching the URLs that you *do* actually want to test to
 ``uncovered_urls``. If you forget what's still missing, run the tests again to
 get an audit of what's left.
 
-::
+.. code-block:: python
 
    class EverythingTest(InstantCoverageMixin, TestCase):
        covered_urls = [
@@ -144,7 +144,7 @@ good chance at least some of the provided `optional mixins`_ will be
 appropriate for your website, so be sure to have a look through them and see
 what strikes your fancy. Use them like this:
 
-::
+.. code-block:: python
 
    from instant_coverage import InstantCoverageMixin, optional
 
@@ -176,7 +176,7 @@ If you want to test all the URLs you've listed under different circumstances
 selected), create a subclass of your tests and override ``setUp()``. For
 instance, you might put the following below your ``EverythingTest``:
 
-::
+.. code-block:: python
 
    from django.contrib.auth import get_user_model
 
