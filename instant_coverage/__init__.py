@@ -149,7 +149,7 @@ class InstantCoverageMixin(InstantCoverageAPI):
 
         with patch('django.core.urlresolvers.RegexURLPattern.resolve',
                    resolve_and_make_note):
-            for url in self.covered_urls + self.uncovered_urls:
+            for url in list(self.covered_urls) + list(self.uncovered_urls):
                 resolve(url.split('?')[0])
 
         all_patterns = extract_all_patterns_from_urlpatterns(
