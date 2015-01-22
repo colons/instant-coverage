@@ -77,7 +77,7 @@ class InstantCoverageAPI(object):
     uncovered_urls = []  # URLs we're okay with not testing
 
     uncovered_includes = []  # tuples of includes we're okay with not testing
-                             # (see README for more details)
+    # (see README for more details)
 
     instant_tracebacks = False  # show full tracebacks in test_no_errors
 
@@ -102,7 +102,7 @@ class InstantCoverageAPI(object):
             'responses': responses, 'errors': errors}
 
     def _get_from_instant_cache(self, key):
-        if not self.__class__ in _instant_cache:
+        if self.__class__ not in _instant_cache:
             self._get_responses()
 
         return _instant_cache[self.__class__][key]
