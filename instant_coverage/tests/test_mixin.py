@@ -1,12 +1,11 @@
 from django.conf.urls import patterns, include, url
 from django.http import HttpResponse, Http404
 from django.shortcuts import redirect
-from django.test import TestCase
+from django.test import SimpleTestCase, TestCase
 from django.test.utils import override_settings
 
 from .utils import (
-    WorkingView, BrokenView, get_results_for, PickyTestResult,
-    FakeURLPatternsTestCase, mocked_patterns
+    WorkingView, BrokenView, get_results_for, PickyTestResult, mocked_patterns
 )
 
 from instant_coverage import (
@@ -14,7 +13,7 @@ from instant_coverage import (
 )
 
 
-class FailuresTest(FakeURLPatternsTestCase):
+class FailuresTest(SimpleTestCase):
     def test_no_errors_okay(self):
         with mocked_patterns(patterns(
             '',

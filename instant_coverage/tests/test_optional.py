@@ -2,13 +2,14 @@ import re
 
 from django.conf.urls import patterns, url
 from django.http import HttpResponse
+from django.test import SimpleTestCase
 
 from instant_coverage import optional
 
-from .utils import get_results_for, FakeURLPatternsTestCase, mocked_patterns
+from .utils import get_results_for, mocked_patterns
 
 
-class ValidJSONTest(FakeURLPatternsTestCase):
+class ValidJSONTest(SimpleTestCase):
     def test_valid_json(self):
         def valid_json(*args, **kwargs):
             return HttpResponse('{}', content_type='application/json')
@@ -66,7 +67,7 @@ class ValidJSONTest(FakeURLPatternsTestCase):
             )
 
 
-class ExternalLinksTest(FakeURLPatternsTestCase):
+class ExternalLinksTest(SimpleTestCase):
     def test_external_links(self):
         def page_with_links(*args, **kwargs):
             return HttpResponse(
@@ -122,7 +123,7 @@ class ExternalLinksTest(FakeURLPatternsTestCase):
             self.assertNotIn("google", result_string)
 
 
-class ValidHTML5Test(FakeURLPatternsTestCase):
+class ValidHTML5Test(SimpleTestCase):
     def test_valid_json(self):
         def valid_html(*args, **kwargs):
             return HttpResponse('<!doctype html>\n<html></html>')
@@ -153,7 +154,7 @@ class ValidHTML5Test(FakeURLPatternsTestCase):
             )
 
 
-class SpellingTest(FakeURLPatternsTestCase):
+class SpellingTest(SimpleTestCase):
     def test_spelling(self):
         def well_spelt(*args, **kwargs):
             return HttpResponse(
