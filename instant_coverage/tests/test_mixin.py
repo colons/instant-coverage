@@ -6,7 +6,7 @@ from django.test.utils import override_settings
 
 from .utils import (
     WorkingView, BrokenView, get_results_for, PickyTestResult,
-    FakeURLPatternsTestCase,
+    FakeURLPatternsTestCase, mocked_patterns
 )
 
 from instant_coverage import (
@@ -16,22 +16,18 @@ from instant_coverage import (
 
 class FailuresTest(FakeURLPatternsTestCase):
     def test_no_errors_okay(self):
-        with override_settings(
-            ROOT_URLCONF=patterns(
-                '',
-                url(r'^$', WorkingView.as_view()),
-            ),
-        ):
+        with mocked_patterns(patterns(
+            '',
+            url(r'^$', WorkingView.as_view()),
+        )):
             results = get_results_for('test_no_errors', covered_urls=['/'])
             self.assertEqual(results.failures, [])
 
     def test_errors_surfaced(self):
-        with override_settings(
-            ROOT_URLCONF=patterns(
-                '',
-                url(r'^$', BrokenView.as_view()),
-            ),
-        ):
+        with mocked_patterns(patterns(
+            '',
+            url(r'^$', BrokenView.as_view()),
+        )):
             results = get_results_for('test_no_errors', covered_urls=['/'])
             self.assertEqual(
                 results.failures[0][1][1].args[0],
@@ -41,13 +37,11 @@ class FailuresTest(FakeURLPatternsTestCase):
             )
 
     def test_missing_nameless_urls_complained_about(self):
-        with override_settings(
-            ROOT_URLCONF=patterns(
-                '',
-                url(r'^tested-url/$', WorkingView.as_view()),
-                url(r'^untested-url/$', WorkingView.as_view()),
-            ),
-        ):
+        with mocked_patterns(patterns(
+            '',
+            url(r'^tested-url/$', WorkingView.as_view()),
+            url(r'^untested-url/$', WorkingView.as_view()),
+        )):
             results = get_results_for('test_all_urls_accounted_for',
                                       covered_urls=['/tested-url/'])
             self.assertEqual(
@@ -58,13 +52,11 @@ class FailuresTest(FakeURLPatternsTestCase):
             )
 
     def test_missing_named_urls_complained_about(self):
-        with override_settings(
-            ROOT_URLCONF=patterns(
-                '',
-                url(r'^tested-url/$', WorkingView.as_view()),
-                url(r'^untested-url/$', WorkingView.as_view(), name='name'),
-            ),
-        ):
+        with mocked_patterns(patterns(
+            '',
+            url(r'^tested-url/$', WorkingView.as_view()),
+            url(r'^untested-url/$', WorkingView.as_view(), name='name'),
+        )):
             results = get_results_for('test_all_urls_accounted_for',
                                       covered_urls=['/tested-url/'])
             self.assertEqual(
@@ -75,14 +67,12 @@ class FailuresTest(FakeURLPatternsTestCase):
             )
 
     def test_excepted_urls_not_complained_about(self):
-        with override_settings(
-            ROOT_URLCONF=patterns(
-                '',
-                url(r'^tested-url/$', WorkingView.as_view()),
-                url(r'^untested-url/$', WorkingView.as_view()),
-                url(r'^deliberately-untested-url/$', WorkingView.as_view()),
-            ),
-        ):
+        with mocked_patterns(patterns(
+            '',
+            url(r'^tested-url/$', WorkingView.as_view()),
+            url(r'^untested-url/$', WorkingView.as_view()),
+            url(r'^deliberately-untested-url/$', WorkingView.as_view()),
+        )):
             results = get_results_for(
                 'test_all_urls_accounted_for',
                 covered_urls=['/tested-url/'],
@@ -96,12 +86,11 @@ class FailuresTest(FakeURLPatternsTestCase):
             )
 
     def test_excepted_urls_ignored(self):
-        with override_settings(
-            ROOT_URLCONF=patterns(
-                '',
-                url(r'^tested-url/$', WorkingView.as_view()),
-                url(r'^deliberately-untested-url/$', BrokenView.as_view()),
-            ),
+        with mocked_patterns(patterns(
+            '',
+            url(r'^tested-url/$', WorkingView.as_view()),
+            url(r'^deliberately-untested-url/$', BrokenView.as_view()),
+        )), override_settings(
             COVERED_URLS=['/tested-url/'],
             UNCOVERED_URLS=['/deliberately-untested-url/'],
         ):
@@ -114,12 +103,10 @@ class FailuresTest(FakeURLPatternsTestCase):
             url(r'^broken-url/$', BrokenView.as_view()),
         )
 
-        with override_settings(
-            ROOT_URLCONF=patterns(
-                '',
-                url(r'^include/', include(incl)),
-            ),
-        ):
+        with mocked_patterns(patterns(
+            '',
+            url(r'^include/', include(incl)),
+        )):
             results = get_results_for('test_no_errors',
                                       covered_urls=['/include/broken-url/'])
             self.assertEqual(
@@ -135,11 +122,10 @@ class FailuresTest(FakeURLPatternsTestCase):
             url(r'^broken-url/$', BrokenView.as_view()),
         )
 
-        with override_settings(
-            ROOT_URLCONF=patterns(
-                '',
-                url(r'^include/', include(incl)),
-            ),
+        with mocked_patterns(patterns(
+            '',
+            url(r'^include/', include(incl)),
+        )), override_settings(
             COVERED_URLS=[],
         ):
             results = get_results_for('test_all_urls_accounted_for')
@@ -156,12 +142,10 @@ class FailuresTest(FakeURLPatternsTestCase):
             url(r'^broken-url/$', BrokenView.as_view()),
         )
 
-        with override_settings(
-            ROOT_URLCONF=patterns(
-                '',
-                url(r'^include/', include(incl)),
-            ),
-        ):
+        with mocked_patterns(patterns(
+            '',
+            url(r'^include/', include(incl)),
+        )):
             for test in [
                 'test_all_urls_accounted_for',
                 'test_no_errors',
@@ -190,14 +174,12 @@ class FailuresTest(FakeURLPatternsTestCase):
             url(r'^included/$', included_view),
         )
 
-        with override_settings(
-            ROOT_URLCONF=patterns(
-                '',
-                url(r'^one/$', view_one),
-                url(r'^two/$', view_two),
-                url(r'^include/', include(incl)),
-            ),
-        ):
+        with mocked_patterns(patterns(
+            '',
+            url(r'^one/$', view_one),
+            url(r'^two/$', view_two),
+            url(r'^include/', include(incl)),
+        )):
             results = get_results_for('test_no_errors', covered_urls=[
                 '/one/', '/two/', '/include/included/',
             ])
@@ -209,13 +191,11 @@ class FailuresTest(FakeURLPatternsTestCase):
         def missing_view(*args, **kwargs):
             raise Http404
 
-        with override_settings(
-            ROOT_URLCONF=patterns(
-                '',
-                url(r'^working-url/$', WorkingView.as_view()),
-                url(r'^404-url/$', missing_view),
-            ),
-        ):
+        with mocked_patterns(patterns(
+            '',
+            url(r'^working-url/$', WorkingView.as_view()),
+            url(r'^404-url/$', missing_view),
+        )):
             results = get_results_for('test_acceptable_status_codes',
                                       covered_urls=['/working-url/',
                                                     '/404-url/'])
@@ -226,12 +206,10 @@ class FailuresTest(FakeURLPatternsTestCase):
             )
 
     def test_instant_tracebacks(self):
-        with override_settings(
-            ROOT_URLCONF=patterns(
-                '',
-                url(r'^$', BrokenView.as_view()),
-            ),
-        ):
+        with mocked_patterns(patterns(
+            '',
+            url(r'^$', BrokenView.as_view()),
+        )):
             results = get_results_for('test_no_errors',
                                       covered_urls=['/'],
                                       instant_tracebacks=True)
@@ -254,13 +232,11 @@ class FailuresTest(FakeURLPatternsTestCase):
             calls.append('b')
             return HttpResponse()
 
-        with override_settings(
-            ROOT_URLCONF=patterns(
-                '',
-                url(r'^a/$', a),
-                url(r'^b/$', b),
-            ),
-        ):
+        with mocked_patterns(patterns(
+            '',
+            url(r'^a/$', a),
+            url(r'^b/$', b),
+        )):
             class TestA(InstantCoverageMixin, TestCase):
                 covered_urls = ['/a/']
 
@@ -277,7 +253,7 @@ class FailuresTest(FakeURLPatternsTestCase):
 
             self.assertEqual(calls, ['a', 'b'])
 
-    def test_redirects_not_followed_if_follow_tracebacks_false(self):
+    def test_redirects_not_followed_if_follow_redirects_false(self):
         calls = []
 
         def redir(*args, **kwargs):
@@ -288,13 +264,11 @@ class FailuresTest(FakeURLPatternsTestCase):
             calls.append('target')
             return HttpResponse('hihi')
 
-        with override_settings(
-            ROOT_URLCONF=tuple(patterns(
-                '',
-                url(r'^redir/$', redir),
-                url(r'^target/$', target),
-            )),
-        ):
+        with mocked_patterns(patterns(
+            '',
+            url(r'^redir/$', redir),
+            url(r'^target/$', target),
+        )):
             get_results_for('test_no_errors', covered_urls=['/redir/'])
             self.assertEqual(calls, ['redir', 'target'])
 

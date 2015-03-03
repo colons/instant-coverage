@@ -3,6 +3,7 @@ import os
 DEBUG = True
 
 SECRET_KEY = 'not empty'
+ROOT_URLCONF = 'instant_coverage.tests.urls'
 
 PROJECT_DIR = os.path.realpath(os.path.join(__file__, '..'))
 

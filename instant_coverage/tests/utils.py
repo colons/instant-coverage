@@ -1,6 +1,5 @@
 from unittest.result import TestResult, failfast
 
-from django.conf import settings
 from django.http import HttpResponse
 from django.test import SimpleTestCase, TestCase
 from django.test.utils import setup_test_environment
@@ -10,8 +9,8 @@ from mock import patch
 import six
 
 
-def get_urlpatterns_stupid():
-    return settings.ROOT_URLCONF
+def mocked_patterns(patterns):
+    return patch('instant_coverage.tests.urls.urlpatterns', patterns)
 
 
 class PickyTestResult(TestResult):
@@ -65,6 +64,4 @@ class BrokenView(View):
 
 
 class FakeURLPatternsTestCase(SimpleTestCase):
-    def run(self, *args, **kwargs):
-        with patch('instant_coverage.get_urlpatterns', get_urlpatterns_stupid):
-            super(FakeURLPatternsTestCase, self).run(*args, **kwargs)
+    pass
