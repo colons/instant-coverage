@@ -51,6 +51,31 @@ class FailuresTest(FakeURLPatternsTestCase):
                 + IGNORE_TUTORIAL.format(name='EverythingTest')
             )
 
+    def test_non_list_urls(self):
+        """
+        Ensure you can use a tuple of URLs if you so desire.
+        """
+
+        with mocked_patterns(patterns(
+            '',
+            url(r'^$', BrokenView.as_view()),
+            url(r'^untested/$', WorkingView.as_view()),
+        )):
+            self.assertEqual(
+                get_results_for('test_no_errors',
+                                covered_urls='/',).failures[0][1][1].args[0],
+                "The following errors were raised:\n\n"
+                "/: this view is broken\n\n"
+                + INSTANT_TRACEBACKS_TUTORIAL.format(name='EverythingTest')
+            )
+            self.assertEqual(
+                get_results_for('test_all_urls_accounted_for',
+                                covered_urls='/',).failures[0][1][1].args[0],
+                "The following views are untested:\n\n"
+                "() ^untested/$ (None)\n\n"
+                + IGNORE_TUTORIAL.format(name='EverythingTest')
+            )
+
     def test_missing_named_urls_complained_about(self):
         with mocked_patterns(patterns(
             '',
