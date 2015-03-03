@@ -35,7 +35,8 @@ Features
     minutes.
 
 **Portable**
-    Tested_ on Python 2.7, 3.3 and 3.4 with Django 1.4, 1.5, 1.6 and 1.7.
+    Tested_ on Python 2.7, 3.3 and 3.4 with Django 1.4, 1.5, 1.6, 1.7 and the
+    1.8 beta.
 
 .. _tested: https://travis-ci.org/colons/instant-coverage
 
