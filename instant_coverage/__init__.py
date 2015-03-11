@@ -83,13 +83,21 @@ class InstantCoverageAPI(object):
 
     follow_redirects = True  # whether the test client should follow redirects
 
+    def attempt_to_get_internal_url(self, url):
+        return self.client.get(url, **self.get_client_kwargs())
+
+    def get_client_kwargs(self):
+        return {
+            'follow': self.follow_redirects,
+        }
+
     def _get_responses(self):
         responses = {}
         errors = {}
 
         for url in self.covered_urls:
             try:
-                response = self.client.get(url, follow=self.follow_redirects)
+                response = self.attempt_to_get_internal_url(url)
             except Exception:
                 errors[url] = sys.exc_info()
             else:
