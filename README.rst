@@ -1,4 +1,4 @@
-.. image:: http://colons.co/instant-coverage-small.png
+z. image:: http://colons.co/instant-coverage-small.png
    :alt: A roll of duct tape; the instant coverage logo
 
 Instant Coverage |status|
@@ -195,6 +195,8 @@ instance, you might put the following below your ``EverythingTest``:
 
 Be aware that, by default, the test client will follow redirects. If you do not
 want this, set the ``follow_redirects`` attribute of your tests to ``False``.
+If you have more specific requirements, you may have to override the
+`get_client_kwargs` or `attempt_to_get_internal_url` methods of your test.
 
 If you have a bunch of test classes that test the same collection of URLs, you
 may want to consider inheriting from ``InstantCoverageAPI`` instead of
