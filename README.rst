@@ -17,24 +17,24 @@ You've got five minutes, though.
 Features
 --------
 
-**Simple**
+Simple
     Iterates through a list of URLs and complains if any of them 500.
 
-**Magic**
+Magic
     Will loudly complain when there are views missing from the list of URLs to
     test.
 
-**Has what you need**
+Has what you need
     Comes with `optional mixins`_ for checking links and validating HTML, JSON
     or your spelling.
 
-**Extensible**
+Extensible
     Easily add tests that will run against every view on your website. If you
     want tests for things like consistent capitalisation of a particular phrase
     or the universal inclusion of a particular meta tag, you can have them in
     minutes.
 
-**Portable**
+Portable
     Tested_ on Python 2.7, 3.3 and 3.4 with Django versions 1.4 to 1.8.
 
 .. _tested: https://travis-ci.org/colons/instant-coverage
