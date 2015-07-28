@@ -5,6 +5,7 @@ Include them as mixins in test classes that inherit from InstantCoverageMixin.
 
 import re
 from collections import defaultdict
+from contextlib import closing
 import json
 import sys
 
@@ -106,7 +107,10 @@ class ExternalLinks(object):
             )
 
     def attempt_to_get_external_url(self, url):
-        return requests.head(url, allow_redirects=True)
+        with closing(
+            requests.get(url, allow_redirects=True, stream=True)
+        ) as r:
+            return r
 
 
 class ValidHTML5(object):
