@@ -74,7 +74,7 @@ class ExternalLinks(object):
             if response['Content-Type'].split(';')[0] != 'text/html':
                 continue
 
-            soup = BeautifulSoup(response.content)
+            soup = BeautifulSoup(response.content, "html5lib")
 
             for attribute in ['href', 'src', 'action']:
                 for prefix in ['http:', 'https:']:
@@ -192,7 +192,7 @@ class Spelling(object):
             if response['Content-Type'].split(';')[0] != 'text/html':
                 continue
 
-            text = BeautifulSoup(response.content).get_text()
+            text = BeautifulSoup(response.content, "html5lib").get_text()
 
             for word in re.findall(r'\b[^_\d\W]+\b', text, flags=re.UNICODE):
                 words[word].add(url)
