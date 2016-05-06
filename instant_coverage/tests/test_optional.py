@@ -1,6 +1,6 @@
 import re
 
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.http import HttpResponse
 from django.test import SimpleTestCase
 
@@ -20,12 +20,11 @@ class ValidJSONTest(SimpleTestCase):
         def not_json(*args, **kwargs):
             return HttpResponse('garbage', content_type='text/html')
 
-        with mocked_patterns(patterns(
-            '',
+        with mocked_patterns([
             url(r'^valid/$', valid_json),
             url(r'^invalid/$', invalid_json),
             url(r'^not/$', not_json),
-        )):
+        ]):
             results = get_results_for(
                 'test_valid_json', mixin=optional.ValidJSON,
                 covered_urls=['/valid/', '/invalid/', '/not/']
@@ -50,10 +49,9 @@ class ValidJSONTest(SimpleTestCase):
         def valid_not_json(*args, **kwargs):
             return HttpResponse('{}', content_type='text/plain')
 
-        with mocked_patterns(patterns(
-            '',
+        with mocked_patterns([
             url(r'^valid-not-json/$', valid_not_json),
-        )):
+        ]):
             results = get_results_for(
                 'test_valid_json', mixin=optional.ValidJSON,
                 covered_urls=['/valid/', '/invalid/', '/not/']
@@ -79,10 +77,9 @@ class ExternalLinksTest(SimpleTestCase):
                 content_type='text/html; utf-8'
             )
 
-        with mocked_patterns(patterns(
-            '',
+        with mocked_patterns([
             url(r'^page/$', page_with_links),
-        )):
+        ]):
             results = get_results_for(
                 'test_external_links', mixin=optional.ExternalLinks,
                 covered_urls=['/page/'],
@@ -134,12 +131,11 @@ class ValidHTML5Test(SimpleTestCase):
         def not_html(*args, **kwargs):
             return HttpResponse('<div sty=wu">', content_type='text/plain')
 
-        with mocked_patterns(patterns(
-            '',
+        with mocked_patterns([
             url(r'^valid/$', valid_html),
             url(r'^invalid/$', invalid_html),
             url(r'^not/$', not_html),
-        )):
+        ]):
             results = get_results_for(
                 'test_valid_html5', mixin=optional.ValidHTML5,
                 covered_urls=['/valid/', '/invalid/', '/not/']
@@ -170,12 +166,11 @@ class SpellingTest(SimpleTestCase):
         def not_html(*args, **kwargs):
             return HttpResponse('nsaiodjsioajds', content_type='text/plain')
 
-        with mocked_patterns(patterns(
-            '',
+        with mocked_patterns([
             url(r'^well/$', well_spelt),
             url(r'^poorly/$', poorly_spelt),
             url(r'^not/$', not_html),
-        )):
+        ]):
             results = get_results_for(
                 'test_spelling', mixin=optional.Spelling,
                 covered_urls=['/well/', '/poorly/', '/not/'],

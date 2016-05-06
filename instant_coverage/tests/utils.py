@@ -1,7 +1,8 @@
 from unittest.result import TestResult, failfast
+from instant_coverage import clear_url_caches
 
 from django.http import HttpResponse
-from django.test import TestCase
+from django.test import SimpleTestCase
 from django.test.utils import setup_test_environment
 from django.views.generic import View
 
@@ -10,6 +11,7 @@ import six
 
 
 def mocked_patterns(patterns):
+    clear_url_caches()
     return patch('instant_coverage.tests.urls.urlpatterns', patterns)
 
 
@@ -28,10 +30,10 @@ def get_results_for(test_name, mixin=None, **test_attributes):
     from instant_coverage import InstantCoverageMixin
 
     if mixin is None:
-        class EverythingTest(InstantCoverageMixin, TestCase):
+        class EverythingTest(InstantCoverageMixin, SimpleTestCase):
             pass
     else:
-        class EverythingTest(mixin, InstantCoverageMixin, TestCase):
+        class EverythingTest(mixin, InstantCoverageMixin, SimpleTestCase):
             pass
 
     setup_test_environment()
@@ -42,7 +44,8 @@ def get_results_for(test_name, mixin=None, **test_attributes):
 
     result = PickyTestResult()
 
-    test._pre_setup()
+    if hasattr(test, '_pre_setup'):
+        test._pre_setup()
 
     test.run(result)
 
