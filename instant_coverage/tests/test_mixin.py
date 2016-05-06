@@ -1,7 +1,7 @@
 from django.conf.urls import include, url
 from django.http import HttpResponse, Http404
 from django.shortcuts import redirect
-from django.test import TestCase as SimpleTestCase
+from django.test import TestCase
 from django.test.utils import override_settings
 
 from .utils import (
@@ -13,7 +13,7 @@ from instant_coverage import (
 )
 
 
-class FailuresTest(SimpleTestCase):
+class FailuresTest(TestCase):
     def test_no_errors_okay(self):
         with mocked_patterns([
             url(r'^$', WorkingView.as_view()),
@@ -243,10 +243,10 @@ class FailuresTest(SimpleTestCase):
             url(r'^a/$', a),
             url(r'^b/$', b),
         ]):
-            class TestA(InstantCoverageMixin, SimpleTestCase):
+            class TestA(InstantCoverageMixin, TestCase):
                 covered_urls = ['/a/']
 
-            class TestB(InstantCoverageMixin, SimpleTestCase):
+            class TestB(InstantCoverageMixin, TestCase):
                 covered_urls = ['/b/']
 
             for method in ['test_no_errors', 'test_acceptable_status_codes']:
