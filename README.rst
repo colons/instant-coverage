@@ -26,7 +26,7 @@ Magic
 
 Has what you need
     Comes with `optional mixins`_ for checking links and validating HTML, JSON
-    or your spelling.
+    or, your spelling.
 
 Extensible
     Easily add tests that will run against every view on your website. If you
@@ -35,7 +35,7 @@ Extensible
     minutes.
 
 Portable
-    Tested_ on Python 2.7, 3.3 and 3.4 with Django versions 1.4 to 1.8.
+    Tested_ on Python 2.7, 3.3, 3.4, and 3.5 with Django versions 1.4 to 1.8.
 
 .. _tested: https://travis-ci.org/colons/instant-coverage
 
