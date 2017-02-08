@@ -165,6 +165,28 @@ class FailuresTest(TestCase):
                     test, covered_urls=[], uncovered_includes=[('^include/',)])
                 self.assertEqual(results.failures, [])
 
+    def test_uncoverd_includes_with_common_nested_patterns(self):
+        incl_a = [url(r'^a/$', BrokenView.as_view())]
+        incl_b = [url(r'^b/$', BrokenView.as_view())]
+        nest = [
+            url(r'^nest/', include(incl_a)),
+            url(r'^nest/', include(incl_b)),
+        ]
+
+        with mocked_patterns([
+            url(r'^include/', include(nest)),
+        ]):
+            for test in [
+                'test_all_urls_accounted_for',
+                'test_no_errors',
+            ]:
+                results = get_results_for(
+                    test, covered_urls=[], uncovered_includes=[
+                        ('^include/', '^nest/')
+                    ]
+                )
+                self.assertEqual(results.failures, [])
+
     def test_all_views_actually_called(self):
         views_called = []
 
