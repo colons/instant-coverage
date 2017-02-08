@@ -25,8 +25,8 @@ Magic
     test.
 
 Has what you need
-    Comes with `optional mixins`_ for checking links and validating HTML, JSON
-    or, your spelling.
+    Comes with `optional mixins`_ for checking links and validating HTML, JSON,
+    or your spelling.
 
 Extensible
     Easily add tests that will run against every view on your website. If you
