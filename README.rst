@@ -35,7 +35,7 @@ Extensible
     minutes.
 
 Portable
-    Tested_ on Python 2.7, 3.3, 3.4, and 3.5 with Django versions 1.4 to 1.9,
+    Tested_ on Python 2.7, 3.3, 3.4, and 3.5 with Django versions 1.4 to 1.10,
     with `some exclusions`_.
 
 .. _some exclusions: https://github.com/colons/instant-coverage/blob/master/.travis.yml
