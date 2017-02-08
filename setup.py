@@ -1,8 +1,8 @@
 import os
 from setuptools import setup
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE",
-                      "instant_coverage.tests.settings")
+os.environ.setdefault('DJANGO_SETTINGS_MODULE',
+                      'instant_coverage.tests.settings')
 
 with open('README.rst') as readme_file:
     README = readme_file.read()
@@ -14,7 +14,7 @@ setup(
     author='colons',
     author_email='pypi@colons.co',
     version='0.0.16',
-    license="BSD",
+    license='BSD',
     platforms=['any'],
     packages=['instant_coverage'],
     install_requires=[
