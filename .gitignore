@@ -1,5 +1,6 @@
 build/
 dist/
+.eggs/
 django_instant_coverage.egg-info/
 *.pyc
 *.egg
