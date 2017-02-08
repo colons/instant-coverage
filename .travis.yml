@@ -35,6 +35,7 @@ before_install:
   - sudo apt-get install libenchant-dev
 
 install:
+  - pip install -U pip setuptools
   - pip install -q $DJANGO_VERSION
   - pip install 'git+https://github.com/rfk/pyenchant.git'
   - python setup.py -q install
