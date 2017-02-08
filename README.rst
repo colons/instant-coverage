@@ -1,4 +1,4 @@
-.. image:: http://colons.co/instant-coverage-small.png
+.. image:: https://colons.co/instant-coverage-small.png
    :alt: A roll of duct tape; the instant coverage logo
 
 Instant Coverage |status|
