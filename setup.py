@@ -24,6 +24,7 @@ setup(
         'beautifulsoup4',
         'requests',
         'html5lib',
+        'wcag_zoo',
     ],
     tests_require=[
         'nose',

@@ -216,3 +216,47 @@ class SpellingTest(SimpleTestCase):
                 'test_spelling', mixin=optional.Spelling,
                 covered_urls=['/'])
         )
+
+
+class WCAGZooTest(SimpleTestCase):
+    def test_valid_heading_structure(self):
+        def valid_headings(*args, **kwargs):
+            return HttpResponse(
+                '<!doctype html><body>'
+                '<h1>hi</h1><h2>fren</h2><h3>this</h3><h4>is</h4><h2>fine</h2>'
+                '</html>'
+            )
+
+        def invalid_headings(*args, **kwargs):
+            return HttpResponse(
+                '<!doctype html><body>'
+                '<h1>hi</h1><h3 id="bad">this</h3><h4>isnt</h4><h2>fine</h2>'
+                '</html>'
+            )
+
+        def not_html(*args, **kwargs):
+            return HttpResponse('<div sty=wu">', content_type='text/plain')
+
+        with mocked_patterns([
+            url(r'^valid/$', valid_headings),
+            url(r'^invalid/$', invalid_headings),
+            url(r'^not/$', not_html),
+        ]):
+            results = get_results_for(
+                'test_wcag', mixin=optional.WCAGZoo,
+                covered_urls=['/valid/', '/invalid/', '/not/']
+            )
+            self.assertEqual(
+                results.failures[0][1][1].args[0],
+                "Some critters in the WCAG Zoo found problems.\n\n"
+                "/invalid/:\n"
+                "{'classes': None,\n"
+                " 'error_code': 'tarsier-1',\n"
+                " 'guideline': '1.3.1',\n"
+                " 'id': 'bad',\n"
+                " 'message': 'Incorrect header found at /html/body/h3 - H3 "
+                "should be H2, text '\n"
+                "            'in header was this',\n"
+                " 'technique': 'G20',\n"
+                " 'xpath': '/html/body/h3'}"
+            )

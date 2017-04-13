@@ -7,12 +7,14 @@ import re
 from collections import defaultdict
 from contextlib import closing
 import json
+from pprint import pformat
 import sys
 
 from bs4 import BeautifulSoup
 import html5lib
 import requests
 import six
+from wcag_zoo.utils import get_wcag_class
 
 
 class ValidJSON(object):
@@ -144,6 +146,57 @@ class ValidHTML5(object):
                              for ((l, c), e, v) in errors]
                         )
                     ) for url, errors in six.iteritems(parser_complaints)])
+                )
+            )
+
+
+class WCAGZoo(object):
+    wcag_critters = ['parade']
+    wcag_level = 'AA'
+
+    def test_wcag(self, *args, **kwargs):
+        """
+        Test HTML for WCAG compliance using critters from WCAG Zoo. If you want
+        to only use some of the critters, provide a list of them by name in the
+        `wcag_critters` attribute; for instance `['molerat', 'tarsier']`. Have
+        a look at the WCAG Zoo documentation for information about what each of
+        these critters does. The default, `['parade']`, nests all other
+        critters.
+
+        You can also set the `wcag_level` attribute to 'A', 'AA', or 'AAA',
+        which affects things like how picky molerat will be about contrast
+        levels. Again, see the WCAG Zoo documentation for more detail.
+
+        For now, tests involving checks of CSS values will probably only work
+        if you're baking your CSS into the document itself. This may change
+        before too long.
+        """
+
+        results = {}
+
+        for critter_name in self.wcag_critters:
+            for url, response in six.iteritems(self.instant_responses()):
+                if response['Content-Type'].split(';')[0] != 'text/html':
+                    continue
+
+                critter = get_wcag_class(critter_name)(level=self.wcag_level)
+                result = critter.validate_document(response.content)
+
+                if result['failures']:
+                    error_list = results.setdefault(url, [])
+                    error_list.extend(result['failures'])
+
+        if results:
+            raise self.failureException(
+                'Some critters in the WCAG Zoo found problems.\n\n{}'.format(
+                    '\n\n'.join((
+                        '{}:\n{}'.format(
+                            url,
+                            '\n'.join(
+                                pformat(e) for e in errors
+                            ),
+                        ) for url, errors in six.iteritems(results)
+                    ))
                 )
             )
 
