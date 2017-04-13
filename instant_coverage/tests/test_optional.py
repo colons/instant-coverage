@@ -246,8 +246,7 @@ class WCAGZooTest(SimpleTestCase):
                 'test_wcag', mixin=optional.WCAGZoo,
                 covered_urls=['/valid/', '/invalid/', '/not/']
             )
-            self.assertEqual(
-                results.failures[0][1][1].args[0],
+            result_py3 = (
                 "Some critters in the WCAG Zoo found problems.\n\n"
                 "/invalid/:\n"
                 "{'classes': None,\n"
@@ -259,4 +258,9 @@ class WCAGZooTest(SimpleTestCase):
                 "            'in header was this',\n"
                 " 'technique': 'G20',\n"
                 " 'xpath': '/html/body/h3'}"
+            )
+            result_py2 = result_py3.replace("'\n            '", "")
+            self.assertIn(
+                results.failures[0][1][1].args[0],
+                (result_py3, result_py2),
             )
