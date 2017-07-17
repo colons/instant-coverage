@@ -10,6 +10,8 @@ import json
 from pprint import pformat
 import sys
 
+from django.conf import settings
+
 from bs4 import BeautifulSoup
 import html5lib
 import requests
@@ -153,6 +155,7 @@ class ValidHTML5(object):
 class WCAGZoo(object):
     wcag_critters = ['parade']
     wcag_level = 'AA'
+    wcag_css_static_dir = None
 
     def test_wcag(self, *args, **kwargs):
         """
@@ -166,21 +169,42 @@ class WCAGZoo(object):
         You can also set the `wcag_level` attribute to 'A', 'AA', or 'AAA',
         which affects things like how picky molerat will be about contrast
         levels. Again, see the WCAG Zoo documentation for more detail.
-
-        For now, tests involving checks of CSS values will probably only work
-        if you're baking your CSS into the document itself. This may change
-        before too long.
         """
 
         results = {}
+        staticpath = self.wcag_css_static_dir
+        if staticpath is None:
+            try:
+                staticpath, = settings.STATICFILES_DIRS
+            except ValueError:
+                raise RuntimeError(
+                    'Could not determine a single static directory to look '
+                    'for your CSS in. Please ensure that your Django '
+                    'STATICFILES_DIRS setting is a single directory, or set '
+                    '{}.wcag_css_static_dir to the path you want us to look '
+                    'in instead.'
+                    .format(self.__class__.__name__)
+                )
 
         for critter_name in self.wcag_critters:
             for url, response in six.iteritems(self.instant_responses()):
                 if response['Content-Type'].split(';')[0] != 'text/html':
                     continue
 
-                critter = get_wcag_class(critter_name)(level=self.wcag_level)
-                result = critter.validate_document(response.content)
+                soup = BeautifulSoup(response.content, 'html5lib')
+                for style in soup.select('link[rel="stylesheet"]'):
+                    if style['href'].startswith(settings.STATIC_URL):
+                        style['href'] = style['href'].replace(
+                            settings.STATIC_URL, '', 1,
+                        )
+
+                critter = get_wcag_class(critter_name)(
+                    level=self.wcag_level, staticpath=staticpath,
+                )
+
+                result = critter.validate_document(
+                    six.text_type(soup).encode('utf-8')
+                )
 
                 if result['failures']:
                     error_list = results.setdefault(url, [])
