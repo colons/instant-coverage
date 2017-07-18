@@ -244,7 +244,8 @@ class WCAGZooTest(SimpleTestCase):
         ]):
             results = get_results_for(
                 'test_wcag', mixin=optional.WCAGZoo,
-                covered_urls=['/valid/', '/invalid/', '/not/']
+                covered_urls=['/valid/', '/invalid/', '/not/'],
+                wcag_css_static_dir='.',
             )
             result_py3 = (
                 "Some critters in the WCAG Zoo found problems.\n\n"
