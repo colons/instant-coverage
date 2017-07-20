@@ -169,6 +169,10 @@ class WCAGZoo(object):
         You can also set the `wcag_level` attribute to 'A', 'AA', or 'AAA',
         which affects things like how picky molerat will be about contrast
         levels. Again, see the WCAG Zoo documentation for more detail.
+
+        If you're using Python 2 and have any non-ascii css, you'll probably
+        want to use my py2-supporting fork of wcag-zoo, which is available at
+        https://github.com/colons/wcag-zoo.
         """
 
         results = {}
