@@ -36,7 +36,15 @@ def get_results_for(test_name, mixin=None, **test_attributes):
         class EverythingTest(mixin, InstantCoverageMixin, SimpleTestCase):
             pass
 
-    setup_test_environment()
+    try:
+        setup_test_environment()
+    except RuntimeError:
+        # look, this is gross, but what we're doing here to make an in-test
+        # fake test environment is pretty gross already, so let's just placate
+        # django for now:
+        teardown_test_environment()
+        setup_test_environment()
+
     test = EverythingTest(test_name)
 
     for attribute, value in six.iteritems(test_attributes):
@@ -48,8 +56,6 @@ def get_results_for(test_name, mixin=None, **test_attributes):
         test._pre_setup()
 
     test.run(result)
-
-    teardown_test_environment()
 
     if not result.errors == []:
         # there should only ever be failures; if there's an error we should
