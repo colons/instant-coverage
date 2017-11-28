@@ -216,11 +216,11 @@ class WCAGZoo(object):
 
         if results:
             raise self.failureException(
-                'Some critters in the WCAG Zoo found problems.\n\n{}'.format(
-                    '\n\n'.join((
-                        '{}:\n{}'.format(
+                u'Some critters in the WCAG Zoo found problems.\n\n{}'.format(
+                    u'\n\n'.join((
+                        u'{}:\n{}'.format(
                             url,
-                            '\n'.join(
+                            u'\n'.join(
                                 pformat(e) for e in errors
                             ),
                         ) for url, errors in six.iteritems(results)
