@@ -247,21 +247,9 @@ class WCAGZooTest(SimpleTestCase):
                 covered_urls=['/valid/', '/invalid/', '/not/'],
                 wcag_css_static_dir='.',
             )
-            result_py3 = (
-                "Some critters in the WCAG Zoo found problems.\n\n"
-                "/invalid/:\n"
-                "{'classes': None,\n"
-                " 'error_code': 'tarsier-1',\n"
-                " 'guideline': '1.3.1',\n"
-                " 'id': 'bad',\n"
-                " 'message': 'Incorrect header found at /html/body/h3 - H3 "
-                "should be H2, text '\n"
-                "            'in header was this',\n"
-                " 'technique': 'G20',\n"
-                " 'xpath': '/html/body/h3'}"
-            )
-            result_py2 = result_py3.replace("'\n            '", "")
             self.assertIn(
+                "Some critters in the WCAG Zoo found problems.\n\n/invalid/:",
                 results.failures[0][1][1].args[0],
-                (result_py3, result_py2),
             )
+            self.assertNotIn("/valid/", results.failures[0][1][1].args[0])
+            self.assertNotIn("/not/", results.failures[0][1][1].args[0])
