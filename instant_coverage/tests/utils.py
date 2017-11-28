@@ -3,7 +3,7 @@ from instant_coverage import clear_url_caches
 
 from django.http import HttpResponse
 from django.test import SimpleTestCase
-from django.test.utils import setup_test_environment
+from django.test.utils import setup_test_environment, teardown_test_environment
 from django.views.generic import View
 
 from mock import patch
@@ -48,6 +48,8 @@ def get_results_for(test_name, mixin=None, **test_attributes):
         test._pre_setup()
 
     test.run(result)
+
+    teardown_test_environment()
 
     if not result.errors == []:
         # there should only ever be failures; if there's an error we should
