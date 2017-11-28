@@ -212,7 +212,7 @@ class WCAGZoo(object):
 
                 if result['failures']:
                     error_list = results.setdefault(url, [])
-                    error_list.extend(result['failures'])
+                    error_list.append(result['failures'])
 
         if results:
             raise self.failureException(

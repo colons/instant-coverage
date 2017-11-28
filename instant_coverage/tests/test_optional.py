@@ -251,5 +251,7 @@ class WCAGZooTest(SimpleTestCase):
                 "Some critters in the WCAG Zoo found problems.\n\n/invalid/:",
                 results.failures[0][1][1].args[0],
             )
+            self.assertIn('Incorrect header found at /html/body/h3',
+                          results.failures[0][1][1].args[0])
             self.assertNotIn("/valid/", results.failures[0][1][1].args[0])
             self.assertNotIn("/not/", results.failures[0][1][1].args[0])
