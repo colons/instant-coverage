@@ -185,11 +185,12 @@ class InstantCoverageMixin(InstantCoverageAPI):
             raise self.failureException(
                 'The following views are untested:\n\n{0}\n\n{1}'.format(
                     '\n'.join([
-                        '{base} {regex} ({name})'.format(
-                            base=base, name=pattern.name, regex=(
-                                pattern.pattern._regex if
-                                django.VERSION >= (2, 0) else
-                                pattern._regex
+                        '{base} {route} ({name})'.format(
+                            base=base, name=pattern.name, route=(
+                                getattr(pattern.pattern, '_route', None) or
+                                getattr(pattern.pattern, '_regex')
+                                if django.VERSION >= (2, 0)
+                                else pattern._regex
                             ),
                         ) for base, pattern in not_accounted_for
                     ]),

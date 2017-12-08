@@ -1,3 +1,4 @@
+import django
 from django.conf.urls import include, url
 from django.http import HttpResponse, Http404
 from django.shortcuts import redirect
@@ -45,6 +46,27 @@ class FailuresTest(TestCase):
                 "The following views are untested:\n\n"
                 "() ^untested-url/$ (None)\n\n" +
                 IGNORE_TUTORIAL.format(name='EverythingTest')
+            )
+
+    def test_messaging_for_non_regex_patterns(self):
+        if django.VERSION < (2, 0):
+            self.skipTest('only works on django 2.0 or newer')
+
+        from django.urls import path
+
+        with mocked_patterns([
+            path('tested-url/', WorkingView.as_view()),
+            path('untested-url/', WorkingView.as_view()),
+            url(r'^another-untested-url/$', WorkingView.as_view()),
+        ]):
+            results = get_results_for('test_all_urls_accounted_for',
+                                      covered_urls=['/tested-url/'])
+            self.assertEqual(
+                'The following views are untested:\n\n'
+                '() untested-url/ (None)\n'
+                '() ^another-untested-url/$ (None)\n\n{}'
+                .format(IGNORE_TUTORIAL.format(name='EverythingTest')),
+                results.failures[0][1][1].args[0],
             )
 
     def test_non_list_urls(self):
