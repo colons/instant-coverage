@@ -3,16 +3,26 @@ import traceback
 
 import django
 from django.conf import settings
-from django.core.urlresolvers import (
-    RegexURLPattern, RegexURLResolver, resolve
-)
 from django.test.client import Client
 
 from mock import patch
 import six
 
 
-if django.VERSION >= (1, 7):
+if django.VERSION >= (2, 0):
+    from django.urls import URLPattern, URLResolver, resolve
+    RESOLVE_PATH = 'django.urls.URLPattern.resolve'
+else:
+    from django.core.urlresolvers import (
+        RegexURLPattern as URLPattern,
+        RegexURLResolver as URLResolver,
+        resolve,
+    )
+    RESOLVE_PATH = 'django.core.urlresolvers.RegexURLPattern.resolve'
+
+if django.VERSION >= (2, 0):
+    from django.urls import clear_url_caches
+elif django.VERSION >= (1, 7):
     from django.core.urlresolvers import clear_url_caches
 else:
     from django.core.urlresolvers import _resolver_cache
@@ -47,19 +57,25 @@ def extract_all_patterns_from_urlpatterns(patterns, uncovered_includes,
         return []
 
     for p in patterns:
-        if isinstance(p, RegexURLPattern):
+        if isinstance(p, URLPattern):
             all_patterns.append((base, p))
 
-        elif isinstance(p, RegexURLResolver):
+        elif isinstance(p, URLResolver):
             all_patterns.extend(extract_all_patterns_from_urlpatterns(
-                p.url_patterns, uncovered_includes, base + (p.regex.pattern,)))
+                p.url_patterns, uncovered_includes, base + ((
+                    p.pattern.regex.pattern if django.VERSION >= (2, 0)
+                    else p.regex.pattern
+                ),)))
 
         elif hasattr(p, '_get_callback'):
             all_patterns.append((base, p))
 
         elif hasattr(p, 'url_patterns') or hasattr(p, '_get_url_patterns'):
             all_patterns.extend(extract_all_patterns_from_urlpatterns(
-                patterns, uncovered_includes, base + (p.regex.pattern,)))
+                patterns, uncovered_includes, base + ((
+                    p.pattern.regex.pattern if django.VERSION >= (2, 0)
+                    else p.regex.pattern
+                ),)))
 
         else:
             raise TypeError("%s does not appear to be a urlpattern object" % p)
@@ -145,7 +161,7 @@ class InstantCoverageMixin(InstantCoverageAPI):
 
         patterns = get_urlpatterns()
 
-        original_resolve = RegexURLPattern.resolve
+        original_resolve = URLPattern.resolve
 
         def resolve_and_make_note(self, url, *args, **kwargs):
             match = original_resolve(self, url, *args, **kwargs)
@@ -155,8 +171,7 @@ class InstantCoverageMixin(InstantCoverageAPI):
 
             return match
 
-        with patch('django.core.urlresolvers.RegexURLPattern.resolve',
-                   resolve_and_make_note):
+        with patch(RESOLVE_PATH, resolve_and_make_note):
             for url in list(self.covered_urls) + list(self.uncovered_urls):
                 resolve(url.split('?')[0])
 
@@ -170,8 +185,12 @@ class InstantCoverageMixin(InstantCoverageAPI):
             raise self.failureException(
                 'The following views are untested:\n\n{0}\n\n{1}'.format(
                     '\n'.join([
-                        '{base} {_regex} ({name})'.format(
-                            base=base, **pattern.__dict__
+                        '{base} {regex} ({name})'.format(
+                            base=base, name=pattern.name, regex=(
+                                pattern.pattern._regex if
+                                django.VERSION >= (2, 0) else
+                                pattern._regex
+                            ),
                         ) for base, pattern in not_accounted_for
                     ]),
                     IGNORE_TUTORIAL.format(name=self.__class__.__name__),
