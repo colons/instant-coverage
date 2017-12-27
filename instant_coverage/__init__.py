@@ -11,6 +11,7 @@ import six
 
 if django.VERSION >= (2, 0):
     from django.urls import URLPattern, URLResolver, resolve
+    from django.urls.resolvers import RoutePattern
     RESOLVE_PATH = 'django.urls.URLPattern.resolve'
 else:
     from django.core.urlresolvers import (
@@ -19,6 +20,7 @@ else:
         resolve,
     )
     RESOLVE_PATH = 'django.core.urlresolvers.RegexURLPattern.resolve'
+    RoutePattern = None
 
 if django.VERSION >= (2, 0):
     from django.urls import clear_url_caches
@@ -186,12 +188,11 @@ class InstantCoverageMixin(InstantCoverageAPI):
                 'The following views are untested:\n\n{0}\n\n{1}'.format(
                     '\n'.join([
                         '{base} {route} ({name})'.format(
-                            base=base, name=pattern.name, route=(
-                                getattr(pattern.pattern, '_route', None) or
+                            base=base, name=pattern.name, route=((
+                                getattr(pattern.pattern, '_route', None) if
+                                isinstance(pattern.pattern, RoutePattern) else
                                 getattr(pattern.pattern, '_regex')
-                                if django.VERSION >= (2, 0)
-                                else pattern._regex
-                            ),
+                            ) if django.VERSION >= (2, 0) else pattern._regex),
                         ) for base, pattern in not_accounted_for
                     ]),
                     IGNORE_TUTORIAL.format(name=self.__class__.__name__),
