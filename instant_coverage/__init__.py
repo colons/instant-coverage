@@ -189,6 +189,8 @@ class InstantCoverageMixin(InstantCoverageAPI):
                             base=base, name=pattern.name, route=(
                                 getattr(pattern.pattern, '_route', None) or
                                 getattr(pattern.pattern, '_regex', '-')
+                                if django.VERSION >= (2, 0)
+                                else pattern._regex
                             ),
                         ) for base, pattern in not_accounted_for
                     ]),
