@@ -142,8 +142,8 @@ class ValidHTML5(object):
                 'html5lib raised the following issues:\n\n{0}'.format(
                     '\n\n'.join(['{url}:\n{errs}'.format(
                         url=url, errs='\n'.join(
-                            ['Line: {l} Col: {c} {err}'.format(
-                                l=l, c=c, err=html5lib.constants.E[e] % v)
+                            ['Line: {line} Col: {col} {err}'.format(
+                                line=l, col=c, err=html5lib.constants.E[e] % v)
                              for ((l, c), e, v) in errors]
                         )
                     ) for url, errors in six.iteritems(parser_complaints)])
