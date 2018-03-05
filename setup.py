@@ -24,11 +24,11 @@ setup(
         'beautifulsoup4',
         'requests',
         'html5lib',
-        'wcag_zoo>=0.2.0',
     ],
     tests_require=[
         'nose',
         'pyenchant',
+        'wcag_zoo>=0.2.0',
     ],
     test_suite='nose.collector',
     long_description=README,
