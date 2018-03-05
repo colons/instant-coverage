@@ -57,5 +57,6 @@ install:
   - pip install -qU pip setuptools
   - pip install -q $DJANGO_VERSION
   - python setup.py -q install
+  - pip install git+https://github.com/colons/wcag-zoo.git
 
 script: python setup.py test
