@@ -179,9 +179,9 @@ class WCAGZoo(object):
         except ImportError:
             raise ImportError(
                 'This test requires wcag-zoo.\n'
-                '`pip install wcag-zoo` will work if you are running python '
-                '3.5 or later, but for 2.7 you will need a version with 2.7 '
-                'support, like https://github.com/colons/wcag-zoo'
+                '`pip install wcag-zoo` will work if you are running a '
+                'version of Python 3, but for 2.7 you will need a version '
+                'with 2.7 support, like https://github.com/colons/wcag-zoo'
             )
 
         results = {}
