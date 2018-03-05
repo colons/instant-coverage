@@ -11,6 +11,7 @@ import six
 
 if django.VERSION >= (2, 0):
     from django.urls import URLPattern, URLResolver, resolve
+    from django.urls.resolvers import RoutePattern
     RESOLVE_PATH = 'django.urls.URLPattern.resolve'
 else:
     from django.core.urlresolvers import (
@@ -19,6 +20,7 @@ else:
         resolve,
     )
     RESOLVE_PATH = 'django.core.urlresolvers.RegexURLPattern.resolve'
+    RoutePattern = None
 
 if django.VERSION >= (2, 0):
     from django.urls import clear_url_caches
