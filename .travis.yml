@@ -7,6 +7,13 @@ python:
   - "3.6"
   - "3.7"
 
+addons:
+  apt:
+    sources:
+      - travis-ci/sqlite3
+    packages:
+      - sqlite3
+
 env:
   - DJANGO_VERSION='Django>=1.4,<1.5'
   - DJANGO_VERSION='Django>=1.5,<1.6'
