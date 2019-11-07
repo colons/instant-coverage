@@ -71,7 +71,7 @@ class ExternalLinksTest(SimpleTestCase):
             return HttpResponse(
                 '<a href="http:garbage"></a>'
                 '<a href="https://github.com/colons/not-a-real-repo"></a>'
-                '<img src="http://localhost:9000000"></img>'
+                '<img src="http://localhost:65530"></img>'
                 '<form action="http://what"></a>'
                 '<a href="http://google.com/"></a>',
                 content_type='text/html; utf-8'
@@ -107,7 +107,7 @@ class ExternalLinksTest(SimpleTestCase):
 
             self.assertRegexpMatches(
                 result_string, connection_error_regex.format(
-                    re.escape('http://localhost:9000000: ')
+                    re.escape('http://localhost:65530: ')
                 )
             )
 
