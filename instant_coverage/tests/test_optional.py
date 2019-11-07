@@ -93,7 +93,7 @@ class ExternalLinksTest(SimpleTestCase):
             )
 
             self.assertIn(
-                "http:garbage: Failed to parse: ",
+                "http:garbage: Invalid URL",
                 result_string
             )
 
