@@ -35,8 +35,8 @@ Extensible
     minutes.
 
 Portable
-    Automatically tested_ on against Django versions 1.4 to 2.2. I'm also
-    actively using it on many projects running Django versions in that range.
+    Automatically tested_ against Django versions 1.4 to 2.2. I'm also actively
+    using it on many projects running Django versions in that range.
 
 .. _tested: https://travis-ci.org/colons/instant-coverage
 
