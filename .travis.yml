@@ -55,6 +55,8 @@ matrix:
       env: DJANGO_VERSION='Django>=1.6,<1.7'  # expects html.parser.HTMLParseError
     - python: "3.5"
       env: DJANGO_VERSION='Django>=1.7,<1.8'  # expects html.parser.HTMLParseError
+    - python: "3.5"
+      env: DJANGO_VERSION='Django>=3.0,<3.1'  # unsupported
     - python: "3.6"
       env: DJANGO_VERSION='Django>=1.4,<1.5'  # unsupported
     - python: "3.6"
