@@ -88,7 +88,7 @@ before_install:
 install:
   - pip install -qU pip setuptools
   - pip install -q $DJANGO_VERSION
-  - python setup.py -q install
   - if python --version | grep -q 'Python 2'; then pip install git+https://github.com/colons/wcag-zoo.git; pip install 'soupsieve<2'; fi
+  - python setup.py -q install
 
 script: python setup.py test
