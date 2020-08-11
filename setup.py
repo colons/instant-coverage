@@ -39,5 +39,7 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Topic :: Software Development :: Testing',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
     ],
 )
