@@ -192,7 +192,8 @@ class SpellingTest(SimpleTestCase):
 
             self.assertIn('/poorly/', result_string)
             self.assertIn('\n\n"nott"\n', result_string)
-            self.assertIn('\nsuggestions: not, ', result_string)
+            self.assertIn('\nsuggestions: ', result_string)
+            self.assertIn('not, ', result_string)
             self.assertIn('\nseen on: /poorly/', result_string)
             self.assertIn('\n\n"saiodjsoiafh"\n', result_string)
 
