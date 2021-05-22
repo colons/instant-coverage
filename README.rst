@@ -35,8 +35,10 @@ Extensible
     minutes.
 
 Portable
-    Automatically tested_ against Django versions 1.4 to 3.0. I'm also actively
-    using it on many projects running Django versions in that range.
+    Automatically tested_ against Django versions 1.5 to 3.2. I'm also actively
+    using it on many projects running Django versions in that range. There are
+    no automatic tests on Python 2 any more, but I'll still fix issues on 2.7
+    if you raise them and it's not too much of a stretch.
 
 .. _tested: https://travis-ci.com/github/colons/instant-coverage
 
