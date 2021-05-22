@@ -4,8 +4,8 @@
 Instant Coverage |status|
 =========================
 
-.. |status| image:: https://travis-ci.org/colons/instant-coverage.svg
-   :target: https://travis-ci.org/colons/instant-coverage
+.. |status| image:: https://travis-ci.com/colons/instant-coverage.svg
+   :target: https://travis-ci.com/github/colons/instant-coverage
 
 Your new Django site need tests. Nothing super fancy, just enough that you know
 you've not forgotten to close some <div> somewhere and it's not going to start
@@ -38,7 +38,7 @@ Portable
     Automatically tested_ against Django versions 1.4 to 3.0. I'm also actively
     using it on many projects running Django versions in that range.
 
-.. _tested: https://travis-ci.org/colons/instant-coverage
+.. _tested: https://travis-ci.com/github/colons/instant-coverage
 
 Changes
 =======
