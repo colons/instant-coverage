@@ -29,6 +29,7 @@ setup(
         'nose',
         'pyenchant',
         'wcag_zoo>=0.2.0',
+        'mypy',
     ],
     test_suite='nose.collector',
     long_description=README,
