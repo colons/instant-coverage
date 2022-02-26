@@ -1,0 +1,113 @@
+on: [push]
+jobs:
+  mypy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: install system dependencies
+        run: sudo apt install aspell aspell-en libenchant-dev
+
+      - uses: actions/checkout@v2
+
+      - run: pip install '.[linting]'
+
+      - run: mypy
+
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        django:
+          - '>=1.5,<1.6'
+          - '>=1.6,<1.7'
+          - '>=1.7,<1.8'
+          - '>=1.8,<1.9'
+          - '>=1.9,<1.10'
+          - '>=1.10,<1.11'
+          - '>=1.11,<1.12'
+          - '>=2.0,<2.1'
+          - '>=2.1,<2.2'
+          - '>=2.2,<2.3'
+          - '>=3.0,<3.1'
+          - '>=3.1,<3.2'
+          - '>=3.2,<3.3'
+        python:
+          - '2.7'
+          - '3.5'
+          - '3.6'
+          - '3.7'
+          - '3.8'
+        exclude:
+          - python: '2.7'
+            django: '>=2.0,<2.1'  # not available
+          - python: '2.7'
+            django: '>=2.1,<2.2'  # not available
+          - python: '2.7'
+            django: '>=2.2,<2.3'  # not available
+          - python: '2.7'
+            django: '>=3.0,<3.1'  # not available
+          - python: '2.7'
+            django: '>=3.1,<3.2'  # not available
+          - python: '2.7'
+            django: '>=3.2,<3.3'  # not available
+
+          - python: '3.5'
+            django: '>=1.5,<1.6'  # expects html.parser.HTMLParseError
+          - python: '3.5'
+            django: '>=1.6,<1.7'  # expects html.parser.HTMLParseError
+          - python: '3.5'
+            django: '>=1.7,<1.8'  # expects html.parser.HTMLParseError
+          - python: '3.5'
+            django: '>=3.0,<3.1'  # unsupported
+          - python: '3.5'
+            django: '>=3.1,<3.2'  # unsupported
+          - python: '3.5'
+            django: '>=3.2,<3.3'  # unsupported
+
+          - python: '3.6'
+            django: '>=1.5,<1.6'  # expects html.parser.HTMLParseError
+          - python: '3.6'
+            django: '>=1.6,<1.7'  # expects html.parser.HTMLParseError
+          - python: '3.6'
+            django: '>=1.7,<1.8'  # expects html.parser.HTMLParseError
+
+          - python: '3.7'
+            django: '>=1.5,<1.6'  # expects html.parser.HTMLParseError
+          - python: '3.7'
+            django: '>=1.6,<1.7'  # expects html.parser.HTMLParseError
+          - python: '3.7'
+            django: '>=1.7,<1.8'  # expects html.parser.HTMLParseError
+
+          - python: '3.8'
+            django: '>=1.5,<1.6'  # expects html.parser.HTMLParseError
+          - python: '3.8'
+            django: '>=1.6,<1.7'  # expects html.parser.HTMLParseError
+          - python: '3.8'
+            django: '>=1.7,<1.8'  # expects html.parser.HTMLParseError
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: install system dependencies
+        run: sudo apt install aspell aspell-en libenchant-dev
+
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '${{ matrix.python }}'
+
+      - name: install Python dependencies
+        run: pip install '.[testing]'
+
+      - name: install Python 2.7-compatible alternative dependencies
+        run: pip install 'premailer<3.7' 'beautifulsoup4==4.9.3' 'git+https://github.com/colons/wcag-zoo.git'
+        if: matrix.python == '2.7'
+
+      - name: install Django
+        run: pip install 'Django${{ matrix.django }}'
+
+      - name: run tests
+        run: python setup.py test

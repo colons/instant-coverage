@@ -25,15 +25,19 @@ setup(
         'requests',
         'html5lib',
     ],
-    tests_require=[
-        'mypy',
-        'nose',
-        'pyenchant',
-        'types-mock',
-        'types-requests',
-        'types-six',
-        'wcag_zoo>=0.2.0',
-    ],
+    extras_require={
+        'linting': [
+            'mypy',
+            'types-mock',
+            'types-requests',
+            'types-six',
+        ],
+        'testing': [
+            'nose',
+            'pyenchant',
+            'wcag_zoo>=0.2.0',
+        ],
+    },
     test_suite='nose.collector',
     long_description=README,
     classifiers=[
