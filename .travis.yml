@@ -80,4 +80,7 @@ install:
   - pip install -q $DJANGO_VERSION
   - python setup.py -q install
 
-script: python setup.py test
+jobs:
+  include:
+    - script: python setup.py test
+    - script: mypy
