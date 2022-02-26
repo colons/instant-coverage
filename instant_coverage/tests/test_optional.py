@@ -10,7 +10,7 @@ from .utils import get_results_for, mocked_patterns
 
 
 class ValidJSONTest(SimpleTestCase):
-    def test_valid_json(self):
+    def test_valid_json(self):  # type: () -> None
         def valid_json(*args, **kwargs):
             return HttpResponse('{}', content_type='application/json')
 
@@ -41,7 +41,7 @@ class ValidJSONTest(SimpleTestCase):
                 )
             )
 
-    def test_no_json(self):
+    def test_no_json(self):  # type: () -> None
         """
         Ensure that, given a website with no json in it, a failure is raised.
         """
@@ -66,7 +66,7 @@ class ValidJSONTest(SimpleTestCase):
 
 
 class ExternalLinksTest(SimpleTestCase):
-    def test_external_links(self):
+    def test_external_links(self):  # type: () -> None
         def page_with_links(*args, **kwargs):
             return HttpResponse(
                 '<a href="http:garbage"></a>'
@@ -121,7 +121,7 @@ class ExternalLinksTest(SimpleTestCase):
 
 
 class ValidHTML5Test(SimpleTestCase):
-    def test_valid_json(self):
+    def test_valid_json(self):  # type: () -> None
         def valid_html(*args, **kwargs):
             return HttpResponse('<!doctype html>\n<html></html>')
 
@@ -151,7 +151,7 @@ class ValidHTML5Test(SimpleTestCase):
 
 
 class SpellingTest(SimpleTestCase):
-    def test_spelling(self):
+    def test_spelling(self):  # type: () -> None
         def well_spelt(*args, **kwargs):
             return HttpResponse(
                 'I am fuelled by the colour of your aluminium armour. '
@@ -204,7 +204,7 @@ class SpellingTest(SimpleTestCase):
                             '"{0}" does not end with "{1}"'.format(
                                 result_string, expected_end))
 
-    def test_no_language_provided(self):
+    def test_no_language_provided(self):  # type: () -> None
         self.assertRaisesMessage(
             Exception,
             # I'd ask for AttributeError specifically, but for whatever reason
@@ -220,7 +220,7 @@ class SpellingTest(SimpleTestCase):
 
 
 class WCAGZooTest(SimpleTestCase):
-    def test_valid_heading_structure(self):
+    def test_valid_heading_structure(self):  # type: () -> None
         def valid_headings(*args, **kwargs):
             return HttpResponse(
                 '<!doctype html><body>'

@@ -15,14 +15,14 @@ from instant_coverage import (
 
 
 class FailuresTest(TestCase):
-    def test_no_errors_okay(self):
+    def test_no_errors_okay(self):  # type: () -> None
         with mocked_patterns([
             url(r'^$', WorkingView.as_view()),
         ]):
             results = get_results_for('test_no_errors', covered_urls=['/'])
             self.assertEqual(results.failures, [])
 
-    def test_errors_surfaced(self):
+    def test_errors_surfaced(self):  # type: () -> None
         with mocked_patterns([
             url(r'^$', BrokenView.as_view()),
         ]):
@@ -34,7 +34,7 @@ class FailuresTest(TestCase):
                 INSTANT_TRACEBACKS_TUTORIAL.format(name='EverythingTest')
             )
 
-    def test_missing_nameless_urls_complained_about(self):
+    def test_missing_nameless_urls_complained_about(self):  # type: () -> None
         with mocked_patterns([
             url(r'^tested-url/$', WorkingView.as_view()),
             url(r'^untested-url/$', WorkingView.as_view()),
@@ -48,7 +48,7 @@ class FailuresTest(TestCase):
                 IGNORE_TUTORIAL.format(name='EverythingTest')
             )
 
-    def test_messaging_for_non_regex_patterns(self):
+    def test_messaging_for_non_regex_patterns(self):  # type: () -> None
         if django.VERSION < (2, 0):
             self.skipTest('only works on django 2.0 or newer')
 
@@ -69,7 +69,7 @@ class FailuresTest(TestCase):
                 results.failures[0][1][1].args[0],
             )
 
-    def test_non_list_urls(self):
+    def test_non_list_urls(self):  # type: () -> None
         """
         Ensure you can use a tuple of URLs if you so desire.
         """
@@ -93,7 +93,7 @@ class FailuresTest(TestCase):
                 IGNORE_TUTORIAL.format(name='EverythingTest')
             )
 
-    def test_missing_named_urls_complained_about(self):
+    def test_missing_named_urls_complained_about(self):  # type: () -> None
         with mocked_patterns([
             url(r'^tested-url/$', WorkingView.as_view()),
             url(r'^untested-url/$', WorkingView.as_view(), name='name'),
@@ -107,7 +107,7 @@ class FailuresTest(TestCase):
                 IGNORE_TUTORIAL.format(name='EverythingTest')
             )
 
-    def test_excepted_urls_not_complained_about(self):
+    def test_excepted_urls_not_complained_about(self):  # type: () -> None
         with mocked_patterns([
             url(r'^tested-url/$', WorkingView.as_view()),
             url(r'^untested-url/$', WorkingView.as_view()),
@@ -125,7 +125,7 @@ class FailuresTest(TestCase):
                 IGNORE_TUTORIAL.format(name='EverythingTest')
             )
 
-    def test_excepted_urls_ignored(self):
+    def test_excepted_urls_ignored(self):  # type: () -> None
         with mocked_patterns([
             url(r'^tested-url/$', WorkingView.as_view()),
             url(r'^deliberately-untested-url/$', BrokenView.as_view()),
@@ -136,7 +136,7 @@ class FailuresTest(TestCase):
             results = get_results_for('test_no_errors')
             self.assertEqual(results.failures, [])
 
-    def test_broken_url_in_include(self):
+    def test_broken_url_in_include(self):  # type: () -> None
         incl = [
             url(r'^broken-url/$', BrokenView.as_view()),
         ]
@@ -153,7 +153,7 @@ class FailuresTest(TestCase):
                 INSTANT_TRACEBACKS_TUTORIAL.format(name='EverythingTest')
             )
 
-    def test_missing_url_in_include(self):
+    def test_missing_url_in_include(self):  # type: () -> None
         incl = [
             url(r'^broken-url/$', BrokenView.as_view()),
         ]
@@ -171,7 +171,7 @@ class FailuresTest(TestCase):
                 IGNORE_TUTORIAL.format(name='EverythingTest')
             )
 
-    def test_uncovered_includes(self):
+    def test_uncovered_includes(self):  # type: () -> None
         incl = [
             url(r'^broken-url/$', BrokenView.as_view()),
         ]
@@ -187,7 +187,7 @@ class FailuresTest(TestCase):
                     test, covered_urls=[], uncovered_includes=[('^include/',)])
                 self.assertEqual(results.failures, [])
 
-    def test_uncoverd_includes_with_common_nested_patterns(self):
+    def test_uncoverd_includes_with_common_nested_patterns(self):  # type: () -> None
         incl_a = [url(r'^a/$', BrokenView.as_view())]
         incl_b = [url(r'^b/$', BrokenView.as_view())]
         nest = [
@@ -209,7 +209,7 @@ class FailuresTest(TestCase):
                 )
                 self.assertEqual(results.failures, [])
 
-    def test_all_views_actually_called(self):
+    def test_all_views_actually_called(self):  # type: () -> None
         views_called = []
 
         def view_one(*args, **kwargs):
@@ -240,7 +240,7 @@ class FailuresTest(TestCase):
             self.assertEqual(views_called,
                              ['view_one', 'view_two', 'included_view'])
 
-    def test_bad_status_codes_caught(self):
+    def test_bad_status_codes_caught(self):  # type: () -> None
         def missing_view(*args, **kwargs):
             raise Http404
 
@@ -257,7 +257,7 @@ class FailuresTest(TestCase):
                 "/404-url/: 404"
             )
 
-    def test_instant_tracebacks(self):
+    def test_instant_tracebacks(self):  # type: () -> None
         with mocked_patterns([
             url(r'^$', BrokenView.as_view()),
         ]):
@@ -272,7 +272,7 @@ class FailuresTest(TestCase):
                 results.failures[0][1][1].args[0],
             )
 
-    def test_views_only_called_once_per_class(self):
+    def test_views_only_called_once_per_class(self):  # type: () -> None
         calls = []
 
         def a(*args, **kwargs):
@@ -303,7 +303,7 @@ class FailuresTest(TestCase):
 
             self.assertEqual(calls, ['a', 'b'])
 
-    def test_redirects_not_followed_if_follow_redirects_false(self):
+    def test_redirects_not_followed_if_follow_redirects_false(self):  # type: () -> None
         calls = []
 
         def redir(*args, **kwargs):

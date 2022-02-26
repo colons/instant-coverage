@@ -19,7 +19,7 @@ import six
 
 
 class ValidJSON(object):
-    def test_valid_json(self):
+    def test_valid_json(self):  # type: () -> None
         """
         Ensure all responses with Content-Type: application/json are throwing
         out valid JSON.
@@ -60,7 +60,7 @@ class ValidJSON(object):
 
 
 class ExternalLinks(object):
-    def test_external_links(self):
+    def test_external_links(self):  # type: () -> None
         """
         Ensure all external links are pointed at URLs that resolve and respond
         with or eventually redirect to somewhere that responds with a 200
@@ -117,7 +117,7 @@ class ExternalLinks(object):
 
 
 class ValidHTML5(object):
-    def test_valid_html5(self):
+    def test_valid_html5(self):  # type: () -> None
         """
         Ensure html5lib thinks our HTML is okay. Will catch really bad stuff
         like dangling tags and asymmetrical attribute quotes but ignores stuff
@@ -156,7 +156,7 @@ class WCAGZoo(object):
     wcag_level = 'AA'
     wcag_css_static_dir = None
 
-    def test_wcag(self, *args, **kwargs):
+    def test_wcag(self):  # type: () -> None
         """
         Test HTML for WCAG compliance using critters from WCAG Zoo. If you want
         to only use some of the critters, provide a list of them by name in the
@@ -239,7 +239,7 @@ class WCAGZoo(object):
 
 
 class Spelling(object):
-    def test_spelling(self):
+    def test_spelling(self):  # type: () -> None
         """
         Test spelling in the language specified in the `spelling_language`
         attribute of the test class. You can specify additional words you

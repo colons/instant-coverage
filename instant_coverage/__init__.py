@@ -29,7 +29,7 @@ elif django.VERSION >= (1, 7):
 else:
     from django.core.urlresolvers import _resolver_cache
 
-    def clear_url_caches():
+    def clear_url_caches():  # type: () -> None
         _resolver_cache.clear()
 
 
@@ -51,8 +51,7 @@ def get_urlpatterns():
     return __import__(settings.ROOT_URLCONF, {}, {}, ['']).urlpatterns
 
 
-def extract_all_patterns_from_urlpatterns(patterns, uncovered_includes,
-                                          base=()):
+def extract_all_patterns_from_urlpatterns(patterns, uncovered_includes, base=()):
     all_patterns = []
 
     if base in uncovered_includes:
@@ -133,7 +132,7 @@ class InstantCoverageAPI(object):
 
         return _instant_cache[self.__class__][key]
 
-    def setUp(self):
+    def setUp(self):  # type: () -> None
         super(InstantCoverageAPI, self).setUp()
         if not hasattr(self, 'client'):
             # django 1.4 does not do this automatically
@@ -152,7 +151,7 @@ class InstantCoverageAPI(object):
 
 
 class InstantCoverageMixin(InstantCoverageAPI):
-    def test_all_urls_accounted_for(self):
+    def test_all_urls_accounted_for(self):  # type: () -> None
         """
         Ensure all URLs that have not been explicitly excluded are present in
         self.covered_urls.
@@ -200,7 +199,7 @@ class InstantCoverageMixin(InstantCoverageAPI):
                 )
             )
 
-    def test_no_errors(self):
+    def test_no_errors(self):  # type: () -> None
         """
         Ensure no URLs raise unhandled exceptions that would cause 500s.
         """
@@ -229,7 +228,7 @@ class InstantCoverageMixin(InstantCoverageAPI):
                     )
                 )
 
-    def test_acceptable_status_codes(self):
+    def test_acceptable_status_codes(self):  # type: () -> None
         """
         Ensure all URLs return responses with status codes between 200 and 399.
         """
