@@ -22,6 +22,7 @@ class FailuresTest(TestCase):
             url(r'^$', BrokenView.as_view()),
         ]):
             results = get_results_for('test_no_errors', covered_urls=['/'])
+            assert results.picky_failures[0][1][1] is not None
             self.assertEqual(
                 results.picky_failures[0][1][1].args[0],
                 "The following errors were raised:\n\n"
@@ -34,8 +35,8 @@ class FailuresTest(TestCase):
             url(r'^tested-url/$', WorkingView.as_view()),
             url(r'^untested-url/$', WorkingView.as_view()),
         ]):
-            results = get_results_for('test_all_urls_accounted_for',
-                                      covered_urls=['/tested-url/'])
+            results = get_results_for('test_all_urls_accounted_for', covered_urls=['/tested-url/'])
+            assert results.picky_failures[0][1][1] is not None
             self.assertEqual(
                 results.picky_failures[0][1][1].args[0],
                 "The following views are untested:\n\n"
@@ -54,8 +55,8 @@ class FailuresTest(TestCase):
             path('untested-url/', WorkingView.as_view()),
             url(r'^another-untested-url/$', WorkingView.as_view()),
         ]):
-            results = get_results_for('test_all_urls_accounted_for',
-                                      covered_urls=['/tested-url/'])
+            results = get_results_for('test_all_urls_accounted_for', covered_urls=['/tested-url/'])
+            assert results.picky_failures[0][1][1] is not None
             self.assertEqual(
                 'The following views are untested:\n\n'
                 '() untested-url/ (None)\n'
@@ -73,16 +74,19 @@ class FailuresTest(TestCase):
             url(r'^$', BrokenView.as_view()),
             url(r'^untested/$', WorkingView.as_view()),
         ]):
+            results = get_results_for('test_no_errors', covered_urls=('/',))
+            assert results.picky_failures[0][1][1] is not None
             self.assertEqual(
-                get_results_for('test_no_errors',
-                                covered_urls='/',).picky_failures[0][1][1].args[0],
+                results.picky_failures[0][1][1].args[0],
                 "The following errors were raised:\n\n"
                 "/: this view is broken\n\n" +
                 INSTANT_TRACEBACKS_TUTORIAL.format(name='EverythingTest')
             )
+
+            results = get_results_for('test_all_urls_accounted_for', covered_urls=('/',))
+            assert results.picky_failures[0][1][1] is not None
             self.assertEqual(
-                get_results_for('test_all_urls_accounted_for',
-                                covered_urls='/',).picky_failures[0][1][1].args[0],
+                results.picky_failures[0][1][1].args[0],
                 "The following views are untested:\n\n"
                 "() ^untested/$ (None)\n\n" +
                 IGNORE_TUTORIAL.format(name='EverythingTest')
@@ -93,8 +97,8 @@ class FailuresTest(TestCase):
             url(r'^tested-url/$', WorkingView.as_view()),
             url(r'^untested-url/$', WorkingView.as_view(), name='name'),
         ]):
-            results = get_results_for('test_all_urls_accounted_for',
-                                      covered_urls=['/tested-url/'])
+            results = get_results_for('test_all_urls_accounted_for', covered_urls=['/tested-url/'])
+            assert results.picky_failures[0][1][1] is not None
             self.assertEqual(
                 results.picky_failures[0][1][1].args[0],
                 "The following views are untested:\n\n"
@@ -112,7 +116,7 @@ class FailuresTest(TestCase):
                 'test_all_urls_accounted_for',
                 covered_urls=['/tested-url/'],
                 uncovered_urls=['/deliberately-untested-url/'])
-
+            assert results.picky_failures[0][1][1] is not None
             self.assertEqual(
                 results.picky_failures[0][1][1].args[0],
                 "The following views are untested:\n\n"
@@ -139,8 +143,8 @@ class FailuresTest(TestCase):
         with mocked_patterns([
             url(r'^include/', include(incl)),
         ]):
-            results = get_results_for('test_no_errors',
-                                      covered_urls=['/include/broken-url/'])
+            results = get_results_for('test_no_errors', covered_urls=['/include/broken-url/'])
+            assert results.picky_failures[0][1][1] is not None
             self.assertEqual(
                 results.picky_failures[0][1][1].args[0],
                 "The following errors were raised:\n\n"
@@ -159,6 +163,7 @@ class FailuresTest(TestCase):
             COVERED_URLS=[],
         ):
             results = get_results_for('test_all_urls_accounted_for')
+            assert results.picky_failures[0][1][1] is not None
             self.assertEqual(
                 results.picky_failures[0][1][1].args[0],
                 "The following views are untested:\n\n"
@@ -207,15 +212,15 @@ class FailuresTest(TestCase):
     def test_all_views_actually_called(self):  # type: () -> None
         views_called = []
 
-        def view_one(*args, **kwargs):
+        def view_one(request):  # type: (django.http.HttpRequest) -> HttpResponse
             views_called.append('view_one')
             return HttpResponse()
 
-        def view_two(*args, **kwargs):
+        def view_two(request):  # type: (django.http.HttpRequest) -> HttpResponse
             views_called.append('view_two')
             return HttpResponse()
 
-        def included_view(*args, **kwargs):
+        def included_view(request):  # type: (django.http.HttpRequest) -> HttpResponse
             views_called.append('included_view')
             return HttpResponse()
 
@@ -236,16 +241,15 @@ class FailuresTest(TestCase):
                              ['view_one', 'view_two', 'included_view'])
 
     def test_bad_status_codes_caught(self):  # type: () -> None
-        def missing_view(*args, **kwargs):
+        def missing_view(request):  # type: (django.http.HttpRequest) -> HttpResponse
             raise Http404
 
         with mocked_patterns([
             url(r'^working-url/$', WorkingView.as_view()),
             url(r'^404-url/$', missing_view),
         ]):
-            results = get_results_for('test_acceptable_status_codes',
-                                      covered_urls=['/working-url/',
-                                                    '/404-url/'])
+            results = get_results_for('test_acceptable_status_codes', covered_urls=['/working-url/', '/404-url/'])
+            assert results.picky_failures[0][1][1] is not None
             self.assertEqual(
                 results.picky_failures[0][1][1].args[0],
                 "The following bad status codes were seen:\n\n"
@@ -256,9 +260,8 @@ class FailuresTest(TestCase):
         with mocked_patterns([
             url(r'^$', BrokenView.as_view()),
         ]):
-            results = get_results_for('test_no_errors',
-                                      covered_urls=['/'],
-                                      instant_tracebacks=True)
+            results = get_results_for('test_no_errors', covered_urls=['/'], instant_tracebacks=True)
+            assert results.picky_failures[0][1][1] is not None
 
             # This is difficult to properly test, as tracebacks will vary from
             # system to system, so we fudge a little.
@@ -302,11 +305,11 @@ class FailuresTest(TestCase):
     def test_redirects_not_followed_if_follow_redirects_false(self):  # type: () -> None
         calls = []
 
-        def redir(*args, **kwargs):
+        def redir(request):  # type: (django.http.HttpRequest) -> HttpResponse
             calls.append('redir')
             return redirect('/target/')
 
-        def target(*args, **kwargs):
+        def target(request):  # type: (django.http.HttpRequest) -> HttpResponse
             calls.append('target')
             return HttpResponse('hihi')
 
