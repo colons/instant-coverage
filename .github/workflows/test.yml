@@ -117,6 +117,16 @@ jobs:
             django: '>=1.6,<1.7'  # expects html.parser.HTMLParseError
           - python: '3.10'
             django: '>=1.7,<1.8'  # expects html.parser.HTMLParseError
+          - python: '3.10'
+            django: '>=1.8,<1.9'  # expects collections.Iterator, etc.
+          - python: '3.10'
+            django: '>=1.9,<1.10'  # expects collections.Iterator, etc.
+          - python: '3.10'
+            django: '>=1.10,<1.11'  # expects collections.Iterator, etc.
+          - python: '3.10'
+            django: '>=1.11,<1.12'  # expects collections.Iterator, etc.
+          - python: '3.10'
+            django: '>=2.0,<2.1'  # expects collections.Iterator, etc.
 
     runs-on: ubuntu-latest
     steps:
