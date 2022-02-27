@@ -10,7 +10,7 @@ from mock import patch
 import six
 
 if sys.version_info >= (3, 6):
-    from typing import Any, Optional, Type
+    from typing import Any, Dict, List, Optional, Tuple, Type
     from .type_utils import ERROR_TYPE, InstantCacheDict
 
 if django.VERSION >= (2, 0):
@@ -46,16 +46,16 @@ IGNORE_TUTORIAL = (
     "undesired URL (such as ('^admin/',)) to {name}.uncovered_includes."
 )
 
-_instant_cache = {}  # type: dict[Type[InstantCoverageAPI], InstantCacheDict]
+_instant_cache = {}  # type: Dict[Type[InstantCoverageAPI], InstantCacheDict]
 
 
-def get_urlpatterns():  # type: () -> list[Any]
+def get_urlpatterns():  # type: () -> List[Any]
     return __import__(settings.ROOT_URLCONF, {}, {}, ['']).urlpatterns or []
 
 
 def extract_all_patterns_from_urlpatterns(
     patterns, uncovered_includes, base=()
-):  # type: (list[Any], list[tuple[str, ...]], tuple[str, ...]) -> list[Any]
+):  # type: (List[Any], List[Tuple[str, ...]], Tuple[str, ...]) -> List[Any]
     all_patterns = []
 
     if base in uncovered_includes:
@@ -94,13 +94,13 @@ class InstantCoverageAPI(TestCase):
     """
 
     #: URLs to test
-    covered_urls = []  # type: list[str]
+    covered_urls = []  # type: List[str]
 
     #: URLs we're okay with not testing
-    uncovered_urls = []  # type: list[str]
+    uncovered_urls = []  # type: List[str]
 
     #: tuples of includes we're okay with not testing (see README for more details)
-    uncovered_includes = []  # type: list[tuple[str, ...]]
+    uncovered_includes = []  # type: List[Tuple[str, ...]]
 
     # whether to show full tracebacks in test_no_errors
     instant_tracebacks = False
@@ -111,14 +111,14 @@ class InstantCoverageAPI(TestCase):
     def attempt_to_get_internal_url(self, url):  # type: (str) -> django.http.HttpResponse
         return self.client.get(url, **self.get_client_kwargs())
 
-    def get_client_kwargs(self):  # type: () -> dict[str, Any]
+    def get_client_kwargs(self):  # type: () -> Dict[str, Any]
         return {
             'follow': self.follow_redirects,
         }
 
     def _get_responses(self):  # type: () -> None
-        responses = {}  # type: dict[str, django.http.HttpResponse]
-        errors = {}  # type: dict[str, ERROR_TYPE]
+        responses = {}  # type: Dict[str, django.http.HttpResponse]
+        errors = {}  # type: Dict[str, ERROR_TYPE]
 
         for url in self.covered_urls:
             try:
@@ -146,7 +146,7 @@ class InstantCoverageAPI(TestCase):
             # django 1.4 does not do this automatically
             self.client = Client()
 
-    def instant_responses(self):  # type: () -> dict[str, django.http.HttpResponse]
+    def instant_responses(self):  # type: () -> Dict[str, django.http.HttpResponse]
         """
         Return a dictionary of responses, as returned by the Django test
         client, keyed by URL.
@@ -154,7 +154,7 @@ class InstantCoverageAPI(TestCase):
 
         return self._get_instant_cache()['responses']
 
-    def instant_errors(self):  # type: () -> dict[str, ERROR_TYPE]
+    def instant_errors(self):  # type: () -> Dict[str, ERROR_TYPE]
         return self._get_instant_cache()['errors']
 
 

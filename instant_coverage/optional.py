@@ -23,7 +23,7 @@ from . import InstantCoverageAPI
 if sys.version_info >= (3, 6):
     from typing import TYPE_CHECKING
     if TYPE_CHECKING:
-        from typing import Any, Optional, Union
+        from typing import Any, Dict, List, Optional, Union
 
 
 class ValidJSON(InstantCoverageAPI):
@@ -96,8 +96,8 @@ class ExternalLinks(InstantCoverageAPI):
 
         self.ensure_all_urls_resolve(external_urls)
 
-    def ensure_all_urls_resolve(self, urls):  # type: (dict[str, list[str]]) -> None
-        bad_responses = {}  # type: dict[str, Union[int, Exception]]
+    def ensure_all_urls_resolve(self, urls):  # type: (Dict[str, List[str]]) -> None
+        bad_responses = {}  # type: Dict[str, Union[int, Exception]]
 
         for url in urls:
             try:
@@ -192,7 +192,7 @@ class WCAGZoo(InstantCoverageAPI):
                 'with 2.7 support, like https://github.com/colons/wcag-zoo'
             )
 
-        results = {}  # type: dict[str, list[Any]]
+        results = {}  # type: Dict[str, List[Any]]
         staticpath = self.wcag_css_static_dir
         if staticpath is None:
             try:

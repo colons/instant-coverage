@@ -12,7 +12,7 @@ import six
 from .. import InstantCoverageAPI, InstantCoverageMixin, clear_url_caches
 
 if sys.version_info >= (3, 6):
-    from typing import Any, Type, TYPE_CHECKING
+    from typing import Any, List, Tuple, Type, TYPE_CHECKING
     from ..type_utils import ERROR_TYPE
 else:
     TYPE_CHECKING = False
@@ -29,7 +29,7 @@ class PickyTestResult(TestResult):
     tests run, rather than storing an entire traceback.
     """
 
-    picky_failures = None  # type: list[tuple[TestCase, ERROR_TYPE]]
+    picky_failures = None  # type: List[Tuple[TestCase, ERROR_TYPE]]
 
     def __init__(self):  # type: () -> None
         super(PickyTestResult, self).__init__()
