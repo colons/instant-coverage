@@ -13,11 +13,8 @@ if sys.version_info >= (3, 6):
     from typing import Any, Optional, Type
     from .type_utils import ERROR_TYPE, InstantCacheDict
 
-    RoutePattern: Optional[Type[django.urls.resolvers.RoutePattern]]
-
 if django.VERSION >= (2, 0):
     from django.urls import URLPattern, URLResolver, resolve
-    from django.urls.resolvers import RoutePattern
     RESOLVE_PATH = 'django.urls.URLPattern.resolve'
 else:
     from django.core.urlresolvers import (  # type: ignore
@@ -26,7 +23,6 @@ else:
         resolve,
     )
     RESOLVE_PATH = 'django.core.urlresolvers.RegexURLPattern.resolve'
-    RoutePattern = None
 
 if django.VERSION >= (2, 0):
     from django.urls import clear_url_caches
