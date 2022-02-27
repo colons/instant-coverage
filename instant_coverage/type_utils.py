@@ -1,10 +1,10 @@
 import types
-from typing import Dict, Type, TypedDict, Union
+from typing import Dict, Tuple, Type, TypedDict, Union
 
 from django.http import HttpResponse
 
 
-ERROR_TYPE = Union[tuple[None, None, None], tuple[Type[BaseException], BaseException, types.TracebackType]]
+ERROR_TYPE = Union[Tuple[None, None, None], Tuple[Type[BaseException], BaseException, types.TracebackType]]
 
 
 class InstantCacheDict(TypedDict):
