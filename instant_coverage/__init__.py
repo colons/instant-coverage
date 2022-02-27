@@ -12,14 +12,14 @@ import six
 if sys.version_info >= (3, 6):
     from typing import TYPE_CHECKING
     if TYPE_CHECKING:
-        from typing import Any, Optional, Type, TypedDict, Union
+        from typing import Any, Dict, Optional, Type, TypedDict, Union
         import types
 
         ERROR_TYPE = Union[tuple[None, None, None], tuple[Type[BaseException], BaseException, types.TracebackType]]
 
         class InstantCacheDict(TypedDict):
-            responses: dict[str, django.http.HttpResponse]
-            errors: dict[str, ERROR_TYPE]
+            responses: Dict[str, django.http.HttpResponse]
+            errors: Dict[str, ERROR_TYPE]
 
         RoutePattern: Optional[Type[django.urls.resolvers.RoutePattern]]
 
