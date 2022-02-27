@@ -4,9 +4,6 @@
 Instant Coverage |status|
 =========================
 
-.. |status| image:: https://travis-ci.com/colons/instant-coverage.svg
-   :target: https://travis-ci.com/github/colons/instant-coverage
-
 Your new Django site need tests. Nothing super fancy, just enough that you know
 you've not forgotten to close some <div> somewhere and it's not going to start
 500ing next time you deploy. You *could* write unit tests, but those are boring
@@ -35,12 +32,10 @@ Extensible
     minutes.
 
 Portable
-    Automatically tested_ against Django versions 1.5 to 3.2. I'm also actively
-    using it on many projects running Django versions in that range. There are
-    no automatic tests on Python 2 any more, but I'll still fix issues on 2.7
-    if you raise them and it's not too much of a stretch.
+    Compatible with (and tested_ against) Django versions 1.5 to 3.3, and
+    Python versions from 2.7 to 3.10.
 
-.. _tested: https://travis-ci.com/github/colons/instant-coverage
+.. _tested: https://github.com/colons/instant-coverage/actions
 
 Changes
 =======
