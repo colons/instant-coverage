@@ -3,17 +3,19 @@ from unittest import TestCase
 from unittest.result import TestResult, failfast
 
 import django
-from django.test import SimpleTestCase
 from django.test.utils import setup_test_environment, teardown_test_environment
 from django.views.generic import View
 
 import mock
 import six
 
-from .. import clear_url_caches
+from .. import InstantCoverageAPI, InstantCoverageMixin, clear_url_caches
 
 if sys.version_info >= (3, 6):
+    from typing import Any, Type, TYPE_CHECKING
     from ..type_utils import ERROR_TYPE
+else:
+    TYPE_CHECKING = False
 
 
 def mocked_patterns(patterns):  # type: (list) -> mock.mock._patch
@@ -41,14 +43,14 @@ class PickyTestResult(TestResult):
         self.picky_failures.append((test, err))
 
 
-def get_results_for(test_name, mixin=None, **test_attributes) -> PickyTestResult:
-    from instant_coverage import InstantCoverageMixin
+def get_results_for(
+    test_name, mixin=InstantCoverageMixin, **test_attributes
+):  # type: (str, Type[InstantCoverageAPI], Any) -> PickyTestResult
 
-    if mixin is None:
-        class EverythingTest(InstantCoverageMixin, SimpleTestCase):
-            pass
+    if TYPE_CHECKING:
+        EverythingTest = mixin
     else:
-        class EverythingTest(mixin, InstantCoverageMixin, SimpleTestCase):
+        class EverythingTest(mixin):
             pass
 
     try:
