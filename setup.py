@@ -27,6 +27,8 @@ setup(
     ],
     extras_require={
         'linting': [
+            'flake8',
+            'flake8-import-order',
             'mypy',
             'types-mock',
             'types-requests',

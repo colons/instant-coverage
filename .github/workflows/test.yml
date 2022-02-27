@@ -1,19 +1,23 @@
 on: [push]
 jobs:
+  flake8:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - uses: actions/checkout@v2
+      - run: pip install '.[linting]'
+      - run: flake8
+
   mypy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-python@v2
         with:
           python-version: '3.9'
-
-      - name: install system dependencies
-        run: sudo apt install aspell aspell-en libenchant-dev
-
       - uses: actions/checkout@v2
-
       - run: pip install '.[linting]'
-
       - run: mypy
 
   test:

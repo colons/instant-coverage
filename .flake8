@@ -1,0 +1,4 @@
+[flake8]
+application-import-names=instant_coverage
+extend-ignore=I201
+max-line-length=120
