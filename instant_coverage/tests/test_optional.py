@@ -1,13 +1,17 @@
 import re
 
 import django
-from django.conf.urls import url
 from django.http import HttpResponse
 from django.test import SimpleTestCase
 
 from instant_coverage import optional
 
 from .utils import get_results_for, mocked_patterns
+
+if django.VERSION > (3, 0):
+    from django.urls import re_path
+else:
+    from django.conf.urls import url as re_path  # type: ignore
 
 
 class ValidJSONTest(SimpleTestCase):
@@ -22,9 +26,9 @@ class ValidJSONTest(SimpleTestCase):
             return HttpResponse('garbage', content_type='text/html')
 
         with mocked_patterns([
-            url(r'^valid/$', valid_json),
-            url(r'^invalid/$', invalid_json),
-            url(r'^not/$', not_json),
+            re_path(r'^valid/$', valid_json),
+            re_path(r'^invalid/$', invalid_json),
+            re_path(r'^not/$', not_json),
         ]):
             results = get_results_for(
                 'test_valid_json', mixin=optional.ValidJSON,
@@ -51,7 +55,7 @@ class ValidJSONTest(SimpleTestCase):
             return HttpResponse('{}', content_type='text/plain')
 
         with mocked_patterns([
-            url(r'^valid-not-json/$', valid_not_json),
+            re_path(r'^valid-not-json/$', valid_not_json),
         ]):
             results = get_results_for(
                 'test_valid_json', mixin=optional.ValidJSON,
@@ -79,7 +83,7 @@ class ExternalLinksTest(SimpleTestCase):
             )
 
         with mocked_patterns([
-            url(r'^page/$', page_with_links),
+            re_path(r'^page/$', page_with_links),
         ]):
             results = get_results_for(
                 'test_external_links', mixin=optional.ExternalLinks,
@@ -133,9 +137,9 @@ class ValidHTML5Test(SimpleTestCase):
             return HttpResponse('<div sty=wu">', content_type='text/plain')
 
         with mocked_patterns([
-            url(r'^valid/$', valid_html),
-            url(r'^invalid/$', invalid_html),
-            url(r'^not/$', not_html),
+            re_path(r'^valid/$', valid_html),
+            re_path(r'^invalid/$', invalid_html),
+            re_path(r'^not/$', not_html),
         ]):
             results = get_results_for(
                 'test_valid_html5', mixin=optional.ValidHTML5,
@@ -169,9 +173,9 @@ class SpellingTest(SimpleTestCase):
             return HttpResponse('nsaiodjsioajds', content_type='text/plain')
 
         with mocked_patterns([
-            url(r'^well/$', well_spelt),
-            url(r'^poorly/$', poorly_spelt),
-            url(r'^not/$', not_html),
+            re_path(r'^well/$', well_spelt),
+            re_path(r'^poorly/$', poorly_spelt),
+            re_path(r'^not/$', not_html),
         ]):
             results = get_results_for(
                 'test_spelling', mixin=optional.Spelling,
@@ -242,9 +246,9 @@ class WCAGZooTest(SimpleTestCase):
             return HttpResponse('<div sty=wu">', content_type='text/plain')
 
         with mocked_patterns([
-            url(r'^valid/$', valid_headings),
-            url(r'^invalid/$', invalid_headings),
-            url(r'^not/$', not_html),
+            re_path(r'^valid/$', valid_headings),
+            re_path(r'^invalid/$', invalid_headings),
+            re_path(r'^not/$', not_html),
         ]):
             results = get_results_for(
                 'test_wcag', mixin=optional.WCAGZoo,

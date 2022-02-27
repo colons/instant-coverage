@@ -1,5 +1,5 @@
 import django
-from django.conf.urls import include, url
+from django.conf.urls import include
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect
 from django.test import TestCase
@@ -8,18 +8,23 @@ from django.test.utils import override_settings
 from .utils import BrokenView, PickyTestResult, WorkingView, get_results_for, mocked_patterns
 from .. import IGNORE_TUTORIAL, INSTANT_TRACEBACKS_TUTORIAL, InstantCoverageMixin
 
+if django.VERSION > (3, 0):
+    from django.urls import re_path
+else:
+    from django.conf.urls import url as re_path  # type: ignore
+
 
 class FailuresTest(TestCase):
     def test_no_errors_okay(self):  # type: () -> None
         with mocked_patterns([
-            url(r'^$', WorkingView.as_view()),
+            re_path(r'^$', WorkingView.as_view()),
         ]):
             results = get_results_for('test_no_errors', covered_urls=['/'])
             self.assertEqual(results.picky_failures, [])
 
     def test_errors_surfaced(self):  # type: () -> None
         with mocked_patterns([
-            url(r'^$', BrokenView.as_view()),
+            re_path(r'^$', BrokenView.as_view()),
         ]):
             results = get_results_for('test_no_errors', covered_urls=['/'])
             assert results.picky_failures[0][1][1] is not None
@@ -32,8 +37,8 @@ class FailuresTest(TestCase):
 
     def test_missing_nameless_urls_complained_about(self):  # type: () -> None
         with mocked_patterns([
-            url(r'^tested-url/$', WorkingView.as_view()),
-            url(r'^untested-url/$', WorkingView.as_view()),
+            re_path(r'^tested-url/$', WorkingView.as_view()),
+            re_path(r'^untested-url/$', WorkingView.as_view()),
         ]):
             results = get_results_for('test_all_urls_accounted_for', covered_urls=['/tested-url/'])
             assert results.picky_failures[0][1][1] is not None
@@ -53,7 +58,7 @@ class FailuresTest(TestCase):
         with mocked_patterns([
             path('tested-url/', WorkingView.as_view()),
             path('untested-url/', WorkingView.as_view()),
-            url(r'^another-untested-url/$', WorkingView.as_view()),
+            re_path(r'^another-untested-url/$', WorkingView.as_view()),
         ]):
             results = get_results_for('test_all_urls_accounted_for', covered_urls=['/tested-url/'])
             assert results.picky_failures[0][1][1] is not None
@@ -71,8 +76,8 @@ class FailuresTest(TestCase):
         """
 
         with mocked_patterns([
-            url(r'^$', BrokenView.as_view()),
-            url(r'^untested/$', WorkingView.as_view()),
+            re_path(r'^$', BrokenView.as_view()),
+            re_path(r'^untested/$', WorkingView.as_view()),
         ]):
             results = get_results_for('test_no_errors', covered_urls=('/',))
             assert results.picky_failures[0][1][1] is not None
@@ -94,8 +99,8 @@ class FailuresTest(TestCase):
 
     def test_missing_named_urls_complained_about(self):  # type: () -> None
         with mocked_patterns([
-            url(r'^tested-url/$', WorkingView.as_view()),
-            url(r'^untested-url/$', WorkingView.as_view(), name='name'),
+            re_path(r'^tested-url/$', WorkingView.as_view()),
+            re_path(r'^untested-url/$', WorkingView.as_view(), name='name'),
         ]):
             results = get_results_for('test_all_urls_accounted_for', covered_urls=['/tested-url/'])
             assert results.picky_failures[0][1][1] is not None
@@ -108,9 +113,9 @@ class FailuresTest(TestCase):
 
     def test_excepted_urls_not_complained_about(self):  # type: () -> None
         with mocked_patterns([
-            url(r'^tested-url/$', WorkingView.as_view()),
-            url(r'^untested-url/$', WorkingView.as_view()),
-            url(r'^deliberately-untested-url/$', WorkingView.as_view()),
+            re_path(r'^tested-url/$', WorkingView.as_view()),
+            re_path(r'^untested-url/$', WorkingView.as_view()),
+            re_path(r'^deliberately-untested-url/$', WorkingView.as_view()),
         ]):
             results = get_results_for(
                 'test_all_urls_accounted_for',
@@ -126,8 +131,8 @@ class FailuresTest(TestCase):
 
     def test_excepted_urls_ignored(self):  # type: () -> None
         with mocked_patterns([
-            url(r'^tested-url/$', WorkingView.as_view()),
-            url(r'^deliberately-untested-url/$', BrokenView.as_view()),
+            re_path(r'^tested-url/$', WorkingView.as_view()),
+            re_path(r'^deliberately-untested-url/$', BrokenView.as_view()),
         ]), override_settings(
             COVERED_URLS=['/tested-url/'],
             UNCOVERED_URLS=['/deliberately-untested-url/'],
@@ -137,11 +142,11 @@ class FailuresTest(TestCase):
 
     def test_broken_url_in_include(self):  # type: () -> None
         incl = [
-            url(r'^broken-url/$', BrokenView.as_view()),
+            re_path(r'^broken-url/$', BrokenView.as_view()),
         ]
 
         with mocked_patterns([
-            url(r'^include/', include(incl)),
+            re_path(r'^include/', include(incl)),
         ]):
             results = get_results_for('test_no_errors', covered_urls=['/include/broken-url/'])
             assert results.picky_failures[0][1][1] is not None
@@ -154,11 +159,11 @@ class FailuresTest(TestCase):
 
     def test_missing_url_in_include(self):  # type: () -> None
         incl = [
-            url(r'^broken-url/$', BrokenView.as_view()),
+            re_path(r'^broken-url/$', BrokenView.as_view()),
         ]
 
         with mocked_patterns([
-            url(r'^include/', include(incl)),
+            re_path(r'^include/', include(incl)),
         ]), override_settings(
             COVERED_URLS=[],
         ):
@@ -173,11 +178,11 @@ class FailuresTest(TestCase):
 
     def test_uncovered_includes(self):  # type: () -> None
         incl = [
-            url(r'^broken-url/$', BrokenView.as_view()),
+            re_path(r'^broken-url/$', BrokenView.as_view()),
         ]
 
         with mocked_patterns([
-            url(r'^include/', include(incl)),
+            re_path(r'^include/', include(incl)),
         ]):
             for test in [
                 'test_all_urls_accounted_for',
@@ -188,15 +193,15 @@ class FailuresTest(TestCase):
                 self.assertEqual(results.picky_failures, [])
 
     def test_uncoverd_includes_with_common_nested_patterns(self):  # type: () -> None
-        incl_a = [url(r'^a/$', BrokenView.as_view())]
-        incl_b = [url(r'^b/$', BrokenView.as_view())]
+        incl_a = [re_path(r'^a/$', BrokenView.as_view())]
+        incl_b = [re_path(r'^b/$', BrokenView.as_view())]
         nest = [
-            url(r'^nest/', include(incl_a)),
-            url(r'^nest/', include(incl_b)),
+            re_path(r'^nest/', include(incl_a)),
+            re_path(r'^nest/', include(incl_b)),
         ]
 
         with mocked_patterns([
-            url(r'^include/', include(nest)),
+            re_path(r'^include/', include(nest)),
         ]):
             for test in [
                 'test_all_urls_accounted_for',
@@ -225,13 +230,13 @@ class FailuresTest(TestCase):
             return HttpResponse()
 
         incl = [
-            url(r'^included/$', included_view),
+            re_path(r'^included/$', included_view),
         ]
 
         with mocked_patterns([
-            url(r'^one/$', view_one),
-            url(r'^two/$', view_two),
-            url(r'^include/', include(incl)),
+            re_path(r'^one/$', view_one),
+            re_path(r'^two/$', view_two),
+            re_path(r'^include/', include(incl)),
         ]):
             results = get_results_for('test_no_errors', covered_urls=[
                 '/one/', '/two/', '/include/included/',
@@ -245,8 +250,8 @@ class FailuresTest(TestCase):
             raise Http404
 
         with mocked_patterns([
-            url(r'^working-url/$', WorkingView.as_view()),
-            url(r'^404-url/$', missing_view),
+            re_path(r'^working-url/$', WorkingView.as_view()),
+            re_path(r'^404-url/$', missing_view),
         ]):
             results = get_results_for('test_acceptable_status_codes', covered_urls=['/working-url/', '/404-url/'])
             assert results.picky_failures[0][1][1] is not None
@@ -258,7 +263,7 @@ class FailuresTest(TestCase):
 
     def test_instant_tracebacks(self):  # type: () -> None
         with mocked_patterns([
-            url(r'^$', BrokenView.as_view()),
+            re_path(r'^$', BrokenView.as_view()),
         ]):
             results = get_results_for('test_no_errors', covered_urls=['/'], instant_tracebacks=True)
             assert results.picky_failures[0][1][1] is not None
@@ -282,8 +287,8 @@ class FailuresTest(TestCase):
             return HttpResponse()
 
         with mocked_patterns([
-            url(r'^a/$', a),
-            url(r'^b/$', b),
+            re_path(r'^a/$', a),
+            re_path(r'^b/$', b),
         ]):
             class TestA(InstantCoverageMixin, TestCase):
                 covered_urls = ['/a/']
@@ -314,8 +319,8 @@ class FailuresTest(TestCase):
             return HttpResponse('hihi')
 
         with mocked_patterns([
-            url(r'^redir/$', redir),
-            url(r'^target/$', target),
+            re_path(r'^redir/$', redir),
+            re_path(r'^target/$', target),
         ]):
             get_results_for('test_no_errors', covered_urls=['/redir/'])
             self.assertEqual(calls, ['redir', 'target'])
