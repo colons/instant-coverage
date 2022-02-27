@@ -11,11 +11,21 @@ jobs:
       - run: flake8
 
   mypy:
+    strategy:
+      fail-fast: false
+      matrix:
+        python:
+          - '3.6'
+          - '3.7'
+          - '3.8'
+          - '3.9'
+          - '3.10'
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.9'
+          python-version: '${{ matrix.python }}'
       - uses: actions/checkout@v2
       - run: pip install '.[linting]'
       - run: mypy
