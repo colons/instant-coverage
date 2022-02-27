@@ -50,7 +50,7 @@ _instant_cache = {}  # type: dict[Type[InstantCoverageAPI], InstantCacheDict]
 
 
 def get_urlpatterns():  # type: () -> list[Any]
-    return __import__(settings.ROOT_URLCONF, {}, {}, ['']).urlpatterns
+    return __import__(settings.ROOT_URLCONF, {}, {}, ['']).urlpatterns or []
 
 
 def extract_all_patterns_from_urlpatterns(
