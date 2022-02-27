@@ -27,6 +27,7 @@ setup(
     ],
     extras_require={
         'linting': [
+            'django-stubs',
             'flake8',
             'flake8-import-order',
             'mypy',
