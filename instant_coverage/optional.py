@@ -23,7 +23,7 @@ from . import InstantCoverageAPI
 if sys.version_info >= (3, 6):
     from typing import TYPE_CHECKING
     if TYPE_CHECKING:
-        from typing import Any, Dict, List, Optional, Union
+        from typing import Any, Dict, List, Optional, Set, Union
 
 
 class ValidJSON(InstantCoverageAPI):
@@ -248,7 +248,7 @@ class WCAGZoo(InstantCoverageAPI):
 
 class Spelling(InstantCoverageAPI):
     spelling_language = None  # type: Optional[str]
-    spelling_extra_words = set()  # type: set[str]
+    spelling_extra_words = set()  # type: Set[str]
 
     def test_spelling(self):  # type: () -> None
         """
