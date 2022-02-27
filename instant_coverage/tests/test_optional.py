@@ -1,5 +1,6 @@
 import re
 
+import django
 from django.conf.urls import url
 from django.http import HttpResponse
 from django.test import SimpleTestCase
@@ -11,13 +12,13 @@ from .utils import get_results_for, mocked_patterns
 
 class ValidJSONTest(SimpleTestCase):
     def test_valid_json(self):  # type: () -> None
-        def valid_json(*args, **kwargs):
+        def valid_json(request):  # type: (django.http.HttpRequest) -> HttpResponse
             return HttpResponse('{}', content_type='application/json')
 
-        def invalid_json(*args, **kwargs):
+        def invalid_json(request):  # type: (django.http.HttpRequest) -> HttpResponse
             return HttpResponse('garbage', content_type='application/json')
 
-        def not_json(*args, **kwargs):
+        def not_json(request):  # type: (django.http.HttpRequest) -> HttpResponse
             return HttpResponse('garbage', content_type='text/html')
 
         with mocked_patterns([
@@ -29,7 +30,7 @@ class ValidJSONTest(SimpleTestCase):
                 'test_valid_json', mixin=optional.ValidJSON,
                 covered_urls=['/valid/', '/invalid/', '/not/']
             )
-
+            assert results.picky_failures[0][1][1] is not None
             self.assertTrue(
                 results.picky_failures[0][1][1].args[0].startswith(
                     "The following URLs returned invalid JSON:\n\n"
@@ -46,7 +47,7 @@ class ValidJSONTest(SimpleTestCase):
         Ensure that, given a website with no json in it, a failure is raised.
         """
 
-        def valid_not_json(*args, **kwargs):
+        def valid_not_json(request):  # type: (django.http.HttpRequest) -> HttpResponse
             return HttpResponse('{}', content_type='text/plain')
 
         with mocked_patterns([
@@ -56,7 +57,7 @@ class ValidJSONTest(SimpleTestCase):
                 'test_valid_json', mixin=optional.ValidJSON,
                 covered_urls=['/valid/', '/invalid/', '/not/']
             )
-
+            assert results.picky_failures[0][1][1] is not None
             self.assertEqual(
                 results.picky_failures[0][1][1].args[0],
                 "No views were found to serve up JSON. Ensure any views you "
@@ -67,7 +68,7 @@ class ValidJSONTest(SimpleTestCase):
 
 class ExternalLinksTest(SimpleTestCase):
     def test_external_links(self):  # type: () -> None
-        def page_with_links(*args, **kwargs):
+        def page_with_links(request):  # type: (django.http.HttpRequest) -> HttpResponse
             return HttpResponse(
                 '<a href="http:garbage"></a>'
                 '<a href="https://github.com/colons/not-a-real-repo"></a>'
@@ -84,7 +85,7 @@ class ExternalLinksTest(SimpleTestCase):
                 'test_external_links', mixin=optional.ExternalLinks,
                 covered_urls=['/page/'],
             )
-
+            assert results.picky_failures[0][1][1] is not None
             result_string = results.picky_failures[0][1][1].args[0]
 
             self.assertIn(
@@ -122,13 +123,13 @@ class ExternalLinksTest(SimpleTestCase):
 
 class ValidHTML5Test(SimpleTestCase):
     def test_valid_json(self):  # type: () -> None
-        def valid_html(*args, **kwargs):
+        def valid_html(request):  # type: (django.http.HttpRequest) -> HttpResponse
             return HttpResponse('<!doctype html>\n<html></html>')
 
-        def invalid_html(*args, **kwargs):
+        def invalid_html(request):  # type: (django.http.HttpRequest) -> HttpResponse
             return HttpResponse('<!doctype html>\n<div sty=wu">')
 
-        def not_html(*args, **kwargs):
+        def not_html(request):  # type: (django.http.HttpRequest) -> HttpResponse
             return HttpResponse('<div sty=wu">', content_type='text/plain')
 
         with mocked_patterns([
@@ -140,6 +141,7 @@ class ValidHTML5Test(SimpleTestCase):
                 'test_valid_html5', mixin=optional.ValidHTML5,
                 covered_urls=['/valid/', '/invalid/', '/not/']
             )
+            assert results.picky_failures[0][1][1] is not None
             self.assertEqual(
                 results.picky_failures[0][1][1].args[0],
                 'html5lib raised the following issues:\n\n'
@@ -152,18 +154,18 @@ class ValidHTML5Test(SimpleTestCase):
 
 class SpellingTest(SimpleTestCase):
     def test_spelling(self):  # type: () -> None
-        def well_spelt(*args, **kwargs):
+        def well_spelt(request):  # type: (django.http.HttpRequest) -> HttpResponse
             return HttpResponse(
                 'I am fuelled by the colour of your aluminium armour. '
                 'Every fibre of me is paralysed by your laboured defence.'
             )
 
-        def poorly_spelt(*args, **kwargs):
+        def poorly_spelt(request):  # type: (django.http.HttpRequest) -> HttpResponse
             return HttpResponse(
                 'mi am nott no how wordzz saiodjsoiafh'
             )
 
-        def not_html(*args, **kwargs):
+        def not_html(request):  # type: (django.http.HttpRequest) -> HttpResponse
             return HttpResponse('nsaiodjsioajds', content_type='text/plain')
 
         with mocked_patterns([
@@ -177,6 +179,7 @@ class SpellingTest(SimpleTestCase):
                 spelling_language='en_GB',
                 spelling_extra_words=['wordzz'],
             )
+            assert results.picky_failures[0][1][1] is not None
 
             result_string = results.picky_failures[0][1][1].args[0]
 
@@ -221,21 +224,21 @@ class SpellingTest(SimpleTestCase):
 
 class WCAGZooTest(SimpleTestCase):
     def test_valid_heading_structure(self):  # type: () -> None
-        def valid_headings(*args, **kwargs):
+        def valid_headings(request):  # type: (django.http.HttpRequest) -> HttpResponse
             return HttpResponse(
                 '<!doctype html><body>'
                 '<h1>hi</h1><h2>fren</h2><h3>this</h3><h4>is</h4><h2>fine</h2>'
                 '</html>'
             )
 
-        def invalid_headings(*args, **kwargs):
+        def invalid_headings(request):  # type: (django.http.HttpRequest) -> HttpResponse
             return HttpResponse(
                 '<!doctype html><body>'
                 '<h1>hi</h1><h3 id="bad">this</h3><h4>isnt</h4><h2>fine</h2>'
                 '</html>'
             )
 
-        def not_html(*args, **kwargs):
+        def not_html(request):  # type: (django.http.HttpRequest) -> HttpResponse
             return HttpResponse('<div sty=wu">', content_type='text/plain')
 
         with mocked_patterns([
@@ -248,6 +251,7 @@ class WCAGZooTest(SimpleTestCase):
                 covered_urls=['/valid/', '/invalid/', '/not/'],
                 wcag_css_static_dir='.',
             )
+            assert results.picky_failures[0][1][1] is not None
             self.assertIn(
                 "Some critters in the WCAG Zoo found problems.\n\n/invalid/:",
                 results.picky_failures[0][1][1].args[0],
