@@ -10,7 +10,7 @@ from mock import patch
 import six
 
 if sys.version_info >= (3, 6):
-    from typing import Any, Dict, List, Optional, Tuple, Type
+    from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Type
     from .type_utils import ERROR_TYPE, InstantCacheDict
 
 if django.VERSION >= (2, 0):
@@ -55,7 +55,7 @@ def get_urlpatterns():  # type: () -> List[Any]
 
 def extract_all_patterns_from_urlpatterns(
     patterns, uncovered_includes, base=()
-):  # type: (List[Any], List[Tuple[str, ...]], Tuple[str, ...]) -> List[Any]
+):  # type: (List[Any], Iterable[Tuple[str, ...]], Tuple[str, ...]) -> List[Any]
     all_patterns = []
 
     if base in uncovered_includes:
@@ -94,13 +94,13 @@ class InstantCoverageAPI(TestCase):
     """
 
     #: URLs to test
-    covered_urls = []  # type: List[str]
+    covered_urls = []  # type: Sequence[str]
 
     #: URLs we're okay with not testing
-    uncovered_urls = []  # type: List[str]
+    uncovered_urls = []  # type: Sequence[str]
 
     #: tuples of includes we're okay with not testing (see README for more details)
-    uncovered_includes = []  # type: List[Tuple[str, ...]]
+    uncovered_includes = []  # type: Sequence[Tuple[str, ...]]
 
     # whether to show full tracebacks in test_no_errors
     instant_tracebacks = False
