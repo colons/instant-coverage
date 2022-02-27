@@ -1,8 +1,4 @@
-import os
 from setuptools import setup
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE',
-                      'instant_coverage.tests.settings')
 
 with open('README.rst') as readme_file:
     README = readme_file.read()
@@ -31,17 +27,16 @@ setup(
             'flake8',
             'flake8-import-order',
             'mypy',
+            'pytest',
             'types-mock',
             'types-requests',
             'types-six',
         ],
         'testing': [
-            'nose',
             'pyenchant',
             'wcag_zoo>=0.2.0',
         ],
     },
-    test_suite='nose.collector',
     long_description=README,
     classifiers=[
         'Development Status :: 5 - Production/Stable',
