@@ -1,8 +1,8 @@
 .. image:: https://colons.co/instant-coverage-small.png
    :alt: A roll of duct tape; the instant coverage logo
 
-Instant Coverage |status|
-=========================
+Instant Coverage
+================
 
 Your new Django site need tests. Nothing super fancy, just enough that you know
 you've not forgotten to close some <div> somewhere and it's not going to start
