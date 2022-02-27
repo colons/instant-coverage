@@ -18,8 +18,15 @@ import html5lib
 import requests
 import six
 
+from . import InstantCoverageAPI
 
-class ValidJSON(object):
+if sys.version_info >= (3, 6):
+    from typing import TYPE_CHECKING
+    if TYPE_CHECKING:
+        from typing import Any, Optional, Union
+
+
+class ValidJSON(InstantCoverageAPI):
     def test_valid_json(self):  # type: () -> None
         """
         Ensure all responses with Content-Type: application/json are throwing
@@ -60,7 +67,7 @@ class ValidJSON(object):
             )
 
 
-class ExternalLinks(object):
+class ExternalLinks(InstantCoverageAPI):
     def test_external_links(self):  # type: () -> None
         """
         Ensure all external links are pointed at URLs that resolve and respond
@@ -89,8 +96,8 @@ class ExternalLinks(object):
 
         self.ensure_all_urls_resolve(external_urls)
 
-    def ensure_all_urls_resolve(self, urls):
-        bad_responses = {}
+    def ensure_all_urls_resolve(self, urls):  # type: (dict[str, list[str]]) -> None
+        bad_responses = {}  # type: dict[str, Union[int, Exception]]
 
         for url in urls:
             try:
@@ -110,14 +117,14 @@ class ExternalLinks(object):
                 )
             )
 
-    def attempt_to_get_external_url(self, url):
+    def attempt_to_get_external_url(self, url):  # type: (str) -> requests.Response
         with closing(
             requests.get(url, allow_redirects=True, stream=True)
         ) as r:
             return r
 
 
-class ValidHTML5(object):
+class ValidHTML5(InstantCoverageAPI):
     def test_valid_html5(self):  # type: () -> None
         """
         Ensure html5lib thinks our HTML is okay. Will catch really bad stuff
@@ -152,7 +159,7 @@ class ValidHTML5(object):
             )
 
 
-class WCAGZoo(object):
+class WCAGZoo(InstantCoverageAPI):
     wcag_critters = ['parade']
     wcag_level = 'AA'
     wcag_css_static_dir = None
@@ -185,7 +192,7 @@ class WCAGZoo(object):
                 'with 2.7 support, like https://github.com/colons/wcag-zoo'
             )
 
-        results = {}
+        results = {}  # type: dict[str, list[Any]]
         staticpath = self.wcag_css_static_dir
         if staticpath is None:
             try:
@@ -239,7 +246,10 @@ class WCAGZoo(object):
             )
 
 
-class Spelling(object):
+class Spelling(InstantCoverageAPI):
+    spelling_language = None  # type: Optional[str]
+    spelling_extra_words = set()  # type: set[str]
+
     def test_spelling(self):  # type: () -> None
         """
         Test spelling in the language specified in the `spelling_language`
@@ -269,7 +279,7 @@ class Spelling(object):
 
         words = defaultdict(set)  # this is probably gonna get pretty big
 
-        if not hasattr(self, 'spelling_language'):
+        if self.spelling_language is None:
             raise AttributeError(
                 'Set {self}.spelling_language to the language you want to '
                 'check against (something like "en_GB" or "fr").'.format(
@@ -287,11 +297,10 @@ class Spelling(object):
                 words[word].add(url)
 
         dictionary = enchant.Dict(self.spelling_language)
-        extra_words = getattr(self, 'spelling_extra_words', set())
         bad_words = {}
 
         for word, urls in six.iteritems(words):
-            if word not in extra_words and not dictionary.check(word):
+            if word not in self.spelling_extra_words and not dictionary.check(word):
                 bad_words[word] = urls
 
         if bad_words:

@@ -1,5 +1,6 @@
 import sys
 import traceback
+from unittest import TestCase
 
 import django
 from django.conf import settings
@@ -8,13 +9,26 @@ from django.test.client import Client
 from mock import patch
 import six
 
+if sys.version_info >= (3, 6):
+    from typing import TYPE_CHECKING
+    if TYPE_CHECKING:
+        from typing import Any, Optional, Type, TypedDict, Union
+        import types
+
+        ERROR_TYPE = Union[tuple[None, None, None], tuple[Type[BaseException], BaseException, types.TracebackType]]
+
+        class InstantCacheDict(TypedDict):
+            responses: dict[str, django.http.HttpResponse]
+            errors: dict[str, ERROR_TYPE]
+
+        RoutePattern: Optional[Type[django.urls.resolvers.RoutePattern]]
 
 if django.VERSION >= (2, 0):
     from django.urls import URLPattern, URLResolver, resolve
     from django.urls.resolvers import RoutePattern
     RESOLVE_PATH = 'django.urls.URLPattern.resolve'
 else:
-    from django.core.urlresolvers import (
+    from django.core.urlresolvers import (  # type: ignore
         RegexURLPattern as URLPattern,
         RegexURLResolver as URLResolver,
         resolve,
@@ -25,7 +39,7 @@ else:
 if django.VERSION >= (2, 0):
     from django.urls import clear_url_caches
 elif django.VERSION >= (1, 7):
-    from django.core.urlresolvers import clear_url_caches
+    from django.core.urlresolvers import clear_url_caches  # type: ignore
 else:
     from django.core.urlresolvers import _resolver_cache
 
@@ -44,14 +58,16 @@ IGNORE_TUTORIAL = (
     "undesired URL (such as ('^admin/',)) to {name}.uncovered_includes."
 )
 
-_instant_cache = {}
+_instant_cache = {}  # type: dict[Type[InstantCoverageAPI], InstantCacheDict]
 
 
-def get_urlpatterns():
+def get_urlpatterns():  # type: () -> list[Any]
     return __import__(settings.ROOT_URLCONF, {}, {}, ['']).urlpatterns
 
 
-def extract_all_patterns_from_urlpatterns(patterns, uncovered_includes, base=()):
+def extract_all_patterns_from_urlpatterns(
+    patterns, uncovered_includes, base=()
+):  # type: (list[Any], list[tuple[str, ...]], tuple[str, ...]) -> list[Any]
     all_patterns = []
 
     if base in uncovered_includes:
@@ -65,7 +81,7 @@ def extract_all_patterns_from_urlpatterns(patterns, uncovered_includes, base=())
             all_patterns.extend(extract_all_patterns_from_urlpatterns(
                 p.url_patterns, uncovered_includes, base + ((
                     p.pattern.regex.pattern if django.VERSION >= (2, 0)
-                    else p.regex.pattern
+                    else p.regex.pattern  # type: ignore
                 ),)))
 
         elif hasattr(p, '_get_callback'):
@@ -84,33 +100,37 @@ def extract_all_patterns_from_urlpatterns(patterns, uncovered_includes, base=())
     return all_patterns
 
 
-class InstantCoverageAPI(object):
+class InstantCoverageAPI(TestCase):
     """
     The API provided by InstantCoverageMixin with none of the tests.
     """
 
-    covered_urls = []  # URLs to test
+    #: URLs to test
+    covered_urls = []  # type: list[str]
 
-    uncovered_urls = []  # URLs we're okay with not testing
+    #: URLs we're okay with not testing
+    uncovered_urls = []  # type: list[str]
 
-    uncovered_includes = []  # tuples of includes we're okay with not testing
-    # (see README for more details)
+    #: tuples of includes we're okay with not testing (see README for more details)
+    uncovered_includes = []  # type: list[tuple[str, ...]]
 
-    instant_tracebacks = False  # show full tracebacks in test_no_errors
+    # whether to show full tracebacks in test_no_errors
+    instant_tracebacks = False
 
-    follow_redirects = True  # whether the test client should follow redirects
+    # whether the test client should follow redirects when loading covered URLs
+    follow_redirects = True
 
-    def attempt_to_get_internal_url(self, url):
+    def attempt_to_get_internal_url(self, url):  # type: (str) -> django.http.HttpResponse
         return self.client.get(url, **self.get_client_kwargs())
 
-    def get_client_kwargs(self):
+    def get_client_kwargs(self):  # type: () -> dict[str, Any]
         return {
             'follow': self.follow_redirects,
         }
 
-    def _get_responses(self):
-        responses = {}
-        errors = {}
+    def _get_responses(self):  # type: () -> None
+        responses = {}  # type: dict[str, django.http.HttpResponse]
+        errors = {}  # type: dict[str, ERROR_TYPE]
 
         for url in self.covered_urls:
             try:
@@ -126,11 +146,11 @@ class InstantCoverageAPI(object):
         _instant_cache[self.__class__] = {
             'responses': responses, 'errors': errors}
 
-    def _get_from_instant_cache(self, key):
+    def _get_instant_cache(self):  # type: () -> InstantCacheDict
         if self.__class__ not in _instant_cache:
             self._get_responses()
 
-        return _instant_cache[self.__class__][key]
+        return _instant_cache[self.__class__]
 
     def setUp(self):  # type: () -> None
         super(InstantCoverageAPI, self).setUp()
@@ -138,16 +158,16 @@ class InstantCoverageAPI(object):
             # django 1.4 does not do this automatically
             self.client = Client()
 
-    def instant_responses(self):
+    def instant_responses(self):  # type: () -> dict[str, django.http.HttpResponse]
         """
         Return a dictionary of responses, as returned by the Django test
         client, keyed by URL.
         """
 
-        return self._get_from_instant_cache('responses')
+        return self._get_instant_cache()['responses']
 
-    def instant_errors(self):
-        return self._get_from_instant_cache('errors')
+    def instant_errors(self):  # type: () -> dict[str, ERROR_TYPE]
+        return self._get_instant_cache()['errors']
 
 
 class InstantCoverageMixin(InstantCoverageAPI):
@@ -164,8 +184,10 @@ class InstantCoverageMixin(InstantCoverageAPI):
 
         original_resolve = URLPattern.resolve
 
-        def resolve_and_make_note(self, url, *args, **kwargs):
-            match = original_resolve(self, url, *args, **kwargs)
+        def resolve_and_make_note(
+            self, path,
+        ):  # type: (URLPattern, str) -> Optional[django.urls.resolvers.ResolverMatch]
+            match = original_resolve(self, path)
 
             if match:
                 seen_patterns.add(self)
