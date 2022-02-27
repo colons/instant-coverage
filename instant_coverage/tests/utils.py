@@ -32,7 +32,7 @@ class PickyTestResult(TestResult):
     picky_failures = None  # type: list[tuple[TestCase, ERROR_TYPE]]
 
     def __init__(self):  # type: () -> None
-        super().__init__()
+        super(PickyTestResult, self).__init__()
         self.picky_failures = []
 
     @failfast
