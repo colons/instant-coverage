@@ -10,18 +10,10 @@ from mock import patch
 import six
 
 if sys.version_info >= (3, 6):
-    from typing import TYPE_CHECKING
-    if TYPE_CHECKING:
-        from typing import Any, Dict, Optional, Type, TypedDict, Union
-        import types
+    from typing import Any, Optional, Type
+    from .type_utils import ERROR_TYPE, InstantCacheDict
 
-        ERROR_TYPE = Union[tuple[None, None, None], tuple[Type[BaseException], BaseException, types.TracebackType]]
-
-        class InstantCacheDict(TypedDict):
-            responses: Dict[str, django.http.HttpResponse]
-            errors: Dict[str, ERROR_TYPE]
-
-        RoutePattern: Optional[Type[django.urls.resolvers.RoutePattern]]
+    RoutePattern: Optional[Type[django.urls.resolvers.RoutePattern]]
 
 if django.VERSION >= (2, 0):
     from django.urls import URLPattern, URLResolver, resolve

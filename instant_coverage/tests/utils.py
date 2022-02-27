@@ -13,9 +13,7 @@ import six
 from .. import clear_url_caches
 
 if sys.version_info >= (3, 6):
-    from typing import TYPE_CHECKING
-    if TYPE_CHECKING:
-        from .. import ERROR_TYPE
+    from ..type_utils import ERROR_TYPE
 
 
 def mocked_patterns(patterns):  # type: (list) -> mock.mock._patch
