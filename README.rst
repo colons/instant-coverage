@@ -32,7 +32,7 @@ Extensible
     minutes.
 
 Portable
-    Compatible with (and tested_ against) Django versions 1.5 to 3.3, and
+    Compatible with (and tested_ against) Django versions 1.5 to 4.0, and
     Python versions from 2.7 to 3.10.
 
 .. _tested: https://github.com/colons/instant-coverage/actions
