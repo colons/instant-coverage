@@ -1,17 +1,12 @@
 import django
 from django.conf.urls import include, url
-from django.http import HttpResponse, Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import redirect
 from django.test import TestCase
 from django.test.utils import override_settings
 
-from .utils import (
-    WorkingView, BrokenView, get_results_for, PickyTestResult, mocked_patterns
-)
-
-from instant_coverage import (
-    IGNORE_TUTORIAL, INSTANT_TRACEBACKS_TUTORIAL, InstantCoverageMixin
-)
+from .utils import BrokenView, PickyTestResult, WorkingView, get_results_for, mocked_patterns
+from .. import IGNORE_TUTORIAL, INSTANT_TRACEBACKS_TUTORIAL, InstantCoverageMixin
 
 
 class FailuresTest(TestCase):

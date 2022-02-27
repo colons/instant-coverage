@@ -1,5 +1,4 @@
 from unittest.result import TestResult, failfast
-from instant_coverage import clear_url_caches
 
 from django.http import HttpResponse
 from django.test import SimpleTestCase
@@ -8,6 +7,8 @@ from django.views.generic import View
 
 from mock import patch
 import six
+
+from .. import clear_url_caches
 
 
 def mocked_patterns(patterns):

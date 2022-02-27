@@ -3,16 +3,17 @@ Optional mixins for testing stuff you might want to test.
 Include them as mixins in test classes that inherit from InstantCoverageMixin.
 """
 
+import json
 import re
+import sys
 from collections import defaultdict
 from contextlib import closing
-import json
 from pprint import pformat
-import sys
+
+from bs4 import BeautifulSoup
 
 from django.conf import settings
 
-from bs4 import BeautifulSoup
 import html5lib
 import requests
 import six
