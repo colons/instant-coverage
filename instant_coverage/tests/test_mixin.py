@@ -15,7 +15,7 @@ class FailuresTest(TestCase):
             url(r'^$', WorkingView.as_view()),
         ]):
             results = get_results_for('test_no_errors', covered_urls=['/'])
-            self.assertEqual(results.failures, [])
+            self.assertEqual(results.picky_failures, [])
 
     def test_errors_surfaced(self):  # type: () -> None
         with mocked_patterns([
@@ -23,7 +23,7 @@ class FailuresTest(TestCase):
         ]):
             results = get_results_for('test_no_errors', covered_urls=['/'])
             self.assertEqual(
-                results.failures[0][1][1].args[0],
+                results.picky_failures[0][1][1].args[0],
                 "The following errors were raised:\n\n"
                 "/: this view is broken\n\n" +
                 INSTANT_TRACEBACKS_TUTORIAL.format(name='EverythingTest')
@@ -37,7 +37,7 @@ class FailuresTest(TestCase):
             results = get_results_for('test_all_urls_accounted_for',
                                       covered_urls=['/tested-url/'])
             self.assertEqual(
-                results.failures[0][1][1].args[0],
+                results.picky_failures[0][1][1].args[0],
                 "The following views are untested:\n\n"
                 "() ^untested-url/$ (None)\n\n" +
                 IGNORE_TUTORIAL.format(name='EverythingTest')
@@ -61,7 +61,7 @@ class FailuresTest(TestCase):
                 '() untested-url/ (None)\n'
                 '() ^another-untested-url/$ (None)\n\n{}'
                 .format(IGNORE_TUTORIAL.format(name='EverythingTest')),
-                results.failures[0][1][1].args[0],
+                results.picky_failures[0][1][1].args[0],
             )
 
     def test_non_list_urls(self):  # type: () -> None
@@ -75,14 +75,14 @@ class FailuresTest(TestCase):
         ]):
             self.assertEqual(
                 get_results_for('test_no_errors',
-                                covered_urls='/',).failures[0][1][1].args[0],
+                                covered_urls='/',).picky_failures[0][1][1].args[0],
                 "The following errors were raised:\n\n"
                 "/: this view is broken\n\n" +
                 INSTANT_TRACEBACKS_TUTORIAL.format(name='EverythingTest')
             )
             self.assertEqual(
                 get_results_for('test_all_urls_accounted_for',
-                                covered_urls='/',).failures[0][1][1].args[0],
+                                covered_urls='/',).picky_failures[0][1][1].args[0],
                 "The following views are untested:\n\n"
                 "() ^untested/$ (None)\n\n" +
                 IGNORE_TUTORIAL.format(name='EverythingTest')
@@ -96,7 +96,7 @@ class FailuresTest(TestCase):
             results = get_results_for('test_all_urls_accounted_for',
                                       covered_urls=['/tested-url/'])
             self.assertEqual(
-                results.failures[0][1][1].args[0],
+                results.picky_failures[0][1][1].args[0],
                 "The following views are untested:\n\n"
                 "() ^untested-url/$ (name)\n\n" +
                 IGNORE_TUTORIAL.format(name='EverythingTest')
@@ -114,7 +114,7 @@ class FailuresTest(TestCase):
                 uncovered_urls=['/deliberately-untested-url/'])
 
             self.assertEqual(
-                results.failures[0][1][1].args[0],
+                results.picky_failures[0][1][1].args[0],
                 "The following views are untested:\n\n"
                 "() ^untested-url/$ (None)\n\n" +
                 IGNORE_TUTORIAL.format(name='EverythingTest')
@@ -129,7 +129,7 @@ class FailuresTest(TestCase):
             UNCOVERED_URLS=['/deliberately-untested-url/'],
         ):
             results = get_results_for('test_no_errors')
-            self.assertEqual(results.failures, [])
+            self.assertEqual(results.picky_failures, [])
 
     def test_broken_url_in_include(self):  # type: () -> None
         incl = [
@@ -142,7 +142,7 @@ class FailuresTest(TestCase):
             results = get_results_for('test_no_errors',
                                       covered_urls=['/include/broken-url/'])
             self.assertEqual(
-                results.failures[0][1][1].args[0],
+                results.picky_failures[0][1][1].args[0],
                 "The following errors were raised:\n\n"
                 "/include/broken-url/: this view is broken\n\n" +
                 INSTANT_TRACEBACKS_TUTORIAL.format(name='EverythingTest')
@@ -160,7 +160,7 @@ class FailuresTest(TestCase):
         ):
             results = get_results_for('test_all_urls_accounted_for')
             self.assertEqual(
-                results.failures[0][1][1].args[0],
+                results.picky_failures[0][1][1].args[0],
                 "The following views are untested:\n\n"
                 "('^include/',) ^broken-url/$ (None)\n\n" +
                 IGNORE_TUTORIAL.format(name='EverythingTest')
@@ -180,7 +180,7 @@ class FailuresTest(TestCase):
             ]:
                 results = get_results_for(
                     test, covered_urls=[], uncovered_includes=[('^include/',)])
-                self.assertEqual(results.failures, [])
+                self.assertEqual(results.picky_failures, [])
 
     def test_uncoverd_includes_with_common_nested_patterns(self):  # type: () -> None
         incl_a = [url(r'^a/$', BrokenView.as_view())]
@@ -202,7 +202,7 @@ class FailuresTest(TestCase):
                         ('^include/', '^nest/')
                     ]
                 )
-                self.assertEqual(results.failures, [])
+                self.assertEqual(results.picky_failures, [])
 
     def test_all_views_actually_called(self):  # type: () -> None
         views_called = []
@@ -231,7 +231,7 @@ class FailuresTest(TestCase):
             results = get_results_for('test_no_errors', covered_urls=[
                 '/one/', '/two/', '/include/included/',
             ])
-            self.assertEqual(results.failures, [])
+            self.assertEqual(results.picky_failures, [])
             self.assertEqual(views_called,
                              ['view_one', 'view_two', 'included_view'])
 
@@ -247,7 +247,7 @@ class FailuresTest(TestCase):
                                       covered_urls=['/working-url/',
                                                     '/404-url/'])
             self.assertEqual(
-                results.failures[0][1][1].args[0],
+                results.picky_failures[0][1][1].args[0],
                 "The following bad status codes were seen:\n\n"
                 "/404-url/: 404"
             )
@@ -264,17 +264,17 @@ class FailuresTest(TestCase):
             # system to system, so we fudge a little.
             self.assertIn(
                 'most recent call last',
-                results.failures[0][1][1].args[0],
+                results.picky_failures[0][1][1].args[0],
             )
 
     def test_views_only_called_once_per_class(self):  # type: () -> None
         calls = []
 
-        def a(*args, **kwargs):
+        def a(request):  # type: (django.http.HttpRequest) -> django.http.HttpResponse
             calls.append('a')
             return HttpResponse()
 
-        def b(*args, **kwargs):
+        def b(request):  # type: (django.http.HttpRequest) -> django.http.HttpResponse
             calls.append('b')
             return HttpResponse()
 
@@ -290,10 +290,11 @@ class FailuresTest(TestCase):
 
             for method in ['test_no_errors', 'test_acceptable_status_codes']:
                 for test in [TestA(method), TestB(method)]:
-                    test._pre_setup()
+                    if hasattr(test, '_pre_setup'):
+                        test._pre_setup()  # type: ignore
                     result = PickyTestResult()
                     test.run(result)
-                    self.assertEqual(result.failures, [])
+                    self.assertEqual(result.picky_failures, [])
                     self.assertEqual(result.errors, [])
 
             self.assertEqual(calls, ['a', 'b'])

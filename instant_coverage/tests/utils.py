@@ -1,19 +1,26 @@
+import sys
+from unittest import TestCase
 from unittest.result import TestResult, failfast
 
-from django.http import HttpResponse
+import django
 from django.test import SimpleTestCase
 from django.test.utils import setup_test_environment, teardown_test_environment
 from django.views.generic import View
 
-from mock import patch
+import mock
 import six
 
 from .. import clear_url_caches
 
+if sys.version_info >= (3, 6):
+    from typing import TYPE_CHECKING
+    if TYPE_CHECKING:
+        from .. import ERROR_TYPE
 
-def mocked_patterns(patterns):
+
+def mocked_patterns(patterns):  # type: (list) -> mock.mock._patch
     clear_url_caches()
-    return patch('instant_coverage.tests.urls.urlpatterns', patterns)
+    return mock.patch('instant_coverage.tests.urls.urlpatterns', patterns)
 
 
 class PickyTestResult(TestResult):
@@ -22,12 +29,21 @@ class PickyTestResult(TestResult):
     tests run, rather than storing an entire traceback.
     """
 
+    picky_failures = None  # type: list[tuple[TestCase, ERROR_TYPE]]
+
+    def __init__(self):  # type: () -> None
+        super().__init__()
+        self.picky_failures = []
+
     @failfast
-    def addFailure(self, test, err):
-        self.failures.append((test, err))
+    def addFailure(self, test, err):  # type: (TestCase, ERROR_TYPE) -> None
+        if self.picky_failures is None:
+            self.picky_failures = []
+
+        self.picky_failures.append((test, err))
 
 
-def get_results_for(test_name, mixin=None, **test_attributes):
+def get_results_for(test_name, mixin=None, **test_attributes) -> PickyTestResult:
     from instant_coverage import InstantCoverageMixin
 
     if mixin is None:
@@ -54,7 +70,7 @@ def get_results_for(test_name, mixin=None, **test_attributes):
     result = PickyTestResult()
 
     if hasattr(test, '_pre_setup'):
-        test._pre_setup()
+        test._pre_setup()  # type: ignore
 
     test.run(result)
 
@@ -66,10 +82,10 @@ def get_results_for(test_name, mixin=None, **test_attributes):
 
 
 class WorkingView(View):
-    def get(self, request, *args, **kwargs):
-        return HttpResponse()
+    def get(self, request):  # type: (django.http.HttpRequest) -> django.http.HttpResponse
+        return django.http.HttpResponse()
 
 
 class BrokenView(View):
-    def get(self, request, *args, **kwargs):
+    def get(self, request):  # type: (django.http.HttpRequest) -> django.http.HttpResponse
         raise Exception('this view is broken')

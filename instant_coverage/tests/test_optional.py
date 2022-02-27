@@ -31,13 +31,13 @@ class ValidJSONTest(SimpleTestCase):
             )
 
             self.assertTrue(
-                results.failures[0][1][1].args[0].startswith(
+                results.picky_failures[0][1][1].args[0].startswith(
                     "The following URLs returned invalid JSON:\n\n"
                     "/invalid/: ",
                 ),
                 '"{error}"\n'
                 'does not look like the kind of error we expect'.format(
-                    error=results.failures[0][1][1].args[0]
+                    error=results.picky_failures[0][1][1].args[0]
                 )
             )
 
@@ -58,7 +58,7 @@ class ValidJSONTest(SimpleTestCase):
             )
 
             self.assertEqual(
-                results.failures[0][1][1].args[0],
+                results.picky_failures[0][1][1].args[0],
                 "No views were found to serve up JSON. Ensure any views you "
                 "expect to return JSON set the Content-Type: header to "
                 "'application/json'."
@@ -85,7 +85,7 @@ class ExternalLinksTest(SimpleTestCase):
                 covered_urls=['/page/'],
             )
 
-            result_string = results.failures[0][1][1].args[0]
+            result_string = results.picky_failures[0][1][1].args[0]
 
             self.assertIn(
                 "The following links are broken:\n\n",
@@ -141,7 +141,7 @@ class ValidHTML5Test(SimpleTestCase):
                 covered_urls=['/valid/', '/invalid/', '/not/']
             )
             self.assertEqual(
-                results.failures[0][1][1].args[0],
+                results.picky_failures[0][1][1].args[0],
                 'html5lib raised the following issues:\n\n'
                 '/invalid/:\nLine: 2 Col: 12 Unexpected character in unquoted '
                 'attribute\n'
@@ -178,7 +178,7 @@ class SpellingTest(SimpleTestCase):
                 spelling_extra_words=['wordzz'],
             )
 
-            result_string = results.failures[0][1][1].args[0]
+            result_string = results.picky_failures[0][1][1].args[0]
 
             self.assertNotIn('wordzz', result_string)
             self.assertNotIn('/not/', result_string)
@@ -250,9 +250,9 @@ class WCAGZooTest(SimpleTestCase):
             )
             self.assertIn(
                 "Some critters in the WCAG Zoo found problems.\n\n/invalid/:",
-                results.failures[0][1][1].args[0],
+                results.picky_failures[0][1][1].args[0],
             )
             self.assertIn('Incorrect header found at /html/body/h3',
-                          results.failures[0][1][1].args[0])
-            self.assertNotIn("/valid/", results.failures[0][1][1].args[0])
-            self.assertNotIn("/not/", results.failures[0][1][1].args[0])
+                          results.picky_failures[0][1][1].args[0])
+            self.assertNotIn("/valid/", results.picky_failures[0][1][1].args[0])
+            self.assertNotIn("/not/", results.picky_failures[0][1][1].args[0])
