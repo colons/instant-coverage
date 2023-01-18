@@ -10,8 +10,8 @@ from mock import patch
 import six
 
 if sys.version_info >= (3, 6):
-    from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Type
-    from .type_utils import ERROR_TYPE, InstantCacheDict, TestHttpResponse
+    from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Type  # noqa: F401
+    from .type_utils import ERROR_TYPE, InstantCacheDict, TestHttpResponse  # noqa: F401
 
 if django.VERSION >= (2, 0):
     from django.urls import URLPattern, URLResolver, resolve

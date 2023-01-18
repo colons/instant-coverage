@@ -1,5 +1,4 @@
 import sys
-from unittest import TestCase
 from unittest.result import TestResult, failfast
 
 import django
@@ -9,13 +8,17 @@ from django.views.generic import View
 import mock
 import six
 
-from .. import InstantCoverageAPI, InstantCoverageMixin, clear_url_caches
+from .. import InstantCoverageMixin, clear_url_caches
 
 if sys.version_info >= (3, 6):
-    from typing import Any, List, Tuple, Type, TYPE_CHECKING
-    from ..type_utils import ERROR_TYPE
+    from typing import Any, List, Tuple, Type, TYPE_CHECKING  # noqa: F401
 else:
     TYPE_CHECKING = False
+
+if TYPE_CHECKING:
+    from unittest import TestCase  # noqa: F401
+    from ..type_utils import ERROR_TYPE  # noqa: F401
+    from .. import InstantCoverageAPI  # noqa: F401
 
 
 def mocked_patterns(patterns):  # type: (list) -> mock.mock._patch

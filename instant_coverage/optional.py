@@ -23,7 +23,7 @@ from . import InstantCoverageAPI
 if sys.version_info >= (3, 6):
     from typing import TYPE_CHECKING
     if TYPE_CHECKING:
-        from typing import Any, Dict, List, Optional, Set, Union
+        from typing import Any, Dict, List, Optional, Set, Union  # noqa: F401
 
 
 class ValidJSON(InstantCoverageAPI):
