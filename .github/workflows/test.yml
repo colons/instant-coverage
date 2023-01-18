@@ -20,6 +20,7 @@ jobs:
           - '3.8'
           - '3.9'
           - '3.10'
+          - '3.11'
 
     runs-on: ubuntu-latest
     steps:
@@ -50,6 +51,7 @@ jobs:
           - '>=3.2,<3.3'
           - '>=3.2,<3.3'
           - '>=4.0,<4.1'
+          - '>=4.1,<4.2'
         python:
           - '2.7'
           - '3.5'
@@ -58,6 +60,7 @@ jobs:
           - '3.8'
           - '3.9'
           - '3.10'
+          - '3.11'
         exclude:
           - python: '2.7'
             django: '>=2.0,<2.1'  # not available
@@ -73,6 +76,8 @@ jobs:
             django: '>=3.2,<3.3'  # not available
           - python: '2.7'
             django: '>=4.0,<4.1'  # not available
+          - python: '2.7'
+            django: '>=4.1,<4.2'  # not available
 
           - python: '3.5'
             django: '>=1.5,<1.6'  # expects html.parser.HTMLParseError
@@ -88,6 +93,8 @@ jobs:
             django: '>=3.2,<3.3'  # not available
           - python: '3.5'
             django: '>=4.0,<4.1'  # not available
+          - python: '3.5'
+            django: '>=4.1,<4.2'  # not available
 
           - python: '3.6'
             django: '>=1.5,<1.6'  # expects html.parser.HTMLParseError
@@ -97,6 +104,8 @@ jobs:
             django: '>=1.7,<1.8'  # expects html.parser.HTMLParseError
           - python: '3.6'
             django: '>=4.0,<4.1'  # not available
+          - python: '3.6'
+            django: '>=4.1,<4.2'  # not available
 
           - python: '3.7'
             django: '>=1.5,<1.6'  # expects html.parser.HTMLParseError
@@ -106,6 +115,8 @@ jobs:
             django: '>=1.7,<1.8'  # expects html.parser.HTMLParseError
           - python: '3.7'
             django: '>=4.0,<4.1'  # not available
+          - python: '3.7'
+            django: '>=4.1,<4.2'  # not available
 
           - python: '3.8'
             django: '>=1.5,<1.6'  # expects html.parser.HTMLParseError
@@ -136,6 +147,23 @@ jobs:
           - python: '3.10'
             django: '>=1.11,<1.12'  # expects collections.Iterator, etc.
           - python: '3.10'
+            django: '>=2.0,<2.1'  # expects collections.Iterator, etc.
+
+          - python: '3.11'
+            django: '>=1.5,<1.6'  # expects html.parser.HTMLParseError
+          - python: '3.11'
+            django: '>=1.6,<1.7'  # expects html.parser.HTMLParseError
+          - python: '3.11'
+            django: '>=1.7,<1.8'  # expects html.parser.HTMLParseError
+          - python: '3.11'
+            django: '>=1.8,<1.9'  # expects collections.Iterator, etc.
+          - python: '3.11'
+            django: '>=1.9,<1.10'  # expects collections.Iterator, etc.
+          - python: '3.11'
+            django: '>=1.10,<1.11'  # expects collections.Iterator, etc.
+          - python: '3.11'
+            django: '>=1.11,<1.12'  # expects collections.Iterator, etc.
+          - python: '3.11'
             django: '>=2.0,<2.1'  # expects collections.Iterator, etc.
 
     runs-on: ubuntu-latest
