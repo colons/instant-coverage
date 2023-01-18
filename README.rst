@@ -128,10 +128,13 @@ list.
 .. _Encouraged: https://github.com/colons/musicfortheblind.co.uk/blob/master/mftb5/tests.py
 
 If you have views that you can't test without data present in the database,
-`make a fixtures file`_ and `add it to your test class`_.
+`make a fixtures file`_ and `add it to your test class`_, or create them
+programmatically in `setUp()`_ or `setUpTestData()`_ on the test class.
 
 .. _make a fixtures file: https://docs.djangoproject.com/en/dev/ref/django-admin/#dumpdata-app-label-app-label-app-label-model
 .. _add it to your test class: https://docs.djangoproject.com/en/dev/topics/testing/tools/#django.test.TransactionTestCase.fixtures
+.. _setUp(): https://docs.python.org/3/library/unittest.html#unittest.TestCase.setUp
+.. _setUpTestData(): https://docs.djangoproject.com/en/dev/topics/testing/tools/#django.test.TestCase.setUpTestData
 
 Use the provided optional test mixins
 -------------------------------------
