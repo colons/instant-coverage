@@ -1,8 +1,5 @@
-import sys
 import types
-from typing import Any, Dict, Tuple, TYPE_CHECKING, Type, Union
-
-from django.test.client import _MonkeyPatchedWSGIResponse as TestHttpResponse
+from typing import Any, Dict, TYPE_CHECKING, Tuple, Type, Union
 
 
 ERROR_TYPE = Union[Tuple[None, None, None], Tuple[Type[BaseException], BaseException, types.TracebackType]]
@@ -10,9 +7,11 @@ ERROR_TYPE = Union[Tuple[None, None, None], Tuple[Type[BaseException], BaseExcep
 
 if TYPE_CHECKING:
     from typing import TypedDict
+    from django.test.client import _MonkeyPatchedWSGIResponse as TestHttpResponse
 
     class InstantCacheDict(TypedDict):
         responses: Dict[str, TestHttpResponse]
         errors: Dict[str, ERROR_TYPE]
 else:
+    from django.http import HttpResponse as TestHttpResponse
     InstantCacheDict = Any
