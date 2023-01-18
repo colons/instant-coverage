@@ -102,10 +102,10 @@ class InstantCoverageAPI(TestCase):
     #: tuples of includes we're okay with not testing (see README for more details)
     uncovered_includes = []  # type: Sequence[Tuple[str, ...]]
 
-    # whether to show full tracebacks in test_no_errors
+    #: whether to show full tracebacks in test_no_errors
     instant_tracebacks = False
 
-    # whether the test client should follow redirects when loading covered URLs
+    #: whether the test client should follow redirects when loading covered URLs
     follow_redirects = True
 
     def attempt_to_get_internal_url(self, url):  # type: (str) -> TestHttpResponse
