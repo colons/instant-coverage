@@ -30,6 +30,7 @@ setup(
             'types-mock',
             'types-requests',
             'types-six',
+            'typing-extensions',
         ],
         'testing': [
             'pyenchant',
