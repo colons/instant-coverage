@@ -165,6 +165,8 @@ jobs:
             django: '>=1.11,<1.12'  # expects collections.Iterator, etc.
           - python: '3.11'
             django: '>=2.0,<2.1'  # expects collections.Iterator, etc.
+          - python: '3.11'
+            django: '>=2.1,<2.2'  # translation() got an unexpected keyword argument 'codeset'
 
     runs-on: ubuntu-20.04
     steps:
