@@ -9,7 +9,7 @@ ERROR_TYPE = Union[Tuple[None, None, None], Tuple[Type[BaseException], BaseExcep
 if sys.version_info >= (3, 8):
     from typing import TypedDict
 else:
-    TypedDict = Any
+    from typing import _TypedDict as TypedDict
 
 if TYPE_CHECKING:
     from django.test.client import _MonkeyPatchedWSGIResponse as TestHttpResponse
