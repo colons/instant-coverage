@@ -13,7 +13,6 @@ else:
 
 if TYPE_CHECKING:
     from django.test.client import _MonkeyPatchedWSGIResponse as TestHttpResponse
-
 else:
     from django.http import HttpResponse as TestHttpResponse
 
