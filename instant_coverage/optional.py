@@ -14,7 +14,7 @@ from bs4 import BeautifulSoup
 
 from django.conf import settings
 
-import html5lib
+from html5lib import HTMLParser, constants
 import requests
 import six
 
@@ -92,7 +92,9 @@ class ExternalLinks(InstantCoverageAPI):
                     for element in soup.select(
                         '[{0}^="{1}"]'.format(attribute, prefix)
                     ):
-                        external_urls[element[attribute]].append(internal_url)
+                        attr = element[attribute]
+                        assert isinstance(attr, str)
+                        external_urls[attr].append(internal_url)
 
         self.ensure_all_urls_resolve(external_urls)
 
@@ -139,7 +141,7 @@ class ValidHTML5(InstantCoverageAPI):
             if response['Content-Type'].split(';')[0] != 'text/html':
                 continue
 
-            parser = html5lib.HTMLParser()
+            parser = HTMLParser()
             parser.parse(response.content)
 
             if parser.errors:
@@ -151,7 +153,7 @@ class ValidHTML5(InstantCoverageAPI):
                     '\n\n'.join(['{url}:\n{errs}'.format(
                         url=url, errs='\n'.join(
                             ['Line: {line} Col: {col} {err}'.format(
-                                line=l, col=c, err=html5lib.constants.E[e] % v)
+                                line=l, col=c, err=constants.E[e] % v)
                              for ((l, c), e, v) in errors]
                         )
                     ) for url, errors in six.iteritems(parser_complaints)])
@@ -214,6 +216,7 @@ class WCAGZoo(InstantCoverageAPI):
 
                 soup = BeautifulSoup(response.content, 'html5lib')
                 for style in soup.select('link[rel="stylesheet"]'):
+                    assert isinstance(style['href'], str)
                     if style['href'].startswith(settings.STATIC_URL):
                         style['href'] = style['href'].replace(
                             settings.STATIC_URL, '', 1,
