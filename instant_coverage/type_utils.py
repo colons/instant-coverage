@@ -11,7 +11,7 @@ if sys.version_info >= (3, 8):
 else:
     from typing_extensions import TypedDict
 
-if TYPE_CHECKING:
+if TYPE_CHECKING and sys.version_info >= (3, 7):
     from django.test.client import _MonkeyPatchedWSGIResponse as TestHttpResponse
 else:
     from django.http import HttpResponse as TestHttpResponse
