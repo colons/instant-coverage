@@ -1,3 +1,5 @@
+from typing import Any, cast
+
 import django
 from django.conf.urls import include
 from django.http import Http404, HttpResponse
@@ -299,7 +301,7 @@ class FailuresTest(TestCase):
             for method in ['test_no_errors', 'test_acceptable_status_codes']:
                 for test in [TestA(method), TestB(method)]:
                     if hasattr(test, '_pre_setup'):
-                        test._pre_setup()
+                        cast(Any, test)._pre_setup()
                     result = PickyTestResult()
                     test.run(result)
                     self.assertEqual(result.picky_failures, [])

@@ -1,4 +1,5 @@
 import sys
+from typing import Any, cast
 from unittest.result import TestResult, failfast
 
 import django
@@ -11,7 +12,7 @@ import six
 from .. import InstantCoverageMixin, clear_url_caches
 
 if sys.version_info >= (3, 6):
-    from typing import Any, List, Tuple, Type, TYPE_CHECKING  # noqa: F401
+    from typing import List, Tuple, Type, TYPE_CHECKING  # noqa: F401
 else:
     TYPE_CHECKING = False
 
@@ -73,7 +74,7 @@ def get_results_for(
     result = PickyTestResult()
 
     if hasattr(test, '_pre_setup'):
-        test._pre_setup()
+        cast(Any, test)._pre_setup()
 
     test.run(result)
 
