@@ -27,6 +27,8 @@ setup(
             'flake8',
             'flake8-import-order',
             'mypy',
+            'types-beautifulsoup4',
+            'types-html5lib',
             'types-mock',
             'types-requests',
             'types-six',
