@@ -169,7 +169,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: install system dependencies
-        run: sudo apt install aspell aspell-en libenchant-dev
+        run: sudo apt install aspell aspell-en libenchant-2-dev
 
       - uses: actions/checkout@v2
 
