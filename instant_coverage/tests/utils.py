@@ -70,7 +70,7 @@ def get_results_for(
     result = PickyTestResult()
 
     if hasattr(test, '_pre_setup'):
-        test._pre_setup()  # type: ignore
+        test._pre_setup()
 
     test.run(result)
 

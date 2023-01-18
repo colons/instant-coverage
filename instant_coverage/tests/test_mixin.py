@@ -299,7 +299,7 @@ class FailuresTest(TestCase):
             for method in ['test_no_errors', 'test_acceptable_status_codes']:
                 for test in [TestA(method), TestB(method)]:
                     if hasattr(test, '_pre_setup'):
-                        test._pre_setup()  # type: ignore
+                        test._pre_setup()
                     result = PickyTestResult()
                     test.run(result)
                     self.assertEqual(result.picky_failures, [])

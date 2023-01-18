@@ -11,7 +11,7 @@ import six
 
 if sys.version_info >= (3, 6):
     from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Type
-    from .type_utils import ERROR_TYPE, InstantCacheDict
+    from .type_utils import ERROR_TYPE, InstantCacheDict, TestHttpResponse
 
 if django.VERSION >= (2, 0):
     from django.urls import URLPattern, URLResolver, resolve
@@ -108,7 +108,7 @@ class InstantCoverageAPI(TestCase):
     # whether the test client should follow redirects when loading covered URLs
     follow_redirects = True
 
-    def attempt_to_get_internal_url(self, url):  # type: (str) -> django.http.HttpResponse
+    def attempt_to_get_internal_url(self, url):  # type: (str) -> TestHttpResponse
         return self.client.get(url, **self.get_client_kwargs())
 
     def get_client_kwargs(self):  # type: () -> Dict[str, Any]
@@ -117,7 +117,7 @@ class InstantCoverageAPI(TestCase):
         }
 
     def _get_responses(self):  # type: () -> None
-        responses = {}  # type: Dict[str, django.http.HttpResponse]
+        responses = {}  # type: Dict[str, TestHttpResponse]
         errors = {}  # type: Dict[str, ERROR_TYPE]
 
         for url in self.covered_urls:
@@ -146,7 +146,7 @@ class InstantCoverageAPI(TestCase):
             # django 1.4 does not do this automatically
             self.client = Client()
 
-    def instant_responses(self):  # type: () -> Dict[str, django.http.HttpResponse]
+    def instant_responses(self):  # type: () -> Dict[str, TestHttpResponse]
         """
         Return a dictionary of responses, as returned by the Django test
         client, keyed by URL.
