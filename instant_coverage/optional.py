@@ -93,7 +93,8 @@ class ExternalLinks(InstantCoverageAPI):
                         '[{0}^="{1}"]'.format(attribute, prefix)
                     ):
                         attr = element[attribute]
-                        assert isinstance(attr, str)
+                        if sys.version_info >= (3, 0):
+                            assert isinstance(attr, str)
                         external_urls[attr].append(internal_url)
 
         self.ensure_all_urls_resolve(external_urls)
@@ -216,7 +217,8 @@ class WCAGZoo(InstantCoverageAPI):
 
                 soup = BeautifulSoup(response.content, 'html5lib')
                 for style in soup.select('link[rel="stylesheet"]'):
-                    assert isinstance(style['href'], str)
+                    if sys.version_info >= (3, 0):
+                        assert isinstance(style['href'], str)
                     if style['href'].startswith(settings.STATIC_URL):
                         style['href'] = style['href'].replace(
                             settings.STATIC_URL, '', 1,
