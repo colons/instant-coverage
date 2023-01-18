@@ -42,7 +42,7 @@ Changes
 
 Changes made in each release are listed in tags_ in this repository.
 
-.. _tags: https://github.com/colons/instant-coverage/releases
+.. _tags: https://github.com/colons/instant-coverage/tags
 
 Usage
 =====
