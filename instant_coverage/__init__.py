@@ -1,6 +1,5 @@
 import sys
 import traceback
-from unittest import TestCase
 
 import django
 from django.conf import settings
@@ -11,7 +10,9 @@ import six
 
 if sys.version_info >= (3, 6):
     from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Type  # noqa: F401
-    from .type_utils import ERROR_TYPE, InstantCacheDict, TestHttpResponse  # noqa: F401
+    from .type_utils import ERROR_TYPE, InstantCacheDict, TestHttpResponse, ExpectTestCase  # noqa: F401
+else:
+    ExpectTestCase = object
 
 if django.VERSION >= (2, 0):
     from django.urls import URLPattern, URLResolver, resolve
@@ -88,7 +89,7 @@ def extract_all_patterns_from_urlpatterns(
     return all_patterns
 
 
-class InstantCoverageAPI(TestCase):
+class InstantCoverageAPI(ExpectTestCase):
     """
     The API provided by InstantCoverageMixin with none of the tests.
     """

@@ -1,6 +1,7 @@
 import sys
 import types
 from typing import Dict, TYPE_CHECKING, Tuple, Type, Union
+from unittest import TestCase
 
 
 ERROR_TYPE = Union[Tuple[None, None, None], Tuple[Type[BaseException], BaseException, types.TracebackType]]
@@ -20,3 +21,9 @@ else:
 class InstantCacheDict(TypedDict):
     responses: Dict[str, TestHttpResponse]
     errors: Dict[str, ERROR_TYPE]
+
+
+if TYPE_CHECKING:
+    ExpectTestCase = TestCase
+else:
+    ExpectTestCase = object

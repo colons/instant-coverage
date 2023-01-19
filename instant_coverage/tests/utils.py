@@ -3,6 +3,7 @@ from typing import Any, cast
 from unittest.result import TestResult, failfast
 
 import django
+from django.test import SimpleTestCase
 from django.test.utils import setup_test_environment, teardown_test_environment
 from django.views.generic import View
 
@@ -54,7 +55,7 @@ def get_results_for(
     if TYPE_CHECKING:
         EverythingTest = mixin
     else:
-        class EverythingTest(mixin):
+        class EverythingTest(mixin, SimpleTestCase):
             pass
 
     try:
