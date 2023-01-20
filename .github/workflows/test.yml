@@ -10,6 +10,25 @@ jobs:
       - run: pip install '.[linting]'
       - run: flake8
 
+  build:
+    strategy:
+      matrix:
+        python:
+          - '2'
+          - '3'
+
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '${{ matrix.python }}'
+      - uses: actions/checkout@v2
+      - run: python setup.py sdist bdist_wheel
+      - uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: dist/*
+
   mypy:
     strategy:
       fail-fast: false
