@@ -6,7 +6,7 @@ with open('README.rst') as readme_file:
 setup(
     name='django-instant-coverage',
     description='Better-than-nothing testing for Django',
-    url='https://github.com/colons/instant-coverage',
+    url='https://codeberg.org/colons/instant-coverage',
     author='colons',
     author_email='pypi@colons.co',
     version='1.2.1',

@@ -75,8 +75,8 @@ class ExternalLinksTest(SimpleTestCase):
         def page_with_links(request):  # type: (django.http.HttpRequest) -> HttpResponse
             return HttpResponse(
                 '<a href="http:garbage"></a>'
-                '<a href="https://github.com/colons/not-a-real-repo"></a>'
-                '<img src="http://localhost:65530"></img>'
+                '<a href="https://codeberg.org/colons/not-a-real-repo"></a>'
+                '<img src="http://localhost:9000000"></img>'
                 '<form action="http://what"></a>'
                 '<a href="http://google.com/"></a>',
                 content_type='text/html; utf-8'
@@ -103,7 +103,7 @@ class ExternalLinksTest(SimpleTestCase):
             )
 
             self.assertIn(
-                "https://github.com/colons/not-a-real-repo: 404\n"
+                "https://codeberg.org/colons/not-a-real-repo: 404\n"
                 "shown on /page/",
                 result_string
             )
