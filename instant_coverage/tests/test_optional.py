@@ -76,7 +76,7 @@ class ExternalLinksTest(FakeURLPatternsTestCase):
         def page_with_links(*args, **kwargs):
             return HttpResponse(
                 '<a href="http:garbage"></a>'
-                '<a href="https://github.com/colons/not-a-real-repo"></a>'
+                '<a href="https://codeberg.org/colons/not-a-real-repo"></a>'
                 '<img src="http://localhost:9000000"></img>'
                 '<form action="http://what"></a>'
                 '<a href="http://google.com/"></a>',
@@ -107,7 +107,7 @@ class ExternalLinksTest(FakeURLPatternsTestCase):
             )
 
             self.assertIn(
-                "https://github.com/colons/not-a-real-repo: 404\n"
+                "https://codeberg.org/colons/not-a-real-repo: 404\n"
                 "shown on /page/",
                 result_string
             )

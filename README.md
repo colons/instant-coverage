@@ -181,4 +181,4 @@ explicitly add yourself.
 [travis]: https://travis-ci.org/colons/instant-coverage
 [travis-status]: https://travis-ci.org/colons/instant-coverage.svg
 [response]: https://docs.djangoproject.com/en/dev/topics/testing/tools/#django.test.Response
-[optional]: https://github.com/colons/instant-coverage/blob/master/instant_coverage/optional.py
+[optional]: https://codeberg.org/colons/instant-coverage/src/branch/main/instant_coverage/optional.py
